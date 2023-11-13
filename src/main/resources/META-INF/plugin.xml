@@ -1,7 +1,7 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.timheibel.intellijmigrationplugin</id>
-    <name>intellij-migration-plugin Template</name>
+    <name>Migration Helper</name>
     <vendor>timheibel</vendor>
 
     <depends>com.intellij.modules.platform</depends>
@@ -9,10 +9,14 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.timheibel.intellijmigrationplugin.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
+        <applicationConfigurable
+            parentId="tools"
+            instance="com.github.timheibel.intellijmigrationplugin.settings.AppSettingsConfigurable"
+            id="com.github.timheibel.intellijmigrationplugin.settings.AppSettingsConfigurable"
+            displayName="Migration Plugin"/>
+        <applicationService
+                serviceImplementation="com.github.timheibel.intellijmigrationplugin.settings.AppSettingsState"/>
     </extensions>
 
-    <applicationListeners>
-        <listener class="com.github.timheibel.intellijmigrationplugin.listeners.MyApplicationActivationListener" topic="com.intellij.openapi.application.ApplicationActivationListener"/>
-    </applicationListeners>
+
 </idea-plugin>
