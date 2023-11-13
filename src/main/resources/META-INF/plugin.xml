@@ -11,11 +11,11 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationConfigurable
             parentId="tools"
-            instance="com.github.timheibel.intellijmigrationplugin.settings.AppSettingsConfigurable"
-            id="com.github.timheibel.intellijmigrationplugin.settings.AppSettingsConfigurable"
+            instance="com.github.timheibel.intellijmigrationplugin.settings.MigrationsSettingsConfigurable"
+            id="com.github.timheibel.intellijmigrationplugin.settings.MigrationSettingsConfigurable"
             displayName="Migration Plugin"/>
         <applicationService
-                serviceImplementation="com.github.timheibel.intellijmigrationplugin.settings.AppSettingsState"/>
+                serviceImplementation="com.github.timheibel.intellijmigrationplugin.settings.MigrationSettingsState"/>
     </extensions>
 
 
