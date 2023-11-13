@@ -1,4 +1,5 @@
 package com.github.timheibel.intellijmigrationplugin.settings
+
 import com.intellij.openapi.options.Configurable
 import org.jetbrains.annotations.Nls
 import javax.swing.JComponent
@@ -21,17 +22,21 @@ internal class MigrationsSettingsConfigurable : Configurable {
 
     override fun isModified(): Boolean {
         val settings: MigrationSettingsState = MigrationSettingsState.instance
-        return settingsComponent?.legacyFolderPath != settings.legacyFolderPath
+        return settingsComponent?.legacyFolderPath != settings.legacyFolderPath || settingsComponent?.keywordColorMapping?.entries != settings.keywordColorMapping.entries || settingsComponent?.fileTypeCommentMapping?.entries != settings.fileTypeCommentMapping.entries
     }
 
     override fun apply() {
         val settings: MigrationSettingsState = MigrationSettingsState.instance
         settings.legacyFolderPath = settingsComponent?.legacyFolderPath ?: ""
+        settings.keywordColorMapping = settingsComponent?.keywordColorMapping ?: mutableMapOf()
+        settings.fileTypeCommentMapping = settingsComponent?.fileTypeCommentMapping ?: mutableMapOf()
     }
 
     override fun reset() {
         val settings: MigrationSettingsState = MigrationSettingsState.instance
         settingsComponent?.legacyFolderPath = settings.legacyFolderPath
+        settingsComponent?.keywordColorMapping = settings.keywordColorMapping
+        settingsComponent?.fileTypeCommentMapping = settings.fileTypeCommentMapping
     }
 
     override fun disposeUIResources() {

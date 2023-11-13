@@ -4,8 +4,8 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
+import com.intellij.ui.JBColor
 import com.intellij.util.xmlb.XmlSerializerUtil
-import java.awt.Color
 
 /**
  * State component for migration settings.
@@ -14,8 +14,12 @@ import java.awt.Color
 
 @State(name = "org.intellij.sdk.settings.AppSettingsState", storages = [Storage("SettingsMigrationHelper.xml")])
 internal class MigrationSettingsState : PersistentStateComponent<MigrationSettingsState?> {
-    var colorKeywordMapping: Map<String, Color> = emptyMap()
-    var fileTypeCommentMapping: Map<String, String> = emptyMap()
+    var keywordColorMapping: MutableMap<String, JBColor> = mutableMapOf(
+        "MIGRATED" to JBColor(JBColor.YELLOW, JBColor.YELLOW.darker()),
+        "LATER" to JBColor(JBColor.RED, JBColor.RED.darker()),
+        "UNUSED" to JBColor(JBColor.GRAY, JBColor.GRAY.darker())
+    )
+    var fileTypeCommentMapping: MutableMap<String, String> = mutableMapOf()
     var legacyFolderPath: String = ""
 
     override fun getState(): MigrationSettingsState {

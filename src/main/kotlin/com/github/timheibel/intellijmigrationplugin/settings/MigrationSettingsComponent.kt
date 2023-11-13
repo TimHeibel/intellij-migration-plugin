@@ -23,9 +23,9 @@ class MigrationSettingsComponent {
     private val descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
 
     // Keywords and their associated colors
-    private val keywordColorMapping = mutableMapOf(
-        "MIGRATED" to JBColor.GREEN, "LATER" to JBColor.RED, "UNUSED" to JBColor.GRAY
-    )
+    var keywordColorMapping = mutableMapOf<String, JBColor>()
+
+    var fileTypeCommentMapping = mutableMapOf<String, String>()
 
     init {
         panel = FormBuilder.createFormBuilder()
