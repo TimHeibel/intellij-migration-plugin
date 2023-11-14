@@ -22,7 +22,9 @@ internal class MigrationsSettingsConfigurable : Configurable {
 
     override fun isModified(): Boolean {
         val settings: MigrationSettingsState = MigrationSettingsState.instance
-        return settingsComponent?.legacyFolderPath != settings.legacyFolderPath || settingsComponent?.keywordColorMapping?.entries != settings.keywordColorMapping.entries || settingsComponent?.fileTypeCommentMapping?.entries != settings.fileTypeCommentMapping.entries
+        return settingsComponent?.legacyFolderPath != settings.legacyFolderPath
+                || settingsComponent?.keywordColorMapping?.entries != settings.keywordColorMapping.entries
+                || settingsComponent?.fileTypeCommentMapping?.entries != settings.fileTypeCommentMapping.entries
     }
 
     override fun apply() {
