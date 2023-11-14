@@ -75,7 +75,7 @@ class MigrationSettingsComponent {
                 panel, "Choose Color for $keyword", keywordColorMapping[keyword], false, null, false
             )
             if (newColor != null) {
-                keywordColorMapping[keyword] = JBColor(newColor, newColor.darker())
+                keywordColorMapping[keyword] = JBColor(newColor, newColor)
                 // Update the color label directly
                 colorLabel.foreground = keywordColorMapping[keyword]
             }
