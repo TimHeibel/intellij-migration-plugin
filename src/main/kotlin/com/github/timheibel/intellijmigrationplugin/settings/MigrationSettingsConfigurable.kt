@@ -37,6 +37,8 @@ internal class MigrationsSettingsConfigurable : Configurable {
         settingsComponent?.legacyFolderPath = settings.legacyFolderPath
         settingsComponent?.keywordColorMapping = settings.keywordColorMapping
         settingsComponent?.fileTypeCommentMapping = settings.fileTypeCommentMapping
+        // Ensure that the color labels are updated based on the loaded state (won't happen automatically)
+        settingsComponent?.updateColorLabels()
     }
 
     override fun disposeUIResources() {

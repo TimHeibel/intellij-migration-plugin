@@ -22,16 +22,19 @@ class MigrationSettingsComponent {
     private val legacyFolderTextField = TextFieldWithBrowseButton()
     private val descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
 
-    // Keywords and their associated colors
+    // Keyword Color Mapping
     var keywordColorMapping = mutableMapOf<String, JBColor>()
+    private val colorLabels = mutableMapOf<String, JBLabel>()
 
+    // FileTypeComment Mapping
     var fileTypeCommentMapping = mutableMapOf<String, String>()
 
     init {
         panel = FormBuilder.createFormBuilder()
+            // Legacy Folder
             .addLabeledComponent(JBLabel("Legacy folder: "), legacyFolderTextField, 1, false)
 
-            // Color Mapping
+            // Keyword Color Mapping
             .addSeparator(2).addLabeledComponent(createColorMappingPanel("MIGRATED"), JPanel(), 1, false)
             .addLabeledComponent(createColorMappingPanel("LATER"), JPanel(), 1, false)
             .addLabeledComponent(createColorMappingPanel("UNUSED"), JPanel(), 1, false)
@@ -61,7 +64,10 @@ class MigrationSettingsComponent {
     private fun createColorMappingPanel(keyword: String): JPanel {
         val colorMappingPanel = JPanel()
         val colorLabel = JBLabel(keyword)
+
         colorLabel.foreground = keywordColorMapping[keyword]
+        colorLabels[keyword] = colorLabel
+
         val selectColorButton = JButton("Select Color")
         selectColorButton.addActionListener {
             // Open ColorPicker dialog and update the color
@@ -70,13 +76,24 @@ class MigrationSettingsComponent {
             )
             if (newColor != null) {
                 keywordColorMapping[keyword] = JBColor(newColor, newColor.darker())
+                // Update the color label directly
                 colorLabel.foreground = keywordColorMapping[keyword]
             }
         }
 
         colorMappingPanel.add(colorLabel)
         colorMappingPanel.add(selectColorButton)
+
         return colorMappingPanel
     }
-
+    // Necessary to update the color labels, when state is loaded
+    fun updateColorLabels() {
+        for (keyword in keywordColorMapping.keys) {
+            val colorLabel = colorLabels[keyword]
+            colorLabel?.foreground = keywordColorMapping[keyword]
+            colorLabel?.repaint()
+        }
+    }
 }
+
+
