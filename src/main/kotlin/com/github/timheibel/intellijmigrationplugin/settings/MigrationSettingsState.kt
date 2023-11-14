@@ -6,14 +6,15 @@ import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.ui.JBColor
 import com.intellij.util.xmlb.XmlSerializerUtil
+import com.intellij.util.xmlb.annotations.OptionTag
 
 /**
  * State component for migration settings.
  * Holds persistent (global -> for all Projects) state for the Plugins settings.
  */
-
 @State(name = "org.intellij.sdk.settings.AppSettingsState", storages = [Storage("SettingsMigrationHelper.xml")])
 internal class MigrationSettingsState : PersistentStateComponent<MigrationSettingsState?> {
+    @OptionTag(converter = JBColorConverter::class)
     var keywordColorMapping: MutableMap<String, JBColor> = mutableMapOf(
         "MIGRATED" to JBColor(JBColor.YELLOW, JBColor.YELLOW.darker()),
         "LATER" to JBColor(JBColor.RED, JBColor.RED.darker()),
