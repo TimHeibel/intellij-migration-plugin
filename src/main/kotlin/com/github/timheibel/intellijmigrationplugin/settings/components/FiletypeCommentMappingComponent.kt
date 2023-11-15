@@ -9,13 +9,17 @@ import javax.swing.table.DefaultTableModel
 
 class FiletypeCommentMappingComponent {
     var fileTypeCommentMapping = mutableMapOf<String, String>()
-
+        set(value) {
+            field = value
+            updateTableModelData()
+        }
     private val tableModel = DefaultTableModel(arrayOf(arrayOf("", "")), arrayOf("Filetype", "Comment Type"))
     private val table = JBTable(tableModel)
     private val tableScrollPane = JBScrollPane(table)
 
     fun getComponent(): JPanel {
-        val panel = FormBuilder.createFormBuilder()
+        configureTableModelListener()
+        return FormBuilder.createFormBuilder()
             .addLabeledComponentFillVertically("Filetype-Comment mapping", tableScrollPane)
             .panel
 

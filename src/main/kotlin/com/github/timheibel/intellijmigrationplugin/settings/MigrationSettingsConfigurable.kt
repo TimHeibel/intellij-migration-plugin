@@ -11,6 +11,7 @@ import javax.swing.JComponent
 internal class MigrationsSettingsConfigurable : Configurable {
     private var settingsComponent: MigrationSettingsComponent? = null
 
+
     override fun getDisplayName(): @Nls(capitalization = Nls.Capitalization.Title) String {
         return "Migration Plugin Settings"
     }
@@ -36,10 +37,8 @@ internal class MigrationsSettingsConfigurable : Configurable {
     override fun reset() {
         val settings: MigrationSettingsState = MigrationSettingsState.instance
         settingsComponent?.legacyFolderComponent?.legacyFolderPath = settings.legacyFolderPath
-        settingsComponent?.keywordColorMappingComponent?.keywordColorMapping= settings.keywordColorMapping
+        settingsComponent?.keywordColorMappingComponent?.keywordColorMapping = settings.keywordColorMapping
         settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMapping = settings.fileTypeCommentMapping
-        // Ensure that the color labels are updated based on the loaded state (won't happen automatically)
-        settingsComponent?.keywordColorMappingComponent?.updateColorLabels()
     }
 
     override fun disposeUIResources() {

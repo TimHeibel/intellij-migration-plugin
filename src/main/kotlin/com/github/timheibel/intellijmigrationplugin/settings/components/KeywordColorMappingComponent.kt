@@ -10,6 +10,11 @@ import javax.swing.JPanel
 
 class KeywordColorMappingComponent {
     var keywordColorMapping = mutableMapOf<String, JBColor>()
+        set(value) {
+            field = value
+            // Ensure that the color labels are updated based on the loaded state (won't happen automatically)
+            updateColorLabels()
+        }
     private val colorLabels = mutableMapOf<String, JBLabel>()
 
     private val migratedComponent = createColorMappingSubComponent("MIGRATED")
@@ -47,7 +52,7 @@ class KeywordColorMappingComponent {
             .addComponent(unusedComponent).panel
     }
 
-    fun updateColorLabels() {
+    private fun updateColorLabels() {
         listOf("MIGRATED", "LATER", "UNUSED").forEach { subKeyword ->
             val colorLabel = colorLabels[subKeyword]
             colorLabel?.foreground = keywordColorMapping[subKeyword]

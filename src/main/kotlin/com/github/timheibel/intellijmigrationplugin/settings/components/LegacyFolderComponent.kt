@@ -18,11 +18,10 @@ class LegacyFolderComponent {
         }
 
     fun getComponent(): JComponent {
-        val component = FormBuilder.createFormBuilder()
+        configureLegacyFolderTextField()
+        return FormBuilder.createFormBuilder()
             .addLabeledComponent(JBLabel("Legacy folder: "), legacyFolderTextField, 1, false)
             .panel
-        configureLegacyFolderTextField()
-        return component
     }
 
     private fun configureLegacyFolderTextField() {
