@@ -1,5 +1,7 @@
 package com.github.timheibel.intellijmigrationplugin.settings
 
+import com.github.timheibel.intellijmigrationplugin.settings.converters.PairListConverter
+import com.github.timheibel.intellijmigrationplugin.settings.converters.JBColorConverter
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
@@ -20,7 +22,8 @@ internal class MigrationSettingsState : PersistentStateComponent<MigrationSettin
         "LATER" to JBColor(JBColor.RED, JBColor.RED),
         "UNUSED" to JBColor(JBColor.GRAY, JBColor.GRAY)
     )
-    var fileTypeCommentMapping: MutableMap<String, String> = mutableMapOf()
+    @OptionTag(converter = PairListConverter::class)
+    var fileTypeCommentMapping: MutableList<Pair<String, String>> = mutableListOf()
     var legacyFolderPath: String = ""
 
     override fun getState(): MigrationSettingsState {
