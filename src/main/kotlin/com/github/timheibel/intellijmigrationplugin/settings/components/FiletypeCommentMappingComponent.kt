@@ -8,7 +8,7 @@ import javax.swing.event.TableModelEvent
 import javax.swing.table.DefaultTableModel
 
 class FiletypeCommentMappingComponent {
-    var fileTypeCommentMapping = mutableMapOf<String, String>()
+    var fileTypeCommentMappingList = mutableListOf<Pair<String, String>>()
         set(value) {
             field = value
             initializeTableModelData()
@@ -45,24 +45,30 @@ class FiletypeCommentMappingComponent {
             val fileType = tableModel.getValueAt(i, 0) as String
             val commentType = tableModel.getValueAt(i, 1) as String
             if (fileType.isEmpty() && commentType.isEmpty()) {
-                tableModel.removeRow(i)
                 rowsToRemove.add(i)
             } else {
-                fileTypeCommentMapping[fileType] = commentType
+                // If index i exists in the list, set the value
+                if (i < fileTypeCommentMappingList.size) {
+                    fileTypeCommentMappingList[i] = Pair(fileType, commentType)
+                } else {
+                    // Create the index via add
+                    fileTypeCommentMappingList.add(Pair(fileType, commentType))
+                }
             }
         }
 
         rowsToRemove.forEach {
-            fileTypeCommentMapping.remove(tableModel.getValueAt(it, 0) as String)
+            fileTypeCommentMappingList.removeAt(it)
+            tableModel.removeRow(it)
         }
     }
+
     private fun initializeTableModelData() {
-        // Clear existing rows
         while (tableModel.rowCount > 0) {
             tableModel.removeRow(0)
         }
         // Add new rows based on the loaded data
-        fileTypeCommentMapping.forEach { (fileType, commentType) ->
+        fileTypeCommentMappingList.forEach { (fileType, commentType) ->
             tableModel.addRow(arrayOf(fileType, commentType))
         }
         // Add empty row for insertion

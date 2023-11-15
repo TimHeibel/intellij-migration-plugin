@@ -25,9 +25,12 @@ internal class MigrationsSettingsConfigurable : Configurable {
         val settings: MigrationSettingsState = MigrationSettingsState.instance
         val legacyFolderPathModified = settingsComponent?.legacyFolderComponent?.legacyFolderPath != settings.legacyFolderPath
         val keyWordColorMappingModified = settingsComponent?.keywordColorMappingComponent?.keywordColorMapping?.equals(settings.keywordColorMapping)?.not()
-        val filetypeCommentMappingModified = settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMapping?.equals(settings.fileTypeCommentMapping)?.not()
-        println("filetypeCommentMappingModified: ${filetypeCommentMappingModified}")
-        println("Mapping: ${settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMapping?.entries}")
+        val filetypeCommentMappingModified = settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMappingList?.equals(settings.fileTypeCommentMapping)?.not()
+        println("filetypeCommentMappingModified: $filetypeCommentMappingModified")
+        println("Mapping: ")
+        for ((first, second) in settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMappingList!!) {
+            println("Pair: ($first, $second)")
+        }
         return legacyFolderPathModified || filetypeCommentMappingModified!! || keyWordColorMappingModified!!
     }
 
@@ -37,8 +40,11 @@ internal class MigrationsSettingsConfigurable : Configurable {
         settings.keywordColorMapping =
             settingsComponent?.keywordColorMappingComponent?.keywordColorMapping?.toMutableMap() ?: mutableMapOf()
         settings.fileTypeCommentMapping =
-            settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMapping?.toMutableMap() ?: mutableMapOf()
-        println("set file type mapping to: ${settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMapping?.entries}")
+            settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMappingList?.toMutableList() ?: mutableListOf()
+        println("set file type mapping to: ")
+        for ((first, second) in settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMappingList!!) {
+            println("Pair: ($first, $second)")
+        }
     }
 
     override fun reset() {
@@ -47,8 +53,8 @@ internal class MigrationsSettingsConfigurable : Configurable {
         println("loaded settings")
         settingsComponent?.keywordColorMappingComponent?.keywordColorMapping =
             settings.keywordColorMapping.toMutableMap()
-        settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMapping =
-            settings.fileTypeCommentMapping.toMutableMap()
+        settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMappingList =
+            settings.fileTypeCommentMapping.toMutableList()
     }
 
     override fun disposeUIResources() {
