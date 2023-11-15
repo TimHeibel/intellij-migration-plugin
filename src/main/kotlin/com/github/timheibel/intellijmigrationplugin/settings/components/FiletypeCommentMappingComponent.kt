@@ -11,7 +11,7 @@ class FiletypeCommentMappingComponent {
     var fileTypeCommentMapping = mutableMapOf<String, String>()
         set(value) {
             field = value
-            updateTableModelData()
+            initializeTableModelData()
         }
     private val tableModel = DefaultTableModel(arrayOf(arrayOf("", "")), arrayOf("Filetype", "Comment Type"))
     private val table = JBTable(tableModel)
@@ -22,9 +22,6 @@ class FiletypeCommentMappingComponent {
         return FormBuilder.createFormBuilder()
             .addLabeledComponentFillVertically("Filetype-Comment mapping", tableScrollPane)
             .panel
-
-        configureTableModelListener()
-        return panel
     }
 
     private fun configureTableModelListener() {
@@ -58,5 +55,17 @@ class FiletypeCommentMappingComponent {
         rowsToRemove.forEach {
             fileTypeCommentMapping.remove(tableModel.getValueAt(it, 0) as String)
         }
+    }
+    private fun initializeTableModelData() {
+        // Clear existing rows
+        while (tableModel.rowCount > 0) {
+            tableModel.removeRow(0)
+        }
+        // Add new rows based on the loaded data
+        fileTypeCommentMapping.forEach { (fileType, commentType) ->
+            tableModel.addRow(arrayOf(fileType, commentType))
+        }
+        // Add empty row for insertion
+        tableModel.addRow(arrayOf("", ""))
     }
 }

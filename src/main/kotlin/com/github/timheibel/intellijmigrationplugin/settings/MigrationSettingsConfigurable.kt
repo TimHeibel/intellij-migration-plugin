@@ -27,6 +27,7 @@ internal class MigrationsSettingsConfigurable : Configurable {
         val keyWordColorMappingModified = settingsComponent?.keywordColorMappingComponent?.keywordColorMapping?.equals(settings.keywordColorMapping)?.not()
         val filetypeCommentMappingModified = settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMapping?.equals(settings.fileTypeCommentMapping)?.not()
         println("filetypeCommentMappingModified: ${filetypeCommentMappingModified}")
+        println("Mapping: ${settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMapping?.entries}")
         return legacyFolderPathModified || filetypeCommentMappingModified!! || keyWordColorMappingModified!!
     }
 
