@@ -7,17 +7,18 @@ import com.intellij.ui.components.JBLabel
 import com.intellij.util.ui.FormBuilder
 import javax.swing.JComponent
 
-class LegacyFolderComponent() {
+class LegacyFolderComponent {
 
-    val legacyFolderTextField = TextFieldWithBrowseButton()
+    private val legacyFolderTextField = TextFieldWithBrowseButton()
     private val descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
     var legacyFolderPath: String
         get() = legacyFolderTextField.text
         set(value) {
             legacyFolderTextField.text = value
         }
+
     fun getComponent(): JComponent {
-        val component =  FormBuilder.createFormBuilder()
+        val component = FormBuilder.createFormBuilder()
             .addLabeledComponent(JBLabel("Legacy folder: "), legacyFolderTextField, 1, false)
             .panel
         configureLegacyFolderTextField()

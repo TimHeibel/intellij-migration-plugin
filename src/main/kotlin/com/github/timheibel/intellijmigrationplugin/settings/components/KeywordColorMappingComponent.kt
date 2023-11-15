@@ -1,32 +1,36 @@
 package com.github.timheibel.intellijmigrationplugin.settings.components
 
-import com.github.timheibel.intellijmigrationplugin.settings.MigrationSettingsComponent
 import com.intellij.ui.ColorPicker
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
+import com.intellij.util.ui.FormBuilder
 import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.JPanel
 
-class KeywordColorMappingComponent(private val keyword: String, private val settingsComponent: MigrationSettingsComponent) {
-    private val keywordColorMapping = settingsComponent.keywordColorMapping
-    private val colorLabels = settingsComponent.colorLabels
+class KeywordColorMappingComponent {
+    var keywordColorMapping = mutableMapOf<String, JBColor>()
+    private val colorLabels = mutableMapOf<String, JBLabel>()
 
-    fun getComponent(): JComponent {
+    private val migratedComponent = createColorMappingSubComponent("MIGRATED")
+    private val laterComponent = createColorMappingSubComponent("LATER")
+    private val unusedComponent = createColorMappingSubComponent("UNUSED")
+
+    private fun createColorMappingSubComponent(subKeyword: String): JComponent {
         val colorMappingPanel = JPanel()
-        val colorLabel = JBLabel(keyword)
+        val colorLabel = JBLabel(subKeyword)
 
-        colorLabel.foreground = keywordColorMapping[keyword]
-        colorLabels[keyword] = colorLabel
+        colorLabel.foreground = keywordColorMapping[subKeyword]
+        colorLabels[subKeyword] = colorLabel
 
         val selectColorButton = JButton("Select Color")
         selectColorButton.addActionListener {
             val newColor = ColorPicker.showDialog(
-                colorMappingPanel, "Choose Color for $keyword", keywordColorMapping[keyword], false, null, false
+                colorMappingPanel, "Choose Color for $subKeyword", keywordColorMapping[subKeyword], false, null, false
             )
             if (newColor != null) {
-                keywordColorMapping[keyword] = JBColor(newColor, newColor)
-                colorLabel.foreground = keywordColorMapping[keyword]
+                keywordColorMapping[subKeyword] = JBColor(newColor, newColor)
+                colorLabel.foreground = keywordColorMapping[subKeyword]
             }
         }
 
@@ -36,11 +40,17 @@ class KeywordColorMappingComponent(private val keyword: String, private val sett
         return colorMappingPanel
     }
 
+    fun getComponent(): JComponent {
+        return FormBuilder.createFormBuilder()
+            .addComponent(migratedComponent)
+            .addComponent(laterComponent)
+            .addComponent(unusedComponent).panel
+    }
 
     fun updateColorLabels() {
-        for (keyword in keywordColorMapping.keys) {
-            val colorLabel = colorLabels[keyword]
-            colorLabel?.foreground = keywordColorMapping[keyword]
+        listOf("MIGRATED", "LATER", "UNUSED").forEach { subKeyword ->
+            val colorLabel = colorLabels[subKeyword]
+            colorLabel?.foreground = keywordColorMapping[subKeyword]
             colorLabel?.repaint()
         }
     }

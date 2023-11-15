@@ -22,13 +22,13 @@ internal class MigrationsSettingsConfigurable : Configurable {
 
     override fun isModified(): Boolean {
         val settings: MigrationSettingsState = MigrationSettingsState.instance
-        return settingsComponent?.legacyFolderComponent?.legacyFolderPath != settings.legacyFolderPath || settingsComponent?.keywordColorMapping?.entries != settings.keywordColorMapping.entries || settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMapping?.entries != settings.fileTypeCommentMapping.entries
+        return settingsComponent?.legacyFolderComponent?.legacyFolderPath != settings.legacyFolderPath || settingsComponent?.keywordColorMappingComponent?.keywordColorMapping?.entries != settings.keywordColorMapping.entries || settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMapping?.entries != settings.fileTypeCommentMapping.entries
     }
 
     override fun apply() {
         val settings: MigrationSettingsState = MigrationSettingsState.instance
         settings.legacyFolderPath = settingsComponent?.legacyFolderComponent?.legacyFolderPath ?: ""
-        settings.keywordColorMapping = settingsComponent?.keywordColorMapping ?: mutableMapOf()
+        settings.keywordColorMapping = settingsComponent?.keywordColorMappingComponent?.keywordColorMapping ?: mutableMapOf()
         settings.fileTypeCommentMapping =
             settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMapping ?: mutableMapOf()
     }
@@ -36,10 +36,10 @@ internal class MigrationsSettingsConfigurable : Configurable {
     override fun reset() {
         val settings: MigrationSettingsState = MigrationSettingsState.instance
         settingsComponent?.legacyFolderComponent?.legacyFolderPath = settings.legacyFolderPath
-        settingsComponent?.keywordColorMapping = settings.keywordColorMapping
+        settingsComponent?.keywordColorMappingComponent?.keywordColorMapping= settings.keywordColorMapping
         settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMapping = settings.fileTypeCommentMapping
         // Ensure that the color labels are updated based on the loaded state (won't happen automatically)
-        settingsComponent?.updateColorLabels()
+        settingsComponent?.keywordColorMappingComponent?.updateColorLabels()
     }
 
     override fun disposeUIResources() {

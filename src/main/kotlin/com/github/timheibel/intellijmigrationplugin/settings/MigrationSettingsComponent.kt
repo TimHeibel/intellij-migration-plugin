@@ -3,42 +3,28 @@ package com.github.timheibel.intellijmigrationplugin.settings
 import com.github.timheibel.intellijmigrationplugin.settings.components.FiletypeCommentMappingComponent
 import com.github.timheibel.intellijmigrationplugin.settings.components.KeywordColorMappingComponent
 import com.github.timheibel.intellijmigrationplugin.settings.components.LegacyFolderComponent
-import com.intellij.ui.JBColor
-import com.intellij.ui.components.JBLabel
 import com.intellij.util.ui.FormBuilder
 import javax.swing.JPanel
 
+/**
+ * Represents the settings component for the migration plugin
+ * This component includes sections for specifying the legacy folder, keyword color mapping,
+ * and filetype comment mapping.
+ */
 class MigrationSettingsComponent {
-    val panel: JPanel
+    internal val panel: JPanel
 
-    var keywordColorMapping = mutableMapOf<String, JBColor>()
-    val colorLabels = mutableMapOf<String, JBLabel>()
-    // new
+    // Components
     internal val legacyFolderComponent = LegacyFolderComponent()
+    internal val keywordColorMappingComponent = KeywordColorMappingComponent()
     internal val filetypeCommentMappingComponent = FiletypeCommentMappingComponent()
 
     init {
-        panel = createMainPanel()
-    }
-
-    private fun createMainPanel(): JPanel {
-        return FormBuilder.createFormBuilder()
+        panel = FormBuilder.createFormBuilder()
             .addComponent(legacyFolderComponent.getComponent())
             .addSeparator(2)
-            .addComponent(KeywordColorMappingComponent("MIGRATED", this).getComponent())
-            .addComponent(KeywordColorMappingComponent("LATER", this).getComponent())
-            .addComponent(KeywordColorMappingComponent("UNUSED", this).getComponent())
-            .addComponent(filetypeCommentMappingComponent.getComponent())
-            .panel
+            .addComponent(keywordColorMappingComponent.getComponent())
+            .addSeparator(2)
+            .addComponent(filetypeCommentMappingComponent.getComponent()).panel
     }
-
-
-    fun updateColorLabels() {
-        for (keyword in keywordColorMapping.keys) {
-            val colorLabel = colorLabels[keyword]
-            colorLabel?.foreground = keywordColorMapping[keyword]
-            colorLabel?.repaint()
-        }
-    }
-
 }
