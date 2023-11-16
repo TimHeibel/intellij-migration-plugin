@@ -18,10 +18,15 @@ class FiletypeCommentMappingComponent {
     private val tableScrollPane = JBScrollPane(table)
 
     fun getComponent(): JPanel {
+        configureTableDesign()
         configureTableModelListener()
         return FormBuilder.createFormBuilder()
             .addLabeledComponentFillVertically("Filetype-Comment mapping", tableScrollPane)
             .panel
+    }
+
+    private fun configureTableDesign() {
+       table.isStriped = true
     }
 
     private fun configureTableModelListener() {
