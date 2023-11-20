@@ -23,7 +23,7 @@ internal class MigrationsSettingsConfigurable : Configurable {
     override fun isModified(): Boolean {
         val settings: MigrationSettingsState = MigrationSettingsState.instance
         val legacyFolderPathModified = settingsComponent?.legacyFolderComponent?.legacyFolderPath != settings.legacyFolderPath
-        val keyWordColorMappingModified = settingsComponent?.keywordColorMappingComponent?.keywordColorMapping?.equals(settings.keywordColorMapping)?.not()
+        val keyWordColorMappingModified = settingsComponent?.keywordColorMappingComponent?.keywordColorMappingList?.equals(settings.keywordColorMapping)?.not()
         val filetypeCommentMappingModified = settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMappingList?.equals(settings.fileTypeCommentMapping)?.not()
         return legacyFolderPathModified || filetypeCommentMappingModified!! || keyWordColorMappingModified!!
     }
@@ -31,14 +31,14 @@ internal class MigrationsSettingsConfigurable : Configurable {
     override fun apply() {
         val settings: MigrationSettingsState = MigrationSettingsState.instance
         settings.legacyFolderPath = settingsComponent?.legacyFolderComponent?.legacyFolderPath ?: ""
-        settings.keywordColorMapping = settingsComponent?.keywordColorMappingComponent?.keywordColorMapping?.toMutableMap() ?: mutableMapOf()
+        settings.keywordColorMapping = settingsComponent?.keywordColorMappingComponent?.keywordColorMappingList?.toMutableList() ?: mutableListOf()
         settings.fileTypeCommentMapping = settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMappingList?.toMutableList() ?: mutableListOf()
     }
 
     override fun reset() {
         val settings: MigrationSettingsState = MigrationSettingsState.instance
         settingsComponent?.legacyFolderComponent?.legacyFolderPath = settings.legacyFolderPath
-        settingsComponent?.keywordColorMappingComponent?.keywordColorMapping = settings.keywordColorMapping.toMutableMap()
+        settingsComponent?.keywordColorMappingComponent?.keywordColorMappingList = settings.keywordColorMapping.toMutableList()
         settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMappingList = settings.fileTypeCommentMapping.toMutableList()
     }
 

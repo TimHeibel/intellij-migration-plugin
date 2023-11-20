@@ -17,11 +17,12 @@ import com.intellij.util.xmlb.annotations.OptionTag
 @State(name = "org.intellij.sdk.settings.AppSettingsState", storages = [Storage("SettingsMigrationHelper.xml")])
 internal class MigrationSettingsState : PersistentStateComponent<MigrationSettingsState?> {
     @OptionTag(converter = JBColorConverter::class)
-    var keywordColorMapping: MutableMap<String, JBColor> = mutableMapOf(
+    var keywordColorMapping: MutableList<Pair<String, JBColor>> = mutableListOf(
         "MIGRATED" to JBColor(JBColor.YELLOW, JBColor.YELLOW),
         "LATER" to JBColor(JBColor.RED, JBColor.RED),
         "UNUSED" to JBColor(JBColor.GRAY, JBColor.GRAY)
     )
+
     @OptionTag(converter = PairListConverter::class)
     var fileTypeCommentMapping: MutableList<Pair<String, String>> = mutableListOf()
     var legacyFolderPath: String = ""

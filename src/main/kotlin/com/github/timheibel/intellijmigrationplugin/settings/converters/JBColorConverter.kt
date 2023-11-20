@@ -1,16 +1,15 @@
 package com.github.timheibel.intellijmigrationplugin.settings.converters
-
 import com.intellij.ui.JBColor
 import com.intellij.util.xmlb.Converter
 import org.jetbrains.annotations.NotNull
 
 /**
- * Converter for serializing and deserializing a map of string-JBColor pairs.
+ * Converter for serializing and deserializing a list of pairs containing a string and JBColor.
  */
-internal class JBColorConverter : Converter<MutableMap<String, JBColor>?>() {
-    override fun fromString(@NotNull value: String): MutableMap<String, JBColor> {
+internal class JBColorConverter : Converter<MutableList<Pair<String, JBColor>>?>() {
+    override fun fromString(@NotNull value: String): MutableList<Pair<String, JBColor>> {
         val entries = value.split(";")
-        val map = mutableMapOf<String, JBColor>()
+        val list = mutableListOf<Pair<String, JBColor>>()
 
         for (entry in entries) {
             val parts = entry.split(":")
@@ -19,14 +18,14 @@ internal class JBColorConverter : Converter<MutableMap<String, JBColor>?>() {
             val regularRGB = colors[0].toInt()
             val darkRGB = colors[1].toInt()
 
-            map[key] = JBColor(regularRGB, darkRGB)
+            list.add(key to JBColor(regularRGB, darkRGB))
         }
 
-        return map
+        return list
     }
 
-    override fun toString(value: MutableMap<String, JBColor>): String {
-        val entries = value.entries.joinToString(";") { (key, jbColor) ->
+    override fun toString(value: MutableList<Pair<String, JBColor>>): String {
+        val entries = value.joinToString(";") { (key, jbColor) ->
             "$key:${jbColor.rgb},${jbColor.darkVariant.rgb}"
         }
 
