@@ -15,4 +15,15 @@
     <applicationListeners>
         <listener class="com.github.timheibel.intellijmigrationplugin.listeners.MyApplicationActivationListener" topic="com.intellij.openapi.application.ApplicationActivationListener"/>
     </applicationListeners>
+
+    <actions>
+        <group
+            id = "com.github.timheibel.intellijmigrationplugin.AnnotationAction.Group"
+            text = "Annotations"
+            popup = "true">
+            <add-to-group
+                    group-id="EditorPopupMenu"
+                    anchor= "last"/>
+        </group>
+    </actions>
 </idea-plugin>
