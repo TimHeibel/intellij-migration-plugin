@@ -5,4 +5,15 @@
     <vendor>timheibel</vendor>
 
     <depends>com.intellij.modules.platform</depends>
+
+    <actions>
+        <group
+            id = "com.github.timheibel.intellijmigrationplugin.AnnotationAction.Group"
+            text = "Annotations"
+            popup = "true">
+            <add-to-group
+                    group-id="EditorPopupMenu"
+                    anchor= "last"/>
+        </group>
+    </actions>
 </idea-plugin>
