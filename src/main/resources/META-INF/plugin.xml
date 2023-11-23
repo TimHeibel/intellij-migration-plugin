@@ -25,5 +25,26 @@
                     group-id="EditorPopupMenu"
                     anchor= "last"/>
         </group>
+        <action
+            id = "com.github.timheibel.intellijmigrationplugin.AnnotationAction.MIGRATED"
+            class = "com.github.timheibel.intellijmigrationplugin.actions.annotation.MIGRATEDAnnotationAction"
+            text = "MIGRATED"
+            description = "Annotated the selected Code-Fragment as Migrated">
+            <add-to-group group-id="com.github.timheibel.intellijmigrationplugin.AnnotationAction.Group"/>
+        </action>
+        <action
+                id = "com.github.timheibel.intellijmigrationplugin.AnnotationAction.LATER"
+                class = "com.github.timheibel.intellijmigrationplugin.actions.annotation.LATERAnnotationAction"
+                text = "LATER"
+                description = "Annotated the selected Code-Fragment to be migrated at a later date">
+            <add-to-group group-id="com.github.timheibel.intellijmigrationplugin.AnnotationAction.Group"/>
+        </action>
+        <action
+                id = "com.github.timheibel.intellijmigrationplugin.AnnotationAction.UNUSED"
+                class = "com.github.timheibel.intellijmigrationplugin.actions.annotation.UNUSEDAnnotationAction"
+                text = "UNUSED"
+                description = "Annotated the selected Code-Fragment as Unused">
+            <add-to-group group-id="com.github.timheibel.intellijmigrationplugin.AnnotationAction.Group"/>
+        </action>
     </actions>
 </idea-plugin>
