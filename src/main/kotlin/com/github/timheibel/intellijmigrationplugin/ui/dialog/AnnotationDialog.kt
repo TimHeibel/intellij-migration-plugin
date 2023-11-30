@@ -11,7 +11,7 @@ class AnnotationDialog : DialogWrapper(true) {
 
     val annotationType : AnnotationType
         get() = data.annotationType
-    val annotationDialog : String
+    val annotationComment : String
         get() = data.annotationComment
 
     init {
