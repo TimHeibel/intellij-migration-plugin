@@ -13,7 +13,7 @@ import com.intellij.openapi.command.WriteCommandAction
  * @property annotationType declares the type of Annotation to be set.
  * @property actionPerformed placement of Annotations
  */
-abstract class AnnotationAction : AnAction() {
+abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
 
     abstract val annotationType : AnnotationType;
     override fun actionPerformed(event: AnActionEvent) {
@@ -32,7 +32,8 @@ abstract class AnnotationAction : AnAction() {
 
         WriteCommandAction.runWriteCommandAction(project) {
             document.insertString(document.getLineEndOffset(endSelectionLine), "\n//END\n")
-            document.insertString(document.getLineStartOffset(startSelectionLine), "//${annotationType.name}\n")
+            document.insertString(document.getLineStartOffset(startSelectionLine),
+                "//${annotationType.name} $addInfo\n")
         }
 
         primaryCaret.removeSelection()
@@ -59,3 +60,10 @@ class LATERAnnotationAction(override val annotationType: AnnotationType = Annota
  */
 class UNUSEDAnnotationAction(override val annotationType: AnnotationType = AnnotationType.UNUSED)
     : AnnotationAction()
+
+/**
+ * Sets Annotation From User-Dialog
+ * @see AnnotationAction
+ */
+class DIALOGAnnotationAction(override val annotationType: AnnotationType, annotationInformation: String)
+    : AnnotationAction(annotationInformation)
