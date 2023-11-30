@@ -36,5 +36,14 @@
                 description = "Annotated the selected Code-Fragment as Unused">
             <add-to-group group-id="com.github.timheibel.intellijmigrationplugin.AnnotationAction.Group"/>
         </action>
+        <action
+                id = "com.github.timheibel.intellijmigrationplugin.actions.annotation.DialogAction"
+                class = "com.github.timheibel.intellijmigrationplugin.actions.annotation.DialogAction"
+                text = "Open Annotation Dialog"
+                description = "Opens Dialog to enter Annotation-Type and additional informations">
+            <keyboard-shortcut
+                    keymap="$default"
+                    first-keystroke="control alt Q"/>
+        </action>
     </actions>
 </idea-plugin>
