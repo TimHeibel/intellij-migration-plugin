@@ -15,6 +15,16 @@ import com.intellij.openapi.command.WriteCommandAction
  */
 abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
 
+    override fun update(event: AnActionEvent) {
+
+        val project = event.getData(CommonDataKeys.PROJECT)
+        val editor = event.getData(CommonDataKeys.EDITOR)
+
+        event.presentation.setEnabledAndVisible(project != null
+                && editor != null
+                && editor.selectionModel.hasSelection(false))
+    }
+
     abstract val annotationType : AnnotationType;
     override fun actionPerformed(event: AnActionEvent) {
 
