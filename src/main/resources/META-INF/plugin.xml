@@ -10,6 +10,8 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow factoryClass="com.github.timheibel.intellijmigrationplugin.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
+        <toolWindow factoryClass="com.github.timheibel.intellijmigrationplugin.statistics.IDEWindow" id="Statistics"/>
+
     </extensions>
 
     <applicationListeners>
