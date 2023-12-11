@@ -1,4 +1,4 @@
-package com.github.timheibel.intellijmigrationplugin.settings.converters
+package intellijmigrationplugin.settings.converters
 import com.intellij.ui.JBColor
 import com.intellij.util.xmlb.Converter
 import org.jetbrains.annotations.NotNull

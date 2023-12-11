@@ -1,4 +1,4 @@
-package com.github.timheibel.intellijmigrationplugin.settings.components
+package intellijmigrationplugin.settings.components
 
 import com.intellij.openapi.fileChooser.FileChooser
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory

@@ -1,9 +1,10 @@
-package com.github.timheibel.intellijmigrationplugin.settings
+package intellijmigrationplugin.settings
 
-import com.github.timheibel.intellijmigrationplugin.settings.components.FiletypeCommentMappingComponent
-import com.github.timheibel.intellijmigrationplugin.settings.components.KeywordColorMappingComponent
-import com.github.timheibel.intellijmigrationplugin.settings.components.LegacyFolderComponent
 import com.intellij.util.ui.FormBuilder
+import intellijmigrationplugin.settings.components.ExcludedFoldersComponent
+import intellijmigrationplugin.settings.components.FiletypeCommentMappingComponent
+import intellijmigrationplugin.settings.components.KeywordColorMappingComponent
+import intellijmigrationplugin.settings.components.LegacyFolderComponent
 import javax.swing.JPanel
 
 /**
@@ -18,9 +19,12 @@ class MigrationSettingsComponent {
     internal val legacyFolderComponent = LegacyFolderComponent()
     internal val keywordColorMappingComponent = KeywordColorMappingComponent()
     internal val filetypeCommentMappingComponent = FiletypeCommentMappingComponent()
+    internal val excludedFolderComponent = ExcludedFoldersComponent()
 
     init {
         panel = FormBuilder.createFormBuilder()
+            .addComponent(excludedFolderComponent.getComponent())
+            .addSeparator(2)
             .addComponent(legacyFolderComponent.getComponent())
             .addSeparator(2)
             .addComponent(keywordColorMappingComponent.getComponent())

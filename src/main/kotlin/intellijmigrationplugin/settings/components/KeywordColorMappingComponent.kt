@@ -1,4 +1,4 @@
-package com.github.timheibel.intellijmigrationplugin.settings.components
+package intellijmigrationplugin.settings.components
 import com.intellij.ui.ColorPicker
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel

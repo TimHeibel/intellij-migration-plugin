@@ -1,4 +1,4 @@
-package com.github.timheibel.intellijmigrationplugin.settings.components
+package intellijmigrationplugin.settings.components
 
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.table.JBTable
