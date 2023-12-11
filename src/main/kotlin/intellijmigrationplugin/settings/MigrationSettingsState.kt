@@ -1,7 +1,5 @@
-package com.github.timheibel.intellijmigrationplugin.settings
+package intellijmigrationplugin.settings
 
-import com.github.timheibel.intellijmigrationplugin.settings.converters.PairListConverter
-import com.github.timheibel.intellijmigrationplugin.settings.converters.JBColorConverter
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
@@ -9,6 +7,8 @@ import com.intellij.openapi.components.Storage
 import com.intellij.ui.JBColor
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.OptionTag
+import intellijmigrationplugin.settings.converters.JBColorConverter
+import intellijmigrationplugin.settings.converters.PairListConverter
 
 /**
  * State component for migration settings.
@@ -26,6 +26,7 @@ internal class MigrationSettingsState : PersistentStateComponent<MigrationSettin
     @OptionTag(converter = PairListConverter::class)
     var fileTypeCommentMapping: MutableList<Pair<String, String>> = mutableListOf()
     var legacyFolderPath: String = ""
+    var excludedFoldersList: MutableList<String> = mutableListOf()
 
     override fun getState(): MigrationSettingsState {
         return this
