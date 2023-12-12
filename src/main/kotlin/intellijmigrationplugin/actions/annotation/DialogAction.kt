@@ -1,6 +1,7 @@
-package com.github.timheibel.intellijmigrationplugin.actions.annotation
+package intellijmigrationplugin.actions.annotation
 
-import com.github.timheibel.intellijmigrationplugin.ui.dialog.AnnotationDialog
+import intellijmigrationplugin.ui.dialogs.AnnotationDialog
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -26,5 +27,9 @@ class DialogAction : AnAction() {
             val annotationAction = DIALOGAnnotationAction(dialog.annotationType, dialog.annotationComment)
             annotationAction.actionPerformed(event)
         }
+    }
+
+    override fun getActionUpdateThread(): ActionUpdateThread {
+        return ActionUpdateThread.BGT
     }
 }

@@ -1,10 +1,9 @@
-package com.github.timheibel.intellijmigrationplugin.actions.annotation
+package intellijmigrationplugin.actions.annotation
 
-import com.github.timheibel.intellijmigrationplugin.annotationModel.AnnotationType
-import com.intellij.openapi.actionSystem.AnAction
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.CommonDataKeys
+import intellijmigrationplugin.annotationModel.AnnotationType
+import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.fileTypes.FileTypeRegistry
 
 
 /**
@@ -40,14 +39,38 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
         val startSelectionLine = document.getLineNumber(startSelection)
         val endSelectionLine = document.getLineNumber(endSelection)
 
+        val commentStart : String = getCommentTypeByEvent(event)
+
         WriteCommandAction.runWriteCommandAction(project) {
-            document.insertString(document.getLineEndOffset(endSelectionLine), "\n//END\n")
+            document.insertString(document.getLineEndOffset(endSelectionLine), "\n${commentStart}END\n")
             document.insertString(document.getLineStartOffset(startSelectionLine),
-                "//${annotationType.name} $addInfo\n")
+                "$commentStart${annotationType.name} $addInfo\n")
         }
 
-        primaryCaret.removeSelection()
     }
+
+    private fun getCommentTypeByEvent(event: AnActionEvent) : String {
+
+        val default = "//"
+
+        val vFile = event.getData(PlatformCoreDataKeys.VIRTUAL_FILE)
+            ?: return default
+
+        val fType = FileTypeRegistry.getInstance().getFileTypeByFileName(vFile.name)
+
+        //TODO: Replace Strings with generic input
+        return when (fType.name) {
+            "Haskell" -> "--"
+            else -> default
+        }
+    }
+
+    override fun getActionUpdateThread(): ActionUpdateThread {
+
+        return ActionUpdateThread.BGT
+
+    }
+
 }
 
 /**

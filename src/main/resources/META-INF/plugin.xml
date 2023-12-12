@@ -8,7 +8,7 @@
 
     <actions>
         <group
-            id = "com.github.timheibel.intellijmigrationplugin.AnnotationAction.Group"
+            id = "intellijmigrationplugin.AnnotationAction.Group"
             text = "Annotations"
             popup = "true">
             <add-to-group
@@ -16,29 +16,29 @@
                     anchor= "last"/>
         </group>
         <action
-            id = "com.github.timheibel.intellijmigrationplugin.AnnotationAction.MIGRATED"
-            class = "com.github.timheibel.intellijmigrationplugin.actions.annotation.MIGRATEDAnnotationAction"
+            id = "intellijmigrationplugin.AnnotationAction.MIGRATED"
+            class = "intellijmigrationplugin.actions.annotation.MIGRATEDAnnotationAction"
             text = "MIGRATED"
             description = "Annotated the selected Code-Fragment as Migrated">
-            <add-to-group group-id="com.github.timheibel.intellijmigrationplugin.AnnotationAction.Group"/>
+            <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group"/>
         </action>
         <action
-                id = "com.github.timheibel.intellijmigrationplugin.AnnotationAction.LATER"
-                class = "com.github.timheibel.intellijmigrationplugin.actions.annotation.LATERAnnotationAction"
+                id = "intellijmigrationplugin.AnnotationAction.LATER"
+                class = "intellijmigrationplugin.actions.annotation.LATERAnnotationAction"
                 text = "LATER"
                 description = "Annotated the selected Code-Fragment to be migrated at a later date">
-            <add-to-group group-id="com.github.timheibel.intellijmigrationplugin.AnnotationAction.Group"/>
+            <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group"/>
         </action>
         <action
                 id = "com.github.timheibel.intellijmigrationplugin.AnnotationAction.UNUSED"
-                class = "com.github.timheibel.intellijmigrationplugin.actions.annotation.UNUSEDAnnotationAction"
+                class = "intellijmigrationplugin.actions.annotation.UNUSEDAnnotationAction"
                 text = "UNUSED"
                 description = "Annotated the selected Code-Fragment as Unused">
-            <add-to-group group-id="com.github.timheibel.intellijmigrationplugin.AnnotationAction.Group"/>
+            <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group"/>
         </action>
         <action
-                id = "com.github.timheibel.intellijmigrationplugin.actions.annotation.DialogAction"
-                class = "com.github.timheibel.intellijmigrationplugin.actions.annotation.DialogAction"
+                id = "intellijmigrationplugin.actions.annotation.DialogAction"
+                class = "intellijmigrationplugin.actions.annotation.DialogAction"
                 text = "Open Annotation Dialog"
                 description = "Opens Dialog to enter Annotation-Type and additional informations">
             <keyboard-shortcut

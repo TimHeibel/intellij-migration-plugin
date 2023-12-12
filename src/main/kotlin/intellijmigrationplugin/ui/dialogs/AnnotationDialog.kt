@@ -1,6 +1,6 @@
-package com.github.timheibel.intellijmigrationplugin.ui.dialog
+package intellijmigrationplugin.ui.dialogs
 
-import com.github.timheibel.intellijmigrationplugin.annotationModel.AnnotationType
+import intellijmigrationplugin.annotationModel.AnnotationType
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.dsl.builder.*
 import javax.swing.JComponent
