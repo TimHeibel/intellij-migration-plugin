@@ -43,7 +43,7 @@
                 description = "Opens Dialog to enter Annotation-Type and additional informations">
             <keyboard-shortcut
                     keymap="$default"
-                    first-keystroke="control alt Q"/>
+                    first-keystroke="control alt W"/>
         </action>
     </actions>
 </idea-plugin>
