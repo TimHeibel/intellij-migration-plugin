@@ -30,7 +30,7 @@
             <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group"/>
         </action>
         <action
-                id = "com.github.timheibel.intellijmigrationplugin.AnnotationAction.UNUSED"
+                id = "intellijmigrationplugin.AnnotationAction.UNUSED"
                 class = "intellijmigrationplugin.actions.annotation.UNUSEDAnnotationAction"
                 text = "UNUSED"
                 description = "Annotated the selected Code-Fragment as Unused">
