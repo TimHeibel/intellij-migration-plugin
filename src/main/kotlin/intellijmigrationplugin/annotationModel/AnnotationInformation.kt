@@ -2,25 +2,24 @@ package intellijmigrationplugin.annotationModel
 
 import java.awt.Color
 
-class AnnotationInformation {
+class AnnotationInformation private constructor() {
+
+    companion object {
+        var instance: AnnotationInformation? = null
+            private set
+            get() {
+                if (field == null) {
+                    field = AnnotationInformation()
+                }
+                return field!!
+            }
+    }
 
 
-    private var instance: AnnotationInformation? = null
     val annotationFiles: HashMap<String, AnnotationFile> = HashMap()
     var legacyFolerPath: String = ""
     val markerColorMapping: HashMap<AnnotationType, Color> = HashMap()
     val commentTypeMapping: HashMap<String, String> = HashMap()
-
-    private constructor() {
-
-    }
-
-    public fun getInstance(): AnnotationInformation {
-        if (instance == null) {
-            instance = AnnotationInformation()
-        }
-        return instance!!
-    }
 
 
     fun getAnnotationFile(name: String): AnnotationFile {
