@@ -45,5 +45,12 @@
                     keymap="$default"
                     first-keystroke="control alt W"/>
         </action>
+        <action
+                id = "intellijmigrationplugin.actions.annotation.RemovalAction"
+                class = "intellijmigrationplugin.actions.annotation.AnnotationRemovalAction"
+                text = "Remove Annotations"
+                description = "Remove annotations in the given code-segment">
+            <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group"/>
+        </action>
     </actions>
 </idea-plugin>
