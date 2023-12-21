@@ -51,6 +51,9 @@
                 text = "Remove Annotations"
                 description = "Remove annotations in the given code-segment">
             <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group"/>
+            <keyboard-shortcut
+                    keymap="$default"
+                    first-keystroke="control alt E"/>
         </action>
     </actions>
 </idea-plugin>
