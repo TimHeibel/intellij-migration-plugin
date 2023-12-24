@@ -9,9 +9,10 @@ import com.intellij.ui.components.JBLabel
 import com.intellij.util.ui.FormBuilder
 import javax.swing.JComponent
 
-class LegacyFolderComponent (private val project: Project) {
+class LegacyFolderComponent(private val project: Project) {
     private val legacyFolderTextField = TextFieldWithBrowseButton()
     private val descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
+
     var legacyFolderPath: String
         get() = legacyFolderTextField.text
         set(value) {
@@ -27,6 +28,7 @@ class LegacyFolderComponent (private val project: Project) {
 
     private fun configureLegacyFolderTextField() {
         legacyFolderTextField.emptyText.setText("Optional")
+
         legacyFolderTextField.addActionListener { _ ->
             val chosenFiles = FileChooser.chooseFiles(descriptor, project, null)
             if (chosenFiles.isNotEmpty() && chosenFiles[0] != null) {
