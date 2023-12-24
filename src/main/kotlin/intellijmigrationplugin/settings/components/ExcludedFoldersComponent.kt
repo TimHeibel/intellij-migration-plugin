@@ -14,19 +14,22 @@ class ExcludedFoldersComponent(private val project: Project) {
 
     var excludedFoldersListModel = CollectionListModel<String>()
     private val excludedFoldersList = JBList(excludedFoldersListModel)
-    private val descriptor = FileChooserDescriptorFactory.createMultipleFoldersDescriptor()
+    private val descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor().apply {
+        title = "Choose Subfolder"
+        description = "Select a subfolder of the project"
+        withTreeRootVisible(false)
+        isTreeRootVisible
+    }
+
 
     fun getComponent(): JComponent {
         configureExcludedFoldersList()
 
-        val decorator = ToolbarDecorator.createDecorator(excludedFoldersList)
-            .setAddAction { addFolder() }
-            .setRemoveAction { removeSelectedFolders() }
-            .disableUpDownActions()
+        val decorator = ToolbarDecorator.createDecorator(excludedFoldersList).setAddAction { addFolder() }
+            .setRemoveAction { removeSelectedFolders() }.disableUpDownActions()
 
         return FormBuilder.createFormBuilder()
-            .addLabeledComponent(JBLabel("Excluded folders: "), decorator.createPanel(), 1, true)
-            .panel
+            .addLabeledComponent(JBLabel("Excluded folders: "), decorator.createPanel(), 1, true).panel
     }
 
     private fun configureExcludedFoldersList() {
