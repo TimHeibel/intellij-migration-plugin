@@ -1,14 +1,15 @@
 package intellijmigrationplugin.settings.components
 
+import com.intellij.openapi.project.Project
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.table.JBTable
 import javax.swing.JPanel
 import javax.swing.table.DefaultTableModel
 
-class FiletypeCommentMappingComponent {
+class FiletypeCommentMappingComponent(private val project: Project) {
 
-    private val tableModel = DefaultTableModel(arrayOf(arrayOf("", "")), arrayOf("Filetype", "Comment Type"))
-    private val table = JBTable(tableModel)
+    var tableModel = DefaultTableModel(arrayOf(arrayOf("", "")), arrayOf("Filetype", "Comment Type"))
+    var table = JBTable(tableModel)
 
     fun getComponent(): JPanel {
         configureTableDesign()
@@ -21,6 +22,7 @@ class FiletypeCommentMappingComponent {
     }
 
     private fun configureTableDesign() {
+        table.emptyText.setText("Optional")
         table.isStriped = true
     }
 
@@ -38,5 +40,12 @@ class FiletypeCommentMappingComponent {
     private fun removeSelectedRows() {
         tableModel.removeRow(table.selectedRow)
         tableModel.fireTableDataChanged()
+    }
+
+    fun initializeTableData(mapping : MutableList<Pair<String,String>>){
+        tableModel.removeRow(0)
+        for (pair in mapping){
+            tableModel.addRow(arrayOf(pair.first, pair.second))
+        }
     }
 }

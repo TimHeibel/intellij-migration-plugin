@@ -16,13 +16,13 @@ import javax.swing.JPanel
  */
 class MigrationSettingsComponent {
     internal val panel: JPanel
-    internal val project = ProjectManager.getInstance().openProjects[0]
+    private val project = ProjectManager.getInstance().openProjects[0]
 
     // Components
     internal val legacyFolderComponent = LegacyFolderComponent(project)
-    internal val keywordColorMappingComponent = KeywordColorMappingComponent()
-    internal val filetypeCommentMappingComponent = FiletypeCommentMappingComponent()
     internal val excludedFolderComponent = ExcludedFoldersComponent(project)
+    internal val keywordColorMappingComponent = KeywordColorMappingComponent()
+    internal val filetypeCommentMappingComponent = FiletypeCommentMappingComponent(project)
 
     init {
         panel = panel {
@@ -37,6 +37,10 @@ class MigrationSettingsComponent {
             separator().rowComment("Filetype Comment Mapping")
             row {
                 scrollCell(filetypeCommentMappingComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+            }
+            separator().rowComment("Keyword color mapping")
+            row{
+                scrollCell(keywordColorMappingComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
             }
 
         }
