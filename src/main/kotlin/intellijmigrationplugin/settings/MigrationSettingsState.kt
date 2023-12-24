@@ -16,6 +16,9 @@ import intellijmigrationplugin.settings.converters.PairListConverter
  */
 @State(name = "org.intellij.sdk.settings.AppSettingsState", storages = [Storage("SettingsMigrationHelper.xml")])
 internal class MigrationSettingsState : PersistentStateComponent<MigrationSettingsState?> {
+    var legacyFolderPath: String = ""
+    var excludedFoldersList: MutableList<String> = mutableListOf()
+
     @OptionTag(converter = JBColorConverter::class)
     var keywordColorMapping: MutableList<Pair<String, JBColor>> = mutableListOf(
         "MIGRATED" to JBColor(JBColor.YELLOW, JBColor.YELLOW),
@@ -24,9 +27,7 @@ internal class MigrationSettingsState : PersistentStateComponent<MigrationSettin
     )
 
     @OptionTag(converter = PairListConverter::class)
-    var fileTypeCommentMapping: MutableList<Pair<String, String>> = mutableListOf()
-    var legacyFolderPath: String = ""
-    var excludedFoldersList: MutableList<String> = mutableListOf()
+    var fileTypeCommentMapping:  MutableList<Pair<String,String>> = mutableListOf()
 
     override fun getState(): MigrationSettingsState {
         return this
