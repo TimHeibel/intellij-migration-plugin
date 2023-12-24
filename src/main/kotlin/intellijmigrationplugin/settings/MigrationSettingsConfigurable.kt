@@ -23,26 +23,27 @@ internal class MigrationsSettingsConfigurable : Configurable {
     override fun isModified(): Boolean {
         val settings: MigrationSettingsState = MigrationSettingsState.instance
         val legacyFolderPathModified = settingsComponent?.legacyFolderComponent?.legacyFolderPath != settings.legacyFolderPath
-        val excludedFoldersListModified = settingsComponent?.excludedFolderComponent?.excludedFoldersList?.equals(settings.excludedFoldersList)?.not()
-        val keyWordColorMappingModified = settingsComponent?.keywordColorMappingComponent?.keywordColorMappingList?.equals(settings.keywordColorMapping)?.not()
-        val filetypeCommentMappingModified = settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMappingList?.equals(settings.fileTypeCommentMapping)?.not()
-        return legacyFolderPathModified || filetypeCommentMappingModified!! || keyWordColorMappingModified!! || excludedFoldersListModified!!
+        val excludedFoldersListModified = settingsComponent?.excludedFolderComponent?.excludedFoldersListModel?.toList()?.equals(settings.excludedFoldersList)?.not()
+        //val keyWordColorMappingModified = settingsComponent?.keywordColorMappingComponent?.keywordColorMappingList?.equals(settings.keywordColorMapping)?.not()
+        //val filetypeCommentMappingModified = settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMappingList?.equals(settings.fileTypeCommentMapping)?.not()
+        return legacyFolderPathModified  || excludedFoldersListModified!! //|| filetypeCommentMappingModified!! || keyWordColorMappingModified!! || excludedFoldersListModified!!
     }
 
     override fun apply() {
         val settings: MigrationSettingsState = MigrationSettingsState.instance
         settings.legacyFolderPath = settingsComponent?.legacyFolderComponent?.legacyFolderPath ?: ""
-        settings.excludedFoldersList = settingsComponent?.excludedFolderComponent?.excludedFoldersList?.toMutableList() ?: mutableListOf()
-        settings.keywordColorMapping = settingsComponent?.keywordColorMappingComponent?.keywordColorMappingList?.toMutableList() ?: mutableListOf()
-        settings.fileTypeCommentMapping = settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMappingList?.toMutableList() ?: mutableListOf()
+        settings.excludedFoldersList = settingsComponent?.excludedFolderComponent?.excludedFoldersListModel?.toList() ?: mutableListOf()
+        print(settings.excludedFoldersList)
+        //settings.keywordColorMapping = settingsComponent?.keywordColorMappingComponent?.keywordColorMappingList?.toMutableList() ?: mutableListOf()
+        //settings.fileTypeCommentMapping = settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMappingList?.toMutableList() ?: mutableListOf()
     }
     
     override fun reset() {
         val settings: MigrationSettingsState = MigrationSettingsState.instance
         settingsComponent?.legacyFolderComponent?.legacyFolderPath = settings.legacyFolderPath
-        settingsComponent?.excludedFolderComponent?.excludedFoldersList = settings.excludedFoldersList
-        settingsComponent?.keywordColorMappingComponent?.keywordColorMappingList = settings.keywordColorMapping.toMutableList()
-        settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMappingList = settings.fileTypeCommentMapping.toMutableList()
+        settingsComponent?.excludedFolderComponent?.excludedFoldersListModel?.replaceAll(settings.excludedFoldersList)
+        //settingsComponent?.keywordColorMappingComponent?.keywordColorMappingList = settings.keywordColorMapping.toMutableList()
+        //settingsComponent?.filetypeCommentMappingComponent?.fileTypeCommentMappingList = settings.fileTypeCommentMapping.toMutableList()
     }
 
     override fun disposeUIResources() {
