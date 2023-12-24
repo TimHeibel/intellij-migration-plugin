@@ -2,7 +2,7 @@ package intellijmigrationplugin.settings.components
 
 import com.intellij.openapi.fileChooser.FileChooser
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
-import com.intellij.openapi.project.ProjectManager
+import com.intellij.openapi.project.Project
 import com.intellij.ui.CollectionListModel
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.components.JBLabel
@@ -10,12 +10,10 @@ import com.intellij.ui.components.JBList
 import com.intellij.util.ui.FormBuilder
 import javax.swing.JComponent
 
-class ExcludedFoldersComponent() {
+class ExcludedFoldersComponent(private val project: Project) {
 
     var excludedFoldersListModel = CollectionListModel<String>()
     private val excludedFoldersList = JBList(excludedFoldersListModel)
-    // TODO(Tim): Find a more elegant way, maybe pass via constructor, find best practice to get project reference
-    private val project = ProjectManager.getInstance().openProjects[0]
     private val descriptor = FileChooserDescriptorFactory.createMultipleFoldersDescriptor()
 
     fun getComponent(): JComponent {

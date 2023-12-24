@@ -1,6 +1,8 @@
 package intellijmigrationplugin.settings
 
-import com.intellij.util.ui.FormBuilder
+import com.intellij.openapi.project.ProjectManager
+import com.intellij.ui.dsl.builder.panel
+import com.intellij.ui.dsl.gridLayout.HorizontalAlign
 import intellijmigrationplugin.settings.components.ExcludedFoldersComponent
 import intellijmigrationplugin.settings.components.FiletypeCommentMappingComponent
 import intellijmigrationplugin.settings.components.KeywordColorMappingComponent
@@ -14,21 +16,30 @@ import javax.swing.JPanel
  */
 class MigrationSettingsComponent {
     internal val panel: JPanel
+    internal val project = ProjectManager.getInstance().openProjects[0]
 
     // Components
-    internal val legacyFolderComponent = LegacyFolderComponent()
+    internal val legacyFolderComponent = LegacyFolderComponent(project)
     internal val keywordColorMappingComponent = KeywordColorMappingComponent()
     internal val filetypeCommentMappingComponent = FiletypeCommentMappingComponent()
-    internal val excludedFolderComponent = ExcludedFoldersComponent()
+    internal val excludedFolderComponent = ExcludedFoldersComponent(project)
 
     init {
-        panel = FormBuilder.createFormBuilder()
-            .addComponent(excludedFolderComponent.getComponent())
-            .addSeparator(2)
-            .addComponent(legacyFolderComponent.getComponent())
-            .addSeparator(2)
-            .addComponent(keywordColorMappingComponent.getComponent())
-            .addSeparator(2)
-            .addComponent(filetypeCommentMappingComponent.getComponent()).panel
+        panel = panel {
+            separator().rowComment("Legacy Folder")
+            row {
+                scrollCell(legacyFolderComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+            }
+            separator().rowComment("Excluded Folders")
+            row {
+                scrollCell(excludedFolderComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+            }
+            separator().rowComment("Filetype Comment Mapping")
+            row {
+                scrollCell(filetypeCommentMappingComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+            }
+
+        }
     }
+
 }
