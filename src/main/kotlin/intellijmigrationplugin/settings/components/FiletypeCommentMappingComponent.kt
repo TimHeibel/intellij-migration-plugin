@@ -37,13 +37,19 @@ class FiletypeCommentMappingComponent(private val project: Project) {
     private fun createCellEditor(): DefaultCellEditor {
         val textField = JTextField()
         return object : DefaultCellEditor(textField) {
+            override fun isCellEditable(event: java.util.EventObject): Boolean {
+                // Allow editing only if the current cell is not the last cell of the last row
+                val row = table.editingRow
+                val column = table.editingColumn
+                return row < table.rowCount - 1 || column < table.columnCount - 1
+            }
             override fun stopCellEditing(): Boolean {
                 val newFiletype = textField.text.trim()
 
                 if (!validateCellContent(newFiletype)) {
                     setWarningBorder(textField, "Filetype must start with '.'", Color(250, 158, 158))
                     return false
-                } else if (filetypeExists(newFiletype)) {
+                } else if (filetypeExists(newFiletype, table.editingRow)) {
                     setWarningBorder(textField, "Filetype already exists in the table",Color(0xF6D89F))
                     return false
                 } else {
@@ -53,9 +59,10 @@ class FiletypeCommentMappingComponent(private val project: Project) {
                 }
             }
 
+
             override fun shouldSelectCell(anEvent: java.util.EventObject): Boolean {
                 // Allow selecting the cell only if the validation is successful
-                return validateCellContent(textField.text) && !filetypeExists(textField.text.trim())
+                return validateCellContent(textField.text) && !filetypeExists(textField.text.trim(), table.editingRow)
             }
         }
     }
@@ -65,21 +72,21 @@ class FiletypeCommentMappingComponent(private val project: Project) {
         textField.toolTipText = tooltip
     }
 
-    private fun filetypeExists(filetype: String): Boolean {
+    private fun filetypeExists(filetype: String, currentRow: Int): Boolean {
+        val trimmedFiletype = filetype.trim()
         for (row in 0 until tableModel.rowCount) {
-            if (tableModel.getValueAt(row, 0) == filetype) {
-                return true
+            if (row != currentRow) { // Skip the current row
+                val cellContent = tableModel.getValueAt(row, 0).toString().trim()
+                if (cellContent.equals(trimmedFiletype, ignoreCase = true)) {
+                    return true
+                }
             }
         }
         return false
     }
 
-
     private fun validateCellContent(content: String): Boolean {
-        if (!content.startsWith(".")) {
-            return false
-        }
-        return true
+        return content.startsWith(".")
     }
 
     private fun addEmptyRow() {
