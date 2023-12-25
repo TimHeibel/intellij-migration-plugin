@@ -5,6 +5,8 @@ import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.UIUtil
 import java.awt.Color
+import java.awt.event.KeyAdapter
+import java.awt.event.KeyEvent
 import javax.swing.BorderFactory
 import javax.swing.DefaultCellEditor
 import javax.swing.JPanel
@@ -13,7 +15,7 @@ import javax.swing.table.DefaultTableModel
 
 class FiletypeCommentMappingComponent(private val project: Project) {
 
-     val tableModel = DefaultTableModel(arrayOf(arrayOf("", "")), arrayOf("Filetype", "Comment Type"))
+    val tableModel = DefaultTableModel(arrayOf(arrayOf("", "")), arrayOf("Filetype", "Comment Type"))
     private var table = JBTable(tableModel)
 
     fun getComponent(): JPanel {
@@ -32,6 +34,22 @@ class FiletypeCommentMappingComponent(private val project: Project) {
         val fileTypeColumn = table.columnModel.getColumn(0)
         fileTypeColumn.cellEditor = createCellEditor()
 
+        // Add KeyListener to the last cell of the last row
+        val lastColumn = tableModel.columnCount - 1
+        val lastCell = table.getCellEditor(tableModel.rowCount - 1, lastColumn) as DefaultCellEditor
+        val lastTextField = lastCell.component as JTextField
+
+        lastTextField.addKeyListener(object : KeyAdapter() {
+            override fun keyPressed(e: KeyEvent) {
+                if (e.keyCode == KeyEvent.VK_TAB) {
+                    val lastRow = tableModel.rowCount - 1
+                    if (table.editingRow == lastRow && table.editingColumn == lastColumn) {
+                        addEmptyRow()
+                        e.consume() // Consume Tab key event to prevent default behavior
+                    }
+                }
+            }
+        })
     }
 
     private fun createCellEditor(): DefaultCellEditor {
@@ -43,6 +61,7 @@ class FiletypeCommentMappingComponent(private val project: Project) {
                 val column = table.editingColumn
                 return row < table.rowCount - 1 || column < table.columnCount - 1
             }
+
             override fun stopCellEditing(): Boolean {
                 val newFiletype = textField.text.trim()
 
@@ -50,7 +69,7 @@ class FiletypeCommentMappingComponent(private val project: Project) {
                     setWarningBorder(textField, "Filetype must start with '.'", Color(250, 158, 158))
                     return false
                 } else if (filetypeExists(newFiletype, table.editingRow)) {
-                    setWarningBorder(textField, "Filetype already exists in the table",Color(0xF6D89F))
+                    setWarningBorder(textField, "Filetype already exists in the table", Color(0xF6D89F))
                     return false
                 } else {
                     textField.border = UIUtil.getTableFocusCellHighlightBorder()
@@ -102,7 +121,7 @@ class FiletypeCommentMappingComponent(private val project: Project) {
         val firstColumn = 0
         table.requestFocusInWindow()
         table.scrollRectToVisible(table.getCellRect(newRow, 0, true))
-        table.changeSelection(newRow, firstColumn, false,false)
+        table.changeSelection(newRow, firstColumn, false, false)
     }
 
     private fun removeSelectedRows() {
