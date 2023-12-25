@@ -1,75 +1,74 @@
 package intellijmigrationplugin.settings.components
+
+import com.intellij.openapi.project.Project
 import com.intellij.ui.ColorPicker
-import com.intellij.ui.JBColor
-import com.intellij.ui.components.JBLabel
-import com.intellij.util.ui.FormBuilder
+import com.intellij.ui.ToolbarDecorator
+import com.intellij.ui.table.JBTable
 import java.awt.Color
-import javax.swing.JButton
-import javax.swing.JComponent
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
 import javax.swing.JPanel
+import javax.swing.table.DefaultTableModel
 
-class KeywordColorMappingComponent {
-    var keywordColorMappingList = mutableListOf<Pair<String, JBColor>>()
-        set(value) {
-            field = value
-            updateColorLabels()
-        }
-    private val colorLabels = mutableMapOf<String, JBLabel>()
+class KeywordColorMappingComponent(private val project: Project) {
 
-    private val migratedComponent = createColorMappingSubComponent("MIGRATED")
-    private val laterComponent = createColorMappingSubComponent("LATER")
-    private val unusedComponent = createColorMappingSubComponent("UNUSED")
+    var tableModel = DefaultTableModel(arrayOf(arrayOf("", "#ffffff")), arrayOf("Filetype", "Comment Type"))
+    var table = JBTable(tableModel)
 
-    private fun createColorMappingSubComponent(subKeyword: String): JComponent {
-        val colorMappingPanel = JPanel()
-        val colorLabel = JBLabel(subKeyword)
+    fun getComponent(): JPanel {
+        configureTableDesign()
 
-        colorLabel.foreground = findColorForSubKeyword(subKeyword)
-        colorLabels[subKeyword] = colorLabel
+        val decorator = ToolbarDecorator.createDecorator(table).setAddAction { addEmptyRow() }
+            .setRemoveAction { removeSelectedRows() }
 
-        val selectColorButton = JButton("Select Color")
-        selectColorButton.addActionListener {
-            val newColor = ColorPicker.showDialog(
-                colorMappingPanel, "Choose Color for $subKeyword", findColorForSubKeyword(subKeyword), false, null, false
-            )
-            if (newColor != null) {
-                updateColorForSubKeyword(subKeyword, JBColor(newColor, newColor))
+        // Add mouse listener to open color chooser on column 1 cell click
+        table.addMouseListener(object : MouseAdapter() {
+            override fun mouseClicked(e: MouseEvent) {
+                if (e.clickCount == 1 && table.columnAtPoint(e.point) == 1) {
+                    openColorChooser(table.selectedRow, 1)
+                }
             }
+        })
+
+        return decorator.createPanel()
+    }
+
+    private fun configureTableDesign() {
+        table.emptyText.setText("Optional")
+        table.isStriped = true
+    }
+
+    private fun addEmptyRow() {
+        tableModel.addRow(arrayOf("", "#fffff"))
+        tableModel.fireTableDataChanged()
+
+        // Focus the first cell of the newly added row
+        val newRow = tableModel.rowCount - 1
+        val firstColumn = 0
+        table.editCellAt(newRow, firstColumn)
+        table.requestFocusInWindow()
+    }
+
+    private fun removeSelectedRows() {
+        tableModel.removeRow(table.selectedRow)
+        tableModel.fireTableDataChanged()
+    }
+
+    private fun openColorChooser(row: Int, column: Int) {
+        val currentColor = tableModel.getValueAt(row, column) as? String ?: ""
+
+        val selectedColor =
+            ColorPicker.showDialog(table, "Choose Color", Color.decode(currentColor), false, null, false)
+        if (selectedColor != null) {
+            tableModel.setValueAt("#" + Integer.toHexString(selectedColor.rgb).substring(2), row, column)
         }
-
-        colorMappingPanel.add(colorLabel)
-        colorMappingPanel.add(selectColorButton)
-
-        return colorMappingPanel
     }
 
-    fun getComponent(): JComponent {
-        return FormBuilder.createFormBuilder()
-            .addComponent(migratedComponent)
-            .addComponent(laterComponent)
-            .addComponent(unusedComponent).panel
-    }
-
-    private fun updateColorLabels() {
-        listOf("MIGRATED", "LATER", "UNUSED").forEach { subKeyword ->
-            val colorLabel = colorLabels[subKeyword]
-            colorLabel?.foreground = findColorForSubKeyword(subKeyword)
-            colorLabel?.repaint()
+    fun initializeTableData(mapping: MutableList<Pair<String, String>>) {
+        tableModel.removeRow(0)
+        for (pair in mapping) {
+            tableModel.addRow(arrayOf(pair.first, pair.second))
         }
-    }
-
-    private fun findColorForSubKeyword(subKeyword: String): JBColor {
-        return keywordColorMappingList.find { it.first == subKeyword }?.second ?: JBColor(Color.BLACK, Color.BLACK)
-    }
-
-    private fun updateColorForSubKeyword(subKeyword: String, newColor: JBColor) {
-        keywordColorMappingList = keywordColorMappingList.map {
-            if (it.first == subKeyword) {
-                subKeyword to newColor
-            } else {
-                it
-            }
-        }.toMutableList()
-        updateColorLabels()
     }
 }
+
