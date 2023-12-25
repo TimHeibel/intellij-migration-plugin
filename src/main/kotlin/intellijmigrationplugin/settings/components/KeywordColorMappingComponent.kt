@@ -66,7 +66,10 @@ class KeywordColorMappingComponent(private val project: Project) {
     }
 
     fun initializeTableData(mapping: MutableList<Pair<String, String>>) {
-        tableModel.removeRow(0)
+        // Remove all rows
+        while (tableModel.getRowCount() > 0) {
+            tableModel.removeRow(0);
+        }
         for (pair in mapping) {
             tableModel.addRow(arrayOf(pair.first, pair.second))
         }

@@ -28,11 +28,12 @@ internal class MigrationsSettingsConfigurable : Configurable {
             settingsComponent?.legacyFolderComponent?.legacyFolderPath != settings.legacyFolderPath
         val excludedFoldersListModified = settingsComponent?.excludedFolderComponent?.excludedFoldersListModel?.toList()
             ?.equals(settings.excludedFoldersList)?.not()
-        //val keyWordColorMappingModified = settingsComponent?.keywordColorMappingComponent?.keywordColorMappingList?.equals(settings.keywordColorMapping)?.not()
+        val keyWordColorMappingModified =
+            convertTableModelToList(settingsComponent?.keywordColorMappingComponent?.tableModel!!) != settings.keywordColorMapping
         val filetypeCommentMappingModified =
-            (convertTableModelToList(settingsComponent?.filetypeCommentMappingComponent?.tableModel!!) != settings.fileTypeCommentMapping)
+            convertTableModelToList(settingsComponent?.filetypeCommentMappingComponent?.tableModel!!) != settings.fileTypeCommentMapping
 
-        return legacyFolderPathModified || excludedFoldersListModified!! || filetypeCommentMappingModified
+        return legacyFolderPathModified || excludedFoldersListModified!! || keyWordColorMappingModified || filetypeCommentMappingModified
     }
 
     override fun apply() {
@@ -40,7 +41,8 @@ internal class MigrationsSettingsConfigurable : Configurable {
         settings.legacyFolderPath = settingsComponent?.legacyFolderComponent?.legacyFolderPath ?: ""
         settings.excludedFoldersList =
             settingsComponent?.excludedFolderComponent?.excludedFoldersListModel?.toList() ?: mutableListOf()
-        //settings.keywordColorMapping = settingsComponent?.keywordColorMappingComponent?.keywordColorMappingList?.toMutableList() ?: mutableListOf()
+        settings.keywordColorMapping =
+            convertTableModelToList(settingsComponent?.keywordColorMappingComponent?.tableModel!!)
         settings.fileTypeCommentMapping =
             convertTableModelToList(settingsComponent?.filetypeCommentMappingComponent?.tableModel!!)
     }
@@ -49,7 +51,7 @@ internal class MigrationsSettingsConfigurable : Configurable {
         val settings: MigrationSettingsState = MigrationSettingsState.instance
         settingsComponent?.legacyFolderComponent?.legacyFolderPath = settings.legacyFolderPath
         settingsComponent?.excludedFolderComponent?.excludedFoldersListModel?.replaceAll(settings.excludedFoldersList)
-        //settingsComponent?.keywordColorMappingComponent?.keywordColorMappingList = settings.keywordColorMapping.toMutableList()
+        settingsComponent?.keywordColorMappingComponent?.initializeTableData(settings.keywordColorMapping)
         settingsComponent?.filetypeCommentMappingComponent?.initializeTableData(settings.fileTypeCommentMapping)
     }
 

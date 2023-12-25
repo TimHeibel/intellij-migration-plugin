@@ -2,7 +2,6 @@ package intellijmigrationplugin.annotationModel
 
 import com.intellij.openapi.application.ApplicationManager
 import intellijmigrationplugin.settings.MigrationSettingsState
-import java.awt.Color
 
 class AnnotationInformation private constructor() {
 
@@ -30,11 +29,11 @@ class AnnotationInformation private constructor() {
             return settings.legacyFolderPath
         }
 
-    val markerColorMapping: HashMap<AnnotationType, Color>
+    val markerColorMapping: HashMap<AnnotationType, String>
         get() {
             val colorMapping = settings.keywordColorMapping
 
-            val colorHashMap = HashMap<AnnotationType, Color>()
+            val colorHashMap = HashMap<AnnotationType, String>()
             for (pair in colorMapping) {
                 colorHashMap[AnnotationType.valueOf(pair.first)] = pair.second
             }

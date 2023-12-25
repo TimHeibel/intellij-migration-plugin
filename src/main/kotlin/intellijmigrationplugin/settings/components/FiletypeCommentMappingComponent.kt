@@ -14,8 +14,7 @@ class FiletypeCommentMappingComponent(private val project: Project) {
     fun getComponent(): JPanel {
         configureTableDesign()
 
-        val decorator = ToolbarDecorator.createDecorator(table)
-            .setAddAction { addEmptyRow() }
+        val decorator = ToolbarDecorator.createDecorator(table).setAddAction { addEmptyRow() }
             .setRemoveAction { removeSelectedRows() }
 
         return decorator.createPanel()
@@ -42,9 +41,12 @@ class FiletypeCommentMappingComponent(private val project: Project) {
         tableModel.fireTableDataChanged()
     }
 
-    fun initializeTableData(mapping : MutableList<Pair<String,String>>){
-        tableModel.removeRow(0)
-        for (pair in mapping){
+    fun initializeTableData(mapping: MutableList<Pair<String, String>>) {
+        // Remove all rows
+        while (tableModel.getRowCount() > 0) {
+            tableModel.removeRow(0);
+        }
+        for (pair in mapping) {
             tableModel.addRow(arrayOf(pair.first, pair.second))
         }
     }

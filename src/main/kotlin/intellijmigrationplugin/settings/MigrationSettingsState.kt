@@ -4,10 +4,8 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
-import com.intellij.ui.JBColor
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.OptionTag
-import intellijmigrationplugin.settings.converters.JBColorConverter
 import intellijmigrationplugin.settings.converters.PairListConverter
 
 /**
@@ -19,15 +17,11 @@ internal class MigrationSettingsState : PersistentStateComponent<MigrationSettin
     var legacyFolderPath: String = ""
     var excludedFoldersList: MutableList<String> = mutableListOf()
 
-    @OptionTag(converter = JBColorConverter::class)
-    var keywordColorMapping: MutableList<Pair<String, JBColor>> = mutableListOf(
-        "MIGRATED" to JBColor(JBColor.YELLOW, JBColor.YELLOW),
-        "LATER" to JBColor(JBColor.RED, JBColor.RED),
-        "UNUSED" to JBColor(JBColor.GRAY, JBColor.GRAY)
-    )
-
     @OptionTag(converter = PairListConverter::class)
     var fileTypeCommentMapping:  MutableList<Pair<String,String>> = mutableListOf()
+
+    @OptionTag(converter = PairListConverter::class)
+    var keywordColorMapping: MutableList<Pair<String, String>> = mutableListOf()
 
     override fun getState(): MigrationSettingsState {
         return this
