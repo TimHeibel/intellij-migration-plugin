@@ -17,11 +17,17 @@ import javax.swing.table.DefaultTableModel
 
 class KeywordColorMappingComponent(private val project: Project) {
 
-    var tableModel = DefaultTableModel(
+    var tableModel = object : DefaultTableModel(
         arrayOf(
             arrayOf("MIGRATED", "#ffffff"),
         ), arrayOf("Keyword", "Color")
-    )
+    ) {
+        override fun isCellEditable(row: Int, column: Int): Boolean {
+            // Make the second column not editable, as this could lead to bugs, when tabbing into the content
+            return column != 1
+        }
+    }
+
     var table = JBTable(tableModel)
 
     fun getComponent(): JPanel {
@@ -70,12 +76,12 @@ class KeywordColorMappingComponent(private val project: Project) {
     }
 
     fun initializeTableData(mapping: MutableList<Pair<String, String>>) {
-            // Remove all rows
-            while (tableModel.getRowCount() > 0) {
-                tableModel.removeRow(0);
-            }
-            for (pair in mapping) {
-                tableModel.addRow(arrayOf(pair.first, pair.second))
+        // Remove all rows
+        while (tableModel.rowCount > 0) {
+            tableModel.removeRow(0);
+        }
+        for (pair in mapping) {
+            tableModel.addRow(arrayOf(pair.first, pair.second))
         }
     }
 
