@@ -38,9 +38,13 @@ class FiletypeCommentMappingComponent(private val project: Project) {
         val textField = JTextField()
         return object : DefaultCellEditor(textField) {
             override fun stopCellEditing(): Boolean {
-                if (!validateCellContent(textField.text)) {
-                    textField.border = BorderFactory.createLineBorder(Color.RED)
-                    textField.toolTipText = "Filetype must start with '.'"
+                val newFiletype = textField.text.trim()
+
+                if (!validateCellContent(newFiletype)) {
+                    setWarningBorder(textField, "Filetype must start with '.'", Color(250, 158, 158))
+                    return false
+                } else if (filetypeExists(newFiletype)) {
+                    setWarningBorder(textField, "Filetype already exists in the table",Color(0xF6D89F))
                     return false
                 } else {
                     textField.border = UIUtil.getTableFocusCellHighlightBorder()
@@ -51,10 +55,25 @@ class FiletypeCommentMappingComponent(private val project: Project) {
 
             override fun shouldSelectCell(anEvent: java.util.EventObject): Boolean {
                 // Allow selecting the cell only if the validation is successful
-                return validateCellContent(textField.text)
+                return validateCellContent(textField.text) && !filetypeExists(textField.text.trim())
             }
         }
     }
+
+    private fun setWarningBorder(textField: JTextField, tooltip: String, color: Color) {
+        textField.border = BorderFactory.createLineBorder(color)
+        textField.toolTipText = tooltip
+    }
+
+    private fun filetypeExists(filetype: String): Boolean {
+        for (row in 0 until tableModel.rowCount) {
+            if (tableModel.getValueAt(row, 0) == filetype) {
+                return true
+            }
+        }
+        return false
+    }
+
 
     private fun validateCellContent(content: String): Boolean {
         if (!content.startsWith(".")) {
