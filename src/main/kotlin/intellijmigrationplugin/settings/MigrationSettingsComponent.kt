@@ -29,25 +29,29 @@ class MigrationSettingsComponent {
         panel = panel {
             group("Legacy Folder") {
                 row {
-                    scrollCell(legacyFolderComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+                    cell(legacyFolderComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+                        .comment("Specify the legacy folder for the migration process.")
                 }
             }
 
             group("Excluded Folders") {
                 row {
                     scrollCell(excludedFolderComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+                        .comment("Specify folders to be excluded from the migration process and statistics.")
                 }
             }
 
             group("Filetype Comment Mapping") {
                 row {
                     scrollCell(filetypeCommentMappingComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+                        .comment("Map file types to specific comments that are used in the annotations.")
                 }
             }
 
-            group("Keyword color mapping") {
+            group("Keyword Color Mapping") {
                 row {
                     scrollCell(keywordColorMappingComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+                        .comment("Map keywords to specific colors for the editor.")
                 }
             }
         }

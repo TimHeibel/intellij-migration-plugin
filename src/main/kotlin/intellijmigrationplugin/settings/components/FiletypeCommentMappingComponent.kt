@@ -30,6 +30,7 @@ class FiletypeCommentMappingComponent(private val project: Project) {
     private fun configureTableDesign() {
         table.emptyText.setText("Optional")
         table.isStriped = true
+        table.visibleRowCount = 3
 
         val fileTypeColumn = table.columnModel.getColumn(0)
         fileTypeColumn.cellEditor = createCellEditor()
