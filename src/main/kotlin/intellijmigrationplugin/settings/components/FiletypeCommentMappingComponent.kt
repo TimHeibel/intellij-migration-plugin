@@ -5,6 +5,7 @@ import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.UIUtil
 import java.awt.Color
+import java.util.*
 import javax.swing.BorderFactory
 import javax.swing.DefaultCellEditor
 import javax.swing.JPanel
@@ -96,8 +97,9 @@ class FiletypeCommentMappingComponent(private val project: Project) {
         // Focus the first cell of the newly added row
         val newRow = tableModel.rowCount - 1
         val firstColumn = 0
-        table.editCellAt(newRow, firstColumn)
         table.requestFocusInWindow()
+        table.scrollRectToVisible(table.getCellRect(newRow, 0, true))
+        table.editCellAt(newRow, firstColumn, EventObject(table))
     }
 
     private fun removeSelectedRows() {
