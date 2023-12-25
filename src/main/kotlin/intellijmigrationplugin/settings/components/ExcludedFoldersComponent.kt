@@ -5,7 +5,6 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.project.Project
 import com.intellij.ui.CollectionListModel
 import com.intellij.ui.ToolbarDecorator
-import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBList
 import com.intellij.util.ui.FormBuilder
 import javax.swing.JComponent
@@ -29,11 +28,12 @@ class ExcludedFoldersComponent(private val project: Project) {
             .setRemoveAction { removeSelectedFolders() }.disableUpDownActions()
 
         return FormBuilder.createFormBuilder()
-            .addLabeledComponent(JBLabel("Excluded folders: "), decorator.createPanel(), 1, true).panel
+            .addComponent(decorator.createPanel()).panel
     }
 
     private fun configureExcludedFoldersList() {
         excludedFoldersList.emptyText.setText("Optional")
+        excludedFoldersList.visibleRowCount = 3
     }
 
     private fun addFolder() {

@@ -27,24 +27,30 @@ class MigrationSettingsComponent {
 
     init {
         panel = panel {
-            separator().rowComment("Legacy Folder")
-            row {
-                scrollCell(legacyFolderComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
-            }
-            separator().rowComment("Excluded Folders")
-            row {
-                scrollCell(excludedFolderComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
-            }
-            separator().rowComment("Filetype Comment Mapping")
-            row {
-                scrollCell(filetypeCommentMappingComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
-            }
-            separator().rowComment("Keyword color mapping")
-            row{
-                scrollCell(keywordColorMappingComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+            group("Legacy Folder") {
+                row {
+                    scrollCell(legacyFolderComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+                }
             }
 
+            group("Excluded Folders") {
+                row {
+                    scrollCell(excludedFolderComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+                }
+            }
+
+            group("Filetype Comment Mapping") {
+                row {
+                    scrollCell(filetypeCommentMappingComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+                }
+            }
+
+            group("Keyword color mapping") {
+                row {
+                    scrollCell(keywordColorMappingComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+                }
+            }
         }
     }
-
 }
+
