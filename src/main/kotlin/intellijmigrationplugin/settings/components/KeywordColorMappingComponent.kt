@@ -4,6 +4,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.ui.ColorPicker
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.table.JBTable
+import intellijmigrationplugin.settings.utils.ColorUtils
 import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
@@ -37,6 +38,9 @@ class KeywordColorMappingComponent(private val project: Project) {
         // Set custom renderer for the second column
         table.columnModel.getColumn(1).cellRenderer = ColorCellRenderer()
 
+        val secondColumn = table.columnModel.getColumn(1)
+        secondColumn.preferredWidth = 100
+
         return decorator.createPanel()
     }
 
@@ -61,6 +65,13 @@ class KeywordColorMappingComponent(private val project: Project) {
         tableModel.fireTableDataChanged()
     }
 
+    fun initializeTableData(mapping: MutableList<Pair<String, String>>) {
+        tableModel.removeRow(0)
+        for (pair in mapping) {
+            tableModel.addRow(arrayOf(pair.first, pair.second))
+        }
+    }
+
     private fun openColorChooser(row: Int, column: Int) {
         val currentColor = tableModel.getValueAt(row, column) as? String ?: ""
 
@@ -68,13 +79,6 @@ class KeywordColorMappingComponent(private val project: Project) {
             ColorPicker.showDialog(table, "Choose Color", Color.decode(currentColor), false, null, false)
         if (selectedColor != null) {
             tableModel.setValueAt("#" + Integer.toHexString(selectedColor.rgb).substring(2), row, column)
-        }
-    }
-
-    fun initializeTableData(mapping: MutableList<Pair<String, String>>) {
-        tableModel.removeRow(0)
-        for (pair in mapping) {
-            tableModel.addRow(arrayOf(pair.first, pair.second))
         }
     }
 
@@ -90,9 +94,18 @@ class KeywordColorMappingComponent(private val project: Project) {
             val hexColor = value as? String ?: ""
             val color = Color.decode(hexColor)
             val icon = ColorIcon(color)
-            val label = JLabel(icon)
-            label.toolTipText = hexColor
-            return label
+            val colorName = getColorName(color)
+
+            val panel = JPanel(FlowLayout(FlowLayout.LEFT))
+            panel.add(JLabel(icon))
+            panel.add(JLabel(colorName))
+
+            return panel
+        }
+
+        private fun getColorName(color: Color): String {
+            val colorName = ColorUtils.getColorNameFromRgb(color.red, color.green, color.blue)
+            return colorName
         }
     }
 
