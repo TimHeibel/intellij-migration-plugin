@@ -5,7 +5,6 @@ import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.UIUtil
 import java.awt.Color
-import java.util.*
 import javax.swing.BorderFactory
 import javax.swing.DefaultCellEditor
 import javax.swing.JPanel
@@ -91,6 +90,10 @@ class FiletypeCommentMappingComponent(private val project: Project) {
     }
 
     private fun addEmptyRow() {
+        if (table.isEditing) {
+            table.cellEditor.stopCellEditing()
+        }
+
         tableModel.addRow(arrayOf("", ""))
         tableModel.fireTableDataChanged()
 
@@ -99,7 +102,7 @@ class FiletypeCommentMappingComponent(private val project: Project) {
         val firstColumn = 0
         table.requestFocusInWindow()
         table.scrollRectToVisible(table.getCellRect(newRow, 0, true))
-        table.editCellAt(newRow, firstColumn, EventObject(table))
+        table.changeSelection(newRow, firstColumn, false,false)
     }
 
     private fun removeSelectedRows() {
