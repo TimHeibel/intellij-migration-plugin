@@ -2,6 +2,9 @@ package intellijmigrationplugin.settings.utils
 
 import intellijmigrationplugin.settings.utils.ColorUtils.ColorName
 
+/**
+ * Utility class for working with predefined colors and finding the closest color name based on RGB values.
+ */
 private fun initColorList(): ArrayList<ColorUtils.ColorName> {
     val colorList = ArrayList<ColorUtils.ColorName>()
     colorList.add(ColorName("Alice Blue", 0xF0, 0xF8, 0xFF))

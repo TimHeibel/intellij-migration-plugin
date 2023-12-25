@@ -17,7 +17,11 @@ import javax.swing.table.DefaultTableModel
 
 class KeywordColorMappingComponent(private val project: Project) {
 
-    var tableModel = DefaultTableModel(arrayOf(arrayOf("", "#ffffff")), arrayOf("Keyword", "Color"))
+    var tableModel = DefaultTableModel(
+        arrayOf(
+            arrayOf("MIGRATED", "#ffffff"),
+        ), arrayOf("Keyword", "Color")
+    )
     var table = JBTable(tableModel)
 
     fun getComponent(): JPanel {
@@ -50,7 +54,7 @@ class KeywordColorMappingComponent(private val project: Project) {
     }
 
     private fun addEmptyRow() {
-        tableModel.addRow(arrayOf("", "#fffff"))
+        tableModel.addRow(arrayOf("", "#ffffff"))
         tableModel.fireTableDataChanged()
 
         // Focus the first cell of the newly added row
@@ -66,12 +70,12 @@ class KeywordColorMappingComponent(private val project: Project) {
     }
 
     fun initializeTableData(mapping: MutableList<Pair<String, String>>) {
-        // Remove all rows
-        while (tableModel.getRowCount() > 0) {
-            tableModel.removeRow(0);
-        }
-        for (pair in mapping) {
-            tableModel.addRow(arrayOf(pair.first, pair.second))
+            // Remove all rows
+            while (tableModel.getRowCount() > 0) {
+                tableModel.removeRow(0);
+            }
+            for (pair in mapping) {
+                tableModel.addRow(arrayOf(pair.first, pair.second))
         }
     }
 
@@ -87,12 +91,7 @@ class KeywordColorMappingComponent(private val project: Project) {
 
     private class ColorCellRenderer : DefaultTableCellRenderer() {
         override fun getTableCellRendererComponent(
-            table: JTable?,
-            value: Any?,
-            isSelected: Boolean,
-            hasFocus: Boolean,
-            row: Int,
-            column: Int
+            table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int
         ): Component {
             val hexColor = value as? String ?: ""
             val color = Color.decode(hexColor)

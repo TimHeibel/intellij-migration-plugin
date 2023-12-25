@@ -18,10 +18,18 @@ internal class MigrationSettingsState : PersistentStateComponent<MigrationSettin
     var excludedFoldersList: MutableList<String> = mutableListOf()
 
     @OptionTag(converter = PairListConverter::class)
-    var fileTypeCommentMapping:  MutableList<Pair<String,String>> = mutableListOf()
+    var fileTypeCommentMapping:  MutableList<Pair<String,String>> = mutableListOf(
+        Pair(".py", "#"),    // Python
+        Pair(".java", "//"),  // Java
+        Pair(".cpp", "//")
+    )
 
     @OptionTag(converter = PairListConverter::class)
-    var keywordColorMapping: MutableList<Pair<String, String>> = mutableListOf()
+    var keywordColorMapping: MutableList<Pair<String, String>> = mutableListOf(
+        Pair("MIGRATED", "#32CD32"),
+        Pair("LATER", "#FFA500"),
+        Pair("UNUSED", "#808080")
+    )
 
     override fun getState(): MigrationSettingsState {
         return this
