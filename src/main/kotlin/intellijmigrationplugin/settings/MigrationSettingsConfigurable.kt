@@ -59,15 +59,20 @@ internal class MigrationsSettingsConfigurable : Configurable {
         settingsComponent = null
     }
 
-    fun convertTableModelToList(tableModel: DefaultTableModel): MutableList<Pair<String, String>> {
+    private fun convertTableModelToList(tableModel: DefaultTableModel): MutableList<Pair<String, String>> {
         val list = mutableListOf<Pair<String, String>>()
 
         for (row in 0 until tableModel.rowCount) {
-            val fileType = tableModel.getValueAt(row, 0).toString()
-            val commentType = tableModel.getValueAt(row, 1).toString()
-            list.add(fileType to commentType)
+            val firstVal = tableModel.getValueAt(row, 0).toString().trim()
+            val secondVal = tableModel.getValueAt(row, 1).toString().trim()
+
+            // Skip empty rows
+            if (firstVal.isNotEmpty() || secondVal.isNotEmpty()) {
+                list.add(firstVal to secondVal)
+            }
         }
 
         return list
     }
+
 }

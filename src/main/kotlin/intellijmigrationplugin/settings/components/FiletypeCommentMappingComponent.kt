@@ -1,6 +1,5 @@
 package intellijmigrationplugin.settings.components
 
-import com.intellij.openapi.project.Project
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.UIUtil
@@ -13,7 +12,8 @@ import javax.swing.JPanel
 import javax.swing.JTextField
 import javax.swing.table.DefaultTableModel
 
-class FiletypeCommentMappingComponent(private val project: Project) {
+@Suppress("UseJBColor")
+class FiletypeCommentMappingComponent {
 
     val tableModel = DefaultTableModel(arrayOf(arrayOf("", "")), arrayOf("Filetype", "Comment Type"))
     private var table = JBTable(tableModel)
@@ -88,9 +88,12 @@ class FiletypeCommentMappingComponent(private val project: Project) {
     }
 
     private fun setWarningBorder(textField: JTextField, tooltip: String, color: Color) {
-        textField.border = BorderFactory.createLineBorder(color)
+        val borderThickness = 4
+        val warningBorder = BorderFactory.createLineBorder(color, borderThickness)
+        textField.border = warningBorder
         textField.toolTipText = tooltip
     }
+
 
     private fun filetypeExists(filetype: String, currentRow: Int): Boolean {
         val trimmedFiletype = filetype.trim()
