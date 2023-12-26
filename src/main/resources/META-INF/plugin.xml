@@ -6,6 +6,47 @@
 
     <depends>com.intellij.modules.platform</depends>
 
+    <actions>
+        <group
+            id = "intellijmigrationplugin.AnnotationAction.Group"
+            text = "Annotations"
+            popup = "true">
+            <add-to-group
+                    group-id="EditorPopupMenu"
+                    anchor= "last"/>
+        </group>
+        <action
+            id = "intellijmigrationplugin.AnnotationAction.MIGRATED"
+            class = "intellijmigrationplugin.actions.annotation.MIGRATEDAnnotationAction"
+            text = "MIGRATED"
+            description = "Annotated the selected Code-Fragment as Migrated">
+            <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group"/>
+        </action>
+        <action
+                id = "intellijmigrationplugin.AnnotationAction.LATER"
+                class = "intellijmigrationplugin.actions.annotation.LATERAnnotationAction"
+                text = "LATER"
+                description = "Annotated the selected Code-Fragment to be migrated at a later date">
+            <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group"/>
+        </action>
+        <action
+                id = "intellijmigrationplugin.AnnotationAction.UNUSED"
+                class = "intellijmigrationplugin.actions.annotation.UNUSEDAnnotationAction"
+                text = "UNUSED"
+                description = "Annotated the selected Code-Fragment as Unused">
+            <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group"/>
+        </action>
+        <action
+                id = "intellijmigrationplugin.actions.annotation.DialogAction"
+                class = "intellijmigrationplugin.actions.annotation.DialogAction"
+                text = "Open Annotation Dialog"
+                description = "Opens Dialog to enter Annotation-Type and additional informations">
+            <keyboard-shortcut
+                    keymap="$default"
+                    first-keystroke="control alt W"/>
+        </action>
+    </actions>
+
     <extensions defaultExtensionNs="com.intellij">
         <applicationConfigurable
             parentId="tools"
