@@ -27,8 +27,7 @@ class ExcludedFoldersComponent(private val project: Project) {
         val decorator = ToolbarDecorator.createDecorator(excludedFoldersList).setAddAction { addFolder() }
             .setRemoveAction { removeSelectedFolders() }.disableUpDownActions()
 
-        return FormBuilder.createFormBuilder()
-            .addComponent(decorator.createPanel()).panel
+        return FormBuilder.createFormBuilder().addComponent(decorator.createPanel()).panel
     }
 
     private fun configureExcludedFoldersList() {

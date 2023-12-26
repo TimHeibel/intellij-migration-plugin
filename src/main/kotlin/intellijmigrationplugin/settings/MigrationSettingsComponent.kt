@@ -21,8 +21,8 @@ class MigrationSettingsComponent {
     // Components
     internal val legacyFolderComponent = LegacyFolderComponent(project)
     internal val excludedFolderComponent = ExcludedFoldersComponent(project)
-    internal val keywordColorMappingComponent = KeywordColorMappingComponent(project)
-    internal val filetypeCommentMappingComponent = FiletypeCommentMappingComponent(project)
+    internal val keywordColorMappingComponent = KeywordColorMappingComponent()
+    internal val filetypeCommentMappingComponent = FiletypeCommentMappingComponent()
 
 
     init {

@@ -1,6 +1,5 @@
 package intellijmigrationplugin.settings.components
 
-import com.intellij.openapi.project.Project
 import com.intellij.ui.ColorPicker
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.table.JBTable
@@ -15,7 +14,7 @@ import javax.swing.JTable
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 
-class KeywordColorMappingComponent(private val project: Project) {
+class KeywordColorMappingComponent {
 
     var tableModel = object : DefaultTableModel(
         arrayOf(
@@ -27,7 +26,6 @@ class KeywordColorMappingComponent(private val project: Project) {
             return column != 1
         }
     }
-
     var table = JBTable(tableModel)
 
     fun getComponent(): JPanel {
@@ -40,7 +38,7 @@ class KeywordColorMappingComponent(private val project: Project) {
         table.addMouseListener(object : MouseAdapter() {
             override fun mouseClicked(e: MouseEvent) {
                 if (e.clickCount == 1 && table.columnAtPoint(e.point) == 1) {
-                    openColorChooser(table.selectedRow, 1)
+                    openColorChooser(table.selectedRow)
                 }
             }
         })
@@ -78,20 +76,20 @@ class KeywordColorMappingComponent(private val project: Project) {
     fun initializeTableData(mapping: MutableList<Pair<String, String>>) {
         // Remove all rows
         while (tableModel.rowCount > 0) {
-            tableModel.removeRow(0);
+            tableModel.removeRow(0)
         }
         for (pair in mapping) {
             tableModel.addRow(arrayOf(pair.first, pair.second))
         }
     }
 
-    private fun openColorChooser(row: Int, column: Int) {
-        val currentColor = tableModel.getValueAt(row, column) as? String ?: ""
+    private fun openColorChooser(row: Int) {
+        val currentColor = tableModel.getValueAt(row, 1) as? String ?: ""
 
         val selectedColor =
             ColorPicker.showDialog(table, "Choose Color", Color.decode(currentColor), false, null, false)
         if (selectedColor != null) {
-            tableModel.setValueAt("#" + Integer.toHexString(selectedColor.rgb).substring(2), row, column)
+            tableModel.setValueAt("#" + Integer.toHexString(selectedColor.rgb).substring(2), row, 1)
         }
     }
 
@@ -117,6 +115,8 @@ class KeywordColorMappingComponent(private val project: Project) {
         }
     }
 
+
+    @Suppress("UseJBColor")
     private class ColorIcon(private val color: Color) : Icon {
         override fun paintIcon(c: Component?, g: Graphics?, x: Int, y: Int) {
             val g2d = g as Graphics2D
@@ -132,7 +132,6 @@ class KeywordColorMappingComponent(private val project: Project) {
         }
 
         override fun getIconWidth() = 16
-
         override fun getIconHeight() = 16
     }
 }

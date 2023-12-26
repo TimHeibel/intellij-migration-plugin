@@ -22,8 +22,7 @@ class LegacyFolderComponent(private val project: Project) {
     fun getComponent(): JComponent {
         configureLegacyFolderTextField()
         return FormBuilder.createFormBuilder()
-            .addLabeledComponent(JBLabel("Path to Legacy folder: "), legacyFolderTextField, 1, false)
-            .panel
+            .addLabeledComponent(JBLabel("Path to Legacy folder: "), legacyFolderTextField, 1, false).panel
     }
 
     private fun configureLegacyFolderTextField() {
