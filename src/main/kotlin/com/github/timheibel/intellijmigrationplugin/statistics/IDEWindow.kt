@@ -45,7 +45,7 @@ class IDEWindow : ToolWindowFactory {
                     if (response == JFileChooser.APPROVE_OPTION) {
                        filePath = File(fileChooser.selectedFile.absolutePath).toString()
                         println(filePath)
-                        lineAnalyserTest.countLinesInFile(filePath)
+                        lineAnalyserTest.pathToFile(filePath)
                         println("done")
                     }
 
