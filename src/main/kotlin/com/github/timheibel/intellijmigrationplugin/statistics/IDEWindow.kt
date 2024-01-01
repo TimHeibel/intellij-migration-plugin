@@ -29,11 +29,11 @@ class IDEWindow : ToolWindowFactory {
 
             val label = JBLabel("This is a Button opens a file selector")
             val label2 = JBLabel("\n")
-            var filePath = ""
+            var filePath: String
 
             add(label)
             add(label2)
-            //path in annotationfile
+
             add(JButton("Select File").apply {
                 // button opens a File selector
                 //TODO: multiple files

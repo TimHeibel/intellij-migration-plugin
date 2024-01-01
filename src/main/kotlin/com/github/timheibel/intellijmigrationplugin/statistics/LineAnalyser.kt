@@ -11,42 +11,41 @@ import java.util.regex.Pattern
 
 class LineAnalyser {
 
-    var fileStatisticMap = initializeEnumMap()
-    fun initializeEnumMap(): HashMap<AnnotationType, Int> {
+    private var fileStatisticMap = initializeEnumMap()
+    private fun initializeEnumMap(): HashMap<AnnotationType, Int> {
         val enumMap = AnnotationType.values().associateWith { 0 }
         return HashMap(enumMap) // Explicitly converting to HashMap
     }
 
-    val regexPattern = ".*\\S|}"
-    val pattern: Pattern = Pattern.compile(regexPattern)
+    private val regexPattern = ".*\\S|}"
+    private val pattern: Pattern = Pattern.compile(regexPattern)
     fun pathToFile(filePath: String) {
-        //TODO: read files from Projekts and anylise lines
+        //TODO: read files from Projects and analyse lines
         fileStatisticMap.clear()
         fileStatisticMap = initializeEnumMap()
-        val LoC = countLinesInFile(filePath)
-        SortLOCbyLabels(filePath)
+        val lOC = countLinesInFile(filePath)
+        sortLOCbyLabel(filePath)
 
         //print statistic
         val linesMigrated = fileStatisticMap[MIGRATED] ?: -1
         val linesLater = fileStatisticMap[AnnotationType.LATER] ?: -1
         val linesUnused = fileStatisticMap[AnnotationType.UNUSED] ?: -1
-        val unmarked = LoC - (linesLater  + linesUnused + linesMigrated)
-        val percent= 100 - ((unmarked/LoC).toDouble() * 100)
-        println("LoC: MIGRATED: LATER: UNUSED: UNMARKED: \n $LoC $linesMigrated $linesLater $linesUnused $unmarked")
+        val unmarked = lOC - (linesLater  + linesUnused + linesMigrated)
+        val percent= 100 - ((unmarked/lOC).toDouble() * 100)
+        println("lOC: MIGRATED: LATER: UNUSED: UNMARKED: \n $lOC $linesMigrated $linesLater $linesUnused $unmarked")
         println("$percent % out of 100%")
     }
 
     /// Counts lines of code including comments and returns the lines as String
-    fun countLinesInFile(filePath: String): Int {
+    private fun countLinesInFile(filePath: String): Int {
         try {
             BufferedReader(FileReader(filePath)).use { br ->
                 var line: String?
-                var loCString = ""
                 var lOC = 0
 
                 while (br.readLine().also { line = it } != null) {
                     // Analyze each line using the regex pattern
-                    val matcher: Matcher = pattern.matcher(line)
+                    val matcher: Matcher = pattern.matcher(line!!)
                     if (matcher.matches()) {
                         lOC++
                     }
@@ -60,8 +59,8 @@ class LineAnalyser {
         return -1
     }
 
-    //TODO: edit function
-    fun SortLOCbyLabels(filePath: String){
+    
+    private fun sortLOCbyLabel(filePath: String){
         val segments = mutableMapOf<String, Pair<String, Int>>()
         var segmentIndex = 0
 
@@ -113,16 +112,16 @@ class LineAnalyser {
     }
 
 
-    fun countLinesInSegment(segment: String): Int {
-        var lOCsegment = 0
+    private fun countLinesInSegment(segment: String): Int {
+        var lOCSegment = 0
 
         segment.lines().forEach { line ->
             val matcher: Matcher = pattern.matcher(line)
             if (matcher.matches()) {
-                lOCsegment++
+                lOCSegment++
             }
         }
-        return lOCsegment
+        return lOCSegment
     }
 }
 
