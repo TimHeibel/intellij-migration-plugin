@@ -58,7 +58,8 @@ class KeywordColorMappingComponent {
     }
 
     private fun addEmptyRow() {
-        tableModel.addRow(arrayOf("", "#ffffff"))
+        // Add new row with white color at 50% opacity (#80FFFFFF)
+        tableModel.addRow(arrayOf("", "#80FFFFFF"))
         tableModel.fireTableDataChanged()
 
         // Focus the first cell of the newly added row
@@ -84,34 +85,49 @@ class KeywordColorMappingComponent {
     }
 
     private fun openColorChooser(row: Int) {
-        val currentColor = tableModel.getValueAt(row, 1) as? String ?: ""
+        val currentColorStr = tableModel.getValueAt(row, 1) as String? ?: "#FFFFFFFF"
+        val currentColor = ColorUtils.decodeColor(currentColorStr)
 
-        val selectedColor =
-            ColorPicker.showDialog(table, "Choose Color", Color.decode(currentColor), false, null, false)
+        val selectedColor = ColorPicker.showDialog(table, "Choose Color", currentColor, true, null, true)
         if (selectedColor != null) {
-            tableModel.setValueAt("#" + Integer.toHexString(selectedColor.rgb).substring(2), row, 1)
+            val hex = String.format(
+                "#%02x%02x%02x%02x", selectedColor.alpha, selectedColor.red, selectedColor.green, selectedColor.blue
+            )
+            tableModel.setValueAt(hex, row, 1)
         }
     }
 
+    @Suppress("UseJBColor")
     private class ColorCellRenderer : DefaultTableCellRenderer() {
         override fun getTableCellRendererComponent(
             table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int
         ): Component {
-            val hexColor = value as? String ?: ""
-            val color = Color.decode(hexColor)
+            val hexColor = value as? String ?: "#FFFFFFFF"
+            val color = ColorUtils.decodeColor(hexColor)
             val icon = ColorIcon(color)
-            val colorName = getColorName(color)
+            // Get color name based on RGB, ignoring Alpha
+            val colorName = getColorName(Color(color.red, color.green, color.blue))
 
-            val panel = JPanel(FlowLayout(FlowLayout.LEFT))
+            val panel = JPanel(FlowLayout(FlowLayout.LEFT)).apply {
+                accessibleContext.accessibleName = "Color Picker"
+            }
+
             panel.add(JLabel(icon))
             panel.add(JLabel(colorName))
+
+            if (isSelected) {
+                panel.background = table?.selectionBackground
+                panel.foreground = table?.selectionForeground
+            } else {
+                panel.background = table?.background
+                panel.foreground = table?.foreground
+            }
 
             return panel
         }
 
         private fun getColorName(color: Color): String {
-            val colorName = ColorUtils.getColorNameFromRgb(color.red, color.green, color.blue)
-            return colorName
+            return ColorUtils.getColorNameFromRgb(color.red, color.green, color.blue)
         }
     }
 
