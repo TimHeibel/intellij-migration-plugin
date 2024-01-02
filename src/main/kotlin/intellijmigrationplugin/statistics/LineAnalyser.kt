@@ -1,7 +1,6 @@
-package com.github.timheibel.intellijmigrationplugin.statistics
+package intellijmigrationplugin.statistics
 
-import com.github.timheibel.intellijmigrationplugin.annotationModel.AnnotationType
-import com.github.timheibel.intellijmigrationplugin.annotationModel.AnnotationType.MIGRATED
+import intellijmigrationplugin.annotationModel.AnnotationType
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
@@ -27,7 +26,7 @@ class LineAnalyser {
         sortLOCbyLabel(filePath)
 
         //print statistic
-        val linesMigrated = fileStatisticMap[MIGRATED] ?: -1
+        val linesMigrated = fileStatisticMap[AnnotationType.MIGRATED] ?: -1
         val linesLater = fileStatisticMap[AnnotationType.LATER] ?: -1
         val linesUnused = fileStatisticMap[AnnotationType.UNUSED] ?: -1
         val unmarked = lOC - (linesLater  + linesUnused + linesMigrated)

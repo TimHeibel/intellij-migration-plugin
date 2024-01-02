@@ -1,4 +1,4 @@
-package com.github.timheibel.intellijmigrationplugin.statistics
+package intellijmigrationplugin.statistics
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow

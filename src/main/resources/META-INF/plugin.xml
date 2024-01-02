@@ -48,7 +48,7 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.timheibel.intellijmigrationplugin.statistics.IDEWindow" id="Statistics"/>
+        <toolWindow factoryClass="intellijmigrationplugin.statistics.IDEWindow" id="Statistics"/>
         <applicationConfigurable
             parentId="tools"
             instance="intellijmigrationplugin.settings.MigrationsSettingsConfigurable"
