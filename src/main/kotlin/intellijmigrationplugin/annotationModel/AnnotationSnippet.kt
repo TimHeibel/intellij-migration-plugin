@@ -1,4 +1,4 @@
-package com.github.timheibel.intellijmigrationplugin.annotationModel
+package intellijmigrationplugin.annotationModel
 
 import java.util.Date
 
