@@ -48,6 +48,8 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity implementation="intellijmigrationplugin.ui.editor.ProjectStartupActivity"/>
+
         <applicationConfigurable
             parentId="tools"
             instance="intellijmigrationplugin.settings.MigrationsSettingsConfigurable"
