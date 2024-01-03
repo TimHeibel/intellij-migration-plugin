@@ -27,12 +27,13 @@ class LegacyFolderComponent(private val project: Project) {
 
     private fun configureLegacyFolderTextField() {
         legacyFolderTextField.emptyText.setText("Optional")
+        legacyFolderTextField.addActionListener { handleFolderSelection() }
+    }
 
-        legacyFolderTextField.addActionListener { _ ->
-            val chosenFiles = FileChooser.chooseFiles(descriptor, project, null)
-            if (chosenFiles.isNotEmpty() && chosenFiles[0] != null) {
-                legacyFolderTextField.text = chosenFiles[0].path
-            }
+    private fun handleFolderSelection() {
+        val chosenFiles = FileChooser.chooseFiles(descriptor, project, null)
+        if (chosenFiles.isNotEmpty()) {
+            legacyFolderPath = chosenFiles.first().path
         }
     }
 }

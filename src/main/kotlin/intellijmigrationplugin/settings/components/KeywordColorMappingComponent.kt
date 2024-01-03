@@ -106,7 +106,7 @@ class KeywordColorMappingComponent {
             val color = ColorUtils.decodeColor(hexColor)
             val icon = ColorIcon(color)
             // Get color name based on RGB, ignoring Alpha
-            val colorName = getColorName(Color(color.red, color.green, color.blue))
+            val colorName = ColorUtils.getColorNameFromRgb(color.red, color.green, color.blue)
 
             val panel = JPanel(FlowLayout(FlowLayout.LEFT)).apply {
                 accessibleContext.accessibleName = "Color Picker"
@@ -125,29 +125,36 @@ class KeywordColorMappingComponent {
 
             return panel
         }
-
-        private fun getColorName(color: Color): String {
-            return ColorUtils.getColorNameFromRgb(color.red, color.green, color.blue)
-        }
     }
 
 
     @Suppress("UseJBColor")
     private class ColorIcon(private val color: Color) : Icon {
+
+        companion object {
+            private const val ICON_WIDTH = 16
+            private const val ICON_HEIGHT = 16
+            private const val BORDER_SIZE = 2
+            private const val CORNER_ROUNDNESS = 4
+        }
+
         override fun paintIcon(c: Component?, g: Graphics?, x: Int, y: Int) {
             val g2d = g as Graphics2D
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
             // White Border
             g2d.color = Color.WHITE
-            g2d.fillRoundRect(x, y, iconWidth, iconHeight, 4, 4)
+            g2d.fillRoundRect(x, y, ICON_WIDTH, ICON_HEIGHT, CORNER_ROUNDNESS, CORNER_ROUNDNESS)
 
             // Fill Border
             g2d.color = color
-            g2d.fillRoundRect(x + 2, y + 2, iconWidth - 4, iconHeight - 4, 4, 4)
+            g2d.fillRoundRect(x + BORDER_SIZE, y + BORDER_SIZE, ICON_WIDTH - 2 * BORDER_SIZE, ICON_HEIGHT - 2 * BORDER_SIZE, CORNER_ROUNDNESS, CORNER_ROUNDNESS)
         }
 
-        override fun getIconWidth() = 16
-        override fun getIconHeight() = 16
+        override fun getIconWidth() = ICON_WIDTH
+        override fun getIconHeight() = ICON_HEIGHT
     }
+
+
+
 }
