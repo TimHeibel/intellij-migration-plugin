@@ -1,7 +1,6 @@
 package intellijmigrationplugin.statistics
 
 import com.intellij.openapi.application.ApplicationManager
-import intellijmigrationplugin.annotationModel.AnnotationType
 import intellijmigrationplugin.settings.MigrationSettingsState
 import java.io.BufferedReader
 import java.io.File
@@ -80,6 +79,7 @@ class LineAnalyser {
         val segments = mutableMapOf<String, Pair<String, Int>>()
         var segmentIndex = 0
 
+
         try {
             File(filePath).useLines { lines ->
                 var currentSegmentKey: String? = null
@@ -87,14 +87,13 @@ class LineAnalyser {
 
                 lines.forEach { line ->
                     if (currentSegmentKey == null) {
-                        //TODO: not annotation type anymore
-                        val foundStartKeyword : String = keywordsList.find { line.contains(it) }.toString()
+                        val foundStartKeyword : String = keywordsList.find { line.contains(it, ignoreCase = true) }.toString()
 
                         if (foundStartKeyword != "null") {
                             currentSegmentKey = foundStartKeyword
                             return@forEach
                         }
-                    } else if (line.contains("END")) {
+                    } else if (line.contains("END", ignoreCase = true)) {
                         val segmentKey = "${currentSegmentKey!!}-$segmentIndex"
                         val segmentContent = currentSegment.toString()
 
