@@ -1,16 +1,23 @@
 package intellijmigrationplugin.statistics
 
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.NlsContexts.BorderTitle
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPanel
 import com.intellij.ui.content.ContentFactory
+import com.intellij.ui.dsl.builder.panel
+import com.intellij.ui.dsl.gridLayout.HorizontalAlign
+import com.intellij.ui.layout.migLayout.createLayoutConstraints
+import intellijmigrationplugin.annotationModel.AnnotationInformation
 import java.io.File
 import java.io.FileNotFoundException
 import javax.swing.JButton
 import javax.swing.JFileChooser
+import javax.swing.JPanel
 
+/// This class is initializing a ToolWindow and adds the content from the MyStatisticsWindow class
 class IDEWindow : ToolWindowFactory {
 
     override fun createToolWindowContent(project: Project, statisticsWindow: ToolWindow) {
@@ -21,11 +28,28 @@ class IDEWindow : ToolWindowFactory {
 
     override fun shouldBeAvailable(project: Project) = true
 
+    ///This class manages the content for myStatisticsWindow
+    ///structure:
     class MyStatisticsWindow(private val statisticsWindow: ToolWindow) {
 
-        private val lineAnalyserTest = LineAnalyser()
+        private val lineAnalyser = LineAnalyser()
+        var annotationInformation = AnnotationInformation.instance
+        val legacyFolderPath = annotationInformation?.legacyFolderPath != null
 
-        fun getContent() = JBPanel<JBPanel<*>>().apply {
+
+        fun getContent() = panel {
+
+            group("Exclude Folders") {
+                row { cell() }
+            }
+
+            group("Include Folders"){
+                row { cell() }
+            }
+
+        }
+            /*TODO: two groups "exclude files" & "include files"
+
             val label = JBLabel("Select files or directories for analysis:")
             add(label)
 
@@ -33,7 +57,7 @@ class IDEWindow : ToolWindowFactory {
                 addActionListener {
                     val fileChooser = JFileChooser().apply {
                         fileSystemView = javax.swing.filechooser.FileSystemView.getFileSystemView()
-                        //TODO: set to legacy path
+
                         currentDirectory = fileSystemView.homeDirectory
                         fileSelectionMode = JFileChooser.FILES_AND_DIRECTORIES
                         isMultiSelectionEnabled = true
@@ -47,15 +71,14 @@ class IDEWindow : ToolWindowFactory {
                         println("File selection complete.")
                     }
                 }
-            })
-        }
+            })*/
 
         private fun processFileOrDirectory(file: File) {
             try {
                 if (file.isFile) {
                     // Process the file
                     println(file.absolutePath)
-                    lineAnalyserTest.pathToFile(file.absolutePath)
+                    lineAnalyser.pathToFile(file.absolutePath)
                 } else if (file.isDirectory) {
                     // Recursively process each file/directory within this directory
                     file.listFiles()?.forEach { subFile ->
@@ -72,3 +95,4 @@ class IDEWindow : ToolWindowFactory {
         }
     }
 }
+
