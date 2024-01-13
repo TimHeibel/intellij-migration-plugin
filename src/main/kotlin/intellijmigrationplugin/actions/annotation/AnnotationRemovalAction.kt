@@ -36,12 +36,23 @@ class AnnotationRemovalAction : AnAction() {
                 if(annotation.start >= startSelectionLine) {
 
                     if(annotation.hasEnd) {
+                        var offset = document.getLineEndOffset(annotation.end) + 1
+
+                        if(offset > document.textLength) {
+                            offset -= 1
+                        }
+
                         document.replaceString(document.getLineStartOffset(annotation.end),
-                            document.getLineEndOffset(annotation.end) + 1, "")
+                            offset, "")
+                    }
+
+                    var offset = document.getLineEndOffset(annotation.start) + 1
+                    if(offset > document.textLength) {
+                        offset -= 1
                     }
 
                     document.replaceString(document.getLineStartOffset(annotation.start),
-                        document.getLineEndOffset(annotation.start) + 1, "")
+                            offset, "")
                 }
             }
         }

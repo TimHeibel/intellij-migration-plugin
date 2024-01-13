@@ -2,7 +2,9 @@ package intellijmigrationplugin.annotationModel
 
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.util.TextRange
+import org.apache.commons.lang.ObjectUtils.Null
 
+@Suppress("UNCHECKED_CAST")
 class AnnotationDetection {
     companion object {
         fun detectAnnotationInFile(document: Document, fileType: String?) : ArrayList<AnnotationSnippet> {
@@ -12,12 +14,20 @@ class AnnotationDetection {
 
             val commentType = AnnotationInformation.instance!!.commentTypeMapping[fileType]
                 ?: "//"
-            val regexMigrated = getAnnotationRegex(commentType, AnnotationType.MIGRATED.name)
-            val regexLater    = getAnnotationRegex(commentType, AnnotationType.LATER.name)
-            val regexUnused   = getAnnotationRegex(commentType, AnnotationType.UNUSED.name)
+
+            val annotations = AnnotationInformation.instance!!.markerColorMapping.keys
+
+            val regexMapping =
+                    annotations.map {
+                        annotation -> getAnnotationRegex(commentType,annotation)
+                    }
+
             val regexEnd      = getAnnotationRegex(commentType, "END")
+
             var line: String
-            var currAnnotation = AnnotationType.UNMARKED
+            var currAnnotation = ""
+            var annotationActive : Boolean = false
+
             var annotationStartLine = 0
             var lineIndex = 0
             while(lineIndex < document.lineCount) {
@@ -28,40 +38,36 @@ class AnnotationDetection {
                     lineIndex++
                     continue
                 }
-                if(currAnnotation == AnnotationType.UNMARKED) {
-                    when {
-                        regexMigrated.matches(line) -> {
-                            currAnnotation = AnnotationType.MIGRATED
+                if(!annotationActive) {
+                    for(regexPair in regexMapping) {
+                        if(regexPair.second.matches(line)) {
+                            annotationActive = true
+                            currAnnotation = regexPair.first
                             annotationStartLine = lineIndex
-                        }
-                        regexLater.matches(line) -> {
-                            currAnnotation = AnnotationType.LATER
-                            annotationStartLine = lineIndex
-                        }
-                        regexUnused.matches(line) -> {
-                            currAnnotation = AnnotationType.UNUSED
-                            annotationStartLine = lineIndex
+                            break
                         }
                     }
                 } else {
-                    when {
-                        regexMigrated.matches(line) || regexLater.matches(line) || regexUnused.matches(line) -> {
+                    for(regexPair in regexMapping) {
+                        if(regexPair.second.matches(line)) {
                             outputList.add(AnnotationSnippet(annotationStartLine, --lineIndex,
-                                false, currAnnotation))
-                            currAnnotation = AnnotationType.UNMARKED
+                                    false, currAnnotation))
+                            annotationActive = false
+                            break
                         }
-                        regexEnd.matches(line) -> {
-                            outputList.add(AnnotationSnippet(annotationStartLine, lineIndex,
+                    }
+
+                    if(annotationActive && regexEnd.second.matches(line)) {
+                        outputList.add(AnnotationSnippet(annotationStartLine, lineIndex,
                                 true, currAnnotation))
-                            currAnnotation = AnnotationType.UNMARKED
-                        }
+                        annotationActive = false
                     }
                 }
 
                     lineIndex++
                 }
 
-                if (currAnnotation != AnnotationType.UNMARKED) {
+                if (annotationActive) {
                     outputList.add(AnnotationSnippet(annotationStartLine, --lineIndex,
                         false, currAnnotation))
                 }
@@ -69,8 +75,8 @@ class AnnotationDetection {
             return outputList
         }
 
-        private fun getAnnotationRegex(commentType: String, annotationType: String) : Regex {
-            return Regex("${Regex.escape(commentType)}(\\s)*${annotationType}.*")
+        private fun getAnnotationRegex(commentType: String, annotationType: String) : Pair<String, Regex> {
+            return Pair(annotationType, Regex("${Regex.escape(commentType)}(\\s)*${annotationType}.*"))
         }
     }
 }
