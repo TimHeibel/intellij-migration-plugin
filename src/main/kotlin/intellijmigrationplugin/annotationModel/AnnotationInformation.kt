@@ -1,6 +1,7 @@
 package intellijmigrationplugin.annotationModel
 
-import java.awt.Color
+import com.intellij.openapi.application.ApplicationManager
+import intellijmigrationplugin.settings.MigrationSettingsState
 
 class AnnotationInformation private constructor() {
 
@@ -16,17 +17,42 @@ class AnnotationInformation private constructor() {
     }
 
 
-    val annotationFiles: HashMap<String, AnnotationFile> = HashMap()
-    var legacyFolerPath: String = ""
-    val markerColorMapping: HashMap<AnnotationType, Color> = HashMap()
-    val commentTypeMapping: HashMap<String, String> = HashMap()
+    private var instance: AnnotationInformation? = null
+    private val settings: MigrationSettingsState
+        get() {
+            return ApplicationManager.getApplication().getService(MigrationSettingsState::class.java)
+        }
 
 
-    fun getAnnotationFile(name: String): AnnotationFile {
-        return AnnotationFile()
-    }
+    val legacyFolderPath: String
+        get() {
+            return settings.legacyFolderPath
+        }
 
-    fun computeAnnotationRanges(): HashMap<AnnotationType, Int> {
-        return HashMap()
-    }
+    val markerColorMapping: HashMap<AnnotationType, String>
+        get() {
+            val colorMapping = settings.keywordColorMapping
+
+            val colorHashMap = HashMap<AnnotationType, String>()
+            for (pair in colorMapping) {
+                colorHashMap[AnnotationType.valueOf(pair.first)] = pair.second
+            }
+
+            return colorHashMap
+        }
+
+
+    val commentTypeMapping: HashMap<String, String>
+        get() {
+            val commentMapping = settings.fileTypeCommentMapping
+
+            val commentHashMap = HashMap<String, String>()
+
+            for (pair in commentMapping) {
+                commentHashMap[pair.first] = pair.second
+            }
+
+            return commentHashMap
+        }
+
 }

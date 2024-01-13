@@ -56,4 +56,16 @@
                     first-keystroke="control alt E"/>
         </action>
     </actions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationConfigurable
+            parentId="tools"
+            instance="intellijmigrationplugin.settings.MigrationsSettingsConfigurable"
+            id="intellijmigrationplugin.settings.MigrationSettingsConfigurable"
+            displayName="Migration Plugin"/>
+        <applicationService
+                serviceImplementation="intellijmigrationplugin.settings.MigrationSettingsState"/>
+    </extensions>
+
+
 </idea-plugin>
