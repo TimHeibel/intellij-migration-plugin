@@ -2,9 +2,8 @@ package intellijmigrationplugin.annotationModel
 
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.util.TextRange
-import org.apache.commons.lang.ObjectUtils.Null
 
-@Suppress("UNCHECKED_CAST")
+
 class AnnotationDetection {
     companion object {
         fun detectAnnotationInFile(document: Document, fileType: String?) : ArrayList<AnnotationSnippet> {
@@ -26,7 +25,7 @@ class AnnotationDetection {
 
             var line: String
             var currAnnotation = ""
-            var annotationActive : Boolean = false
+            var annotationActive = false
 
             var annotationStartLine = 0
             var lineIndex = 0

@@ -23,7 +23,7 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
                 && editor.selectionModel.hasSelection(false))
     }
 
-    abstract val annotationType : String;
+    abstract val annotationType : String
 
     override fun actionPerformed(event: AnActionEvent) {
 
