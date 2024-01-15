@@ -2,6 +2,7 @@ package intellijmigrationplugin.annotationModel
 
 import com.intellij.openapi.application.ApplicationManager
 import intellijmigrationplugin.settings.MigrationSettingsState
+import intellijmigrationplugin.settings.components.FileTypeMapping
 
 class AnnotationInformation private constructor() {
 
@@ -29,30 +30,74 @@ class AnnotationInformation private constructor() {
             return settings.legacyFolderPath
         }
 
-    val markerColorMapping: HashMap<AnnotationType, String>
+    val markerColorMapping: HashMap<String, String>
         get() {
             val colorMapping = settings.keywordColorMapping
 
-            val colorHashMap = HashMap<AnnotationType, String>()
+            val colorHashMap = HashMap<String, String>()
             for (pair in colorMapping) {
-                colorHashMap[AnnotationType.valueOf(pair.first)] = pair.second
+                colorHashMap[pair.first] = pair.second
             }
 
             return colorHashMap
         }
 
 
-    val commentTypeMapping: HashMap<String, String>
+
+   val fileTypeMapping: HashMap<String, FileTypeMapping>
         get() {
-            val commentMapping = settings.fileTypeCommentMapping
+            val typeMapping = settings.fileTypeCommentMapping
 
-            val commentHashMap = HashMap<String, String>()
+            val typeHashMap = HashMap<String, FileTypeMapping>()
 
-            for (pair in commentMapping) {
-                commentHashMap[pair.first] = pair.second
+            for (fileType in typeMapping) {
+
+                //Returns only a shallow copy to ensure consistency
+                val mapping = fileType.copy()
+                typeHashMap[mapping.filetype] = mapping
             }
 
-            return commentHashMap
+            return typeHashMap
         }
+
+   val singleCommentMapping: HashMap<String, String>
+       get() {
+           val typeMapping = fileTypeMapping
+           val singleCommentMapping = HashMap<String, String>()
+
+           for(key in typeMapping.keys) {
+
+               singleCommentMapping[typeMapping[key]!!.filetype] = typeMapping[key]!!.singleLineComment
+           }
+
+           return singleCommentMapping
+       }
+
+   val multiCommentMapping: HashMap<String, String>
+       get() {
+           val typeMapping = fileTypeMapping
+           val multiCommentMapping = HashMap<String, String>()
+
+           for(key in typeMapping.keys) {
+
+               multiCommentMapping[typeMapping[key]!!.filetype] = typeMapping[key]!!.multiLineComment
+           }
+
+           return multiCommentMapping
+       }
+
+   val importMapping: HashMap<String, String>
+       get() {
+           val typeMapping = fileTypeMapping
+           val importMapping = HashMap<String, String>()
+
+           for(key in typeMapping.keys) {
+
+               importMapping[typeMapping[key]!!.filetype] = typeMapping[key]!!.importStatement
+           }
+
+           return importMapping
+       }
+
 
 }

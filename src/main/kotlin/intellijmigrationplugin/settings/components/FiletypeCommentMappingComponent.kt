@@ -6,16 +6,28 @@ import com.intellij.util.ui.UIUtil
 import java.awt.Color
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
-import javax.swing.BorderFactory
-import javax.swing.DefaultCellEditor
-import javax.swing.JPanel
-import javax.swing.JTextField
+import javax.swing.*
 import javax.swing.table.DefaultTableModel
+
+data class FileTypeMapping(
+    var filetype: String, var singleLineComment: String, var multiLineComment: String, var importStatement: String
+)
 
 @Suppress("UseJBColor")
 class FiletypeCommentMappingComponent {
 
-    val tableModel = DefaultTableModel(arrayOf(arrayOf("", "")), arrayOf("Filetype", "Comment Type"))
+    val tableModel = object : DefaultTableModel(
+        arrayOf(arrayOf("", "", "", "")),
+        arrayOf("Filetype", "Single-line Comment", "Multi-line Comment", "Import Statement")
+    ) {
+        override fun setValueAt(value: Any, row: Int, column: Int) {
+            if (row == 0 && column == 0) {
+                JOptionPane.showMessageDialog(null, "The fallback filetype cannot be updated")
+                return
+            }
+            super.setValueAt(value, row, column)
+        }
+    }
     private var table = JBTable(tableModel)
 
     fun getComponent(): JPanel {
@@ -117,7 +129,7 @@ class FiletypeCommentMappingComponent {
             table.cellEditor.stopCellEditing()
         }
 
-        tableModel.addRow(arrayOf("", ""))
+        tableModel.addRow(arrayOf("", "", "", ""))
         tableModel.fireTableDataChanged()
 
         // Focus the first cell of the newly added row
@@ -129,17 +141,27 @@ class FiletypeCommentMappingComponent {
     }
 
     private fun removeSelectedRows() {
-        tableModel.removeRow(table.selectedRow)
-        tableModel.fireTableDataChanged()
+        val selectedRow = table.selectedRow
+        if (selectedRow > 0) { // Check if the selected row is not the first row
+            tableModel.removeRow(selectedRow)
+            tableModel.fireTableDataChanged()
+        }
     }
 
-    fun initializeTableData(mapping: MutableList<Pair<String, String>>) {
-        // Remove all rows
+
+    fun initializeTableData(mapping: MutableList<FileTypeMapping>) {
         while (tableModel.rowCount > 0) {
             tableModel.removeRow(0)
         }
-        for (pair in mapping) {
-            tableModel.addRow(arrayOf(pair.first, pair.second))
+        for (mappingEntry in mapping) {
+            tableModel.addRow(
+                arrayOf(
+                    mappingEntry.filetype,
+                    mappingEntry.singleLineComment,
+                    mappingEntry.multiLineComment,
+                    mappingEntry.importStatement
+                )
+            )
         }
     }
 }
