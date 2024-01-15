@@ -7,10 +7,7 @@ import intellijmigrationplugin.settings.utils.ColorUtils
 import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import javax.swing.Icon
-import javax.swing.JLabel
-import javax.swing.JPanel
-import javax.swing.JTable
+import javax.swing.*
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 
@@ -24,6 +21,22 @@ class KeywordColorMappingComponent {
         override fun isCellEditable(row: Int, column: Int): Boolean {
             // Make the second column not editable, as this could lead to bugs, when tabbing into the content
             return column != 1
+        }
+        override fun setValueAt(aValue: Any?, row: Int, column: Int) {
+            if (column == 0) { // Assuming keyword is in the first column
+                val newKeyword = aValue.toString().lowercase()
+                for (i in 0 until rowCount) {
+                    if (i != row && getValueAt(i, 0).toString().lowercase() == newKeyword) {
+                        JOptionPane.showMessageDialog(null, "Duplicate keyword not allowed.")
+                        // Remove the row if it's a new entry
+                        if (row >= rowCount - 1) {
+                            removeRow(row)
+                        }
+                        return
+                    }
+                }
+            }
+            super.setValueAt(aValue, row, column)
         }
     }
     var table = JBTable(tableModel)
@@ -154,7 +167,5 @@ class KeywordColorMappingComponent {
         override fun getIconWidth() = ICON_WIDTH
         override fun getIconHeight() = ICON_HEIGHT
     }
-
-
 
 }

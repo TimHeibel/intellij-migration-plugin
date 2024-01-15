@@ -21,6 +21,7 @@ internal class MigrationSettingsState : PersistentStateComponent<MigrationSettin
 
     @OptionTag(converter = FileTypeMappingListConverter::class)
     var fileTypeCommentMapping: MutableList<FileTypeMapping> = mutableListOf(
+        FileTypeMapping(".*",  "//", "/* */","import "),
         FileTypeMapping(".py", "#" , "\"\"\" \"\"\"", "import "),
         FileTypeMapping(".java", "//" , "/* */", "import "),
         FileTypeMapping(".cpp", "//" , "/* */", "#include ")
