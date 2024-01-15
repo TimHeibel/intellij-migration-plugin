@@ -12,7 +12,7 @@ class AnnotationDetection {
             val outputList = ArrayList<AnnotationSnippet>()
 
 
-            val commentType = AnnotationInformation.instance!!.commentTypeMapping[fileType]
+            val commentType = AnnotationInformation.instance!!.singleCommentMapping[".$fileType"]
                 ?: "//"
 
             val annotations = AnnotationInformation.instance!!.markerColorMapping.keys

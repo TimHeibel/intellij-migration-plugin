@@ -62,12 +62,9 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
         val annotationInformation = AnnotationInformation.instance
             ?: return default
 
-        // TODO(David)
-/*
-        annotationInformation.commentTypeMapping[fType]?.let {
+        annotationInformation.singleCommentMapping[".$fType"]?.let {
             return it
         }
-*/
 
         return default
     }

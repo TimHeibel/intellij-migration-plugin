@@ -3,7 +3,7 @@ package intellijmigrationplugin.annotationModel
 import java.util.Date
 
 
-class AnnotationSnippet(var start: Int, var end: Int, var hasEnd: Boolean, var type: AnnotationType) {
+class AnnotationSnippet(var start: Int, var end: Int, var hasEnd: Boolean, var type: String) {
 
     var newFunctionName: String? = null
 
