@@ -41,8 +41,8 @@ class AnnotationInformation private constructor() {
             return colorHashMap
         }
 
-
-    val commentTypeMapping: HashMap<String, String>
+    // TODO(David)
+   /* val commentTypeMapping: HashMap<String, String>
         get() {
             val commentMapping = settings.fileTypeCommentMapping
 
@@ -53,6 +53,6 @@ class AnnotationInformation private constructor() {
             }
 
             return commentHashMap
-        }
+        }*/
 
 }

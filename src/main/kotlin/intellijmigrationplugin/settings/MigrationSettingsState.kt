@@ -6,6 +6,8 @@ import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.OptionTag
+import intellijmigrationplugin.settings.components.FileTypeMapping
+import intellijmigrationplugin.settings.converters.FileTypeMappingListConverter
 import intellijmigrationplugin.settings.converters.PairListConverter
 
 /**
@@ -17,18 +19,19 @@ internal class MigrationSettingsState : PersistentStateComponent<MigrationSettin
     var legacyFolderPath: String = ""
     var excludedFoldersList: MutableList<String> = mutableListOf()
 
-    @OptionTag(converter = PairListConverter::class)
-    var fileTypeCommentMapping:  MutableList<Pair<String,String>> = mutableListOf(
-        Pair(".py", "#"),    // Python
-        Pair(".java", "//"),  // Java
-        Pair(".cpp", "//")
+    @OptionTag(converter = FileTypeMappingListConverter::class)
+    var fileTypeCommentMapping: MutableList<FileTypeMapping> = mutableListOf(
+        FileTypeMapping(".py", "#" , "\"\"\" \"\"\"", "import "),
+        FileTypeMapping(".java", "//" , "/* */", "import "),
+        FileTypeMapping(".cpp", "//" , "/* */", "#include ")
     )
+
 
     @OptionTag(converter = PairListConverter::class)
     var keywordColorMapping: MutableList<Pair<String, String>> = mutableListOf(
-        Pair("MIGRATED", "#32CD32"),
-        Pair("LATER", "#FFA500"),
-        Pair("UNUSED", "#808080")
+        Pair("MIGRATED", "#8032cd32"),
+        Pair("LATER", "#82ffa500"),
+        Pair("UNUSED", "#82808080")
     )
 
     override fun getState(): MigrationSettingsState {

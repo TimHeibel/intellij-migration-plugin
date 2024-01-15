@@ -12,10 +12,17 @@ import javax.swing.JPanel
 import javax.swing.JTextField
 import javax.swing.table.DefaultTableModel
 
+data class FileTypeMapping(
+    var filetype: String,
+    var singleLineComment: String,
+    var multiLineComment: String,
+    var importStatement: String
+)
+
 @Suppress("UseJBColor")
 class FiletypeCommentMappingComponent {
 
-    val tableModel = DefaultTableModel(arrayOf(arrayOf("", "")), arrayOf("Filetype", "Comment Type"))
+    val tableModel = DefaultTableModel(arrayOf(arrayOf("", "", "", "")), arrayOf("Filetype", "Single-line Comment", "Multi-line Comment", "Import Statement"))
     private var table = JBTable(tableModel)
 
     fun getComponent(): JPanel {
@@ -117,7 +124,7 @@ class FiletypeCommentMappingComponent {
             table.cellEditor.stopCellEditing()
         }
 
-        tableModel.addRow(arrayOf("", ""))
+        tableModel.addRow(arrayOf("", "", "", ""))
         tableModel.fireTableDataChanged()
 
         // Focus the first cell of the newly added row
@@ -133,13 +140,16 @@ class FiletypeCommentMappingComponent {
         tableModel.fireTableDataChanged()
     }
 
-    fun initializeTableData(mapping: MutableList<Pair<String, String>>) {
-        // Remove all rows
+    fun initializeTableData(mapping: MutableList<FileTypeMapping>) {
         while (tableModel.rowCount > 0) {
             tableModel.removeRow(0)
         }
-        for (pair in mapping) {
-            tableModel.addRow(arrayOf(pair.first, pair.second))
+        for (mappingEntry in mapping) {
+            tableModel.addRow(arrayOf(
+                mappingEntry.filetype,
+                mappingEntry.singleLineComment,
+                mappingEntry.multiLineComment,
+                mappingEntry.importStatement))
         }
     }
 }

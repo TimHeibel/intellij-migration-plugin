@@ -58,7 +58,8 @@ class KeywordColorMappingComponent {
     }
 
     private fun addEmptyRow() {
-        tableModel.addRow(arrayOf("", "#ffffff"))
+        // Add new row with white color at 50% opacity (#80FFFFFF)
+        tableModel.addRow(arrayOf("", "#80FFFFFF"))
         tableModel.fireTableDataChanged()
 
         // Focus the first cell of the newly added row
@@ -84,54 +85,76 @@ class KeywordColorMappingComponent {
     }
 
     private fun openColorChooser(row: Int) {
-        val currentColor = tableModel.getValueAt(row, 1) as? String ?: ""
+        val currentColorStr = tableModel.getValueAt(row, 1) as String? ?: "#FFFFFFFF"
+        val currentColor = ColorUtils.decodeColor(currentColorStr)
 
-        val selectedColor =
-            ColorPicker.showDialog(table, "Choose Color", Color.decode(currentColor), false, null, false)
+        val selectedColor = ColorPicker.showDialog(table, "Choose Color", currentColor, true, null, true)
         if (selectedColor != null) {
-            tableModel.setValueAt("#" + Integer.toHexString(selectedColor.rgb).substring(2), row, 1)
+            val hex = String.format(
+                "#%02x%02x%02x%02x", selectedColor.alpha, selectedColor.red, selectedColor.green, selectedColor.blue
+            )
+            tableModel.setValueAt(hex, row, 1)
         }
     }
 
+    @Suppress("UseJBColor")
     private class ColorCellRenderer : DefaultTableCellRenderer() {
         override fun getTableCellRendererComponent(
             table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int
         ): Component {
-            val hexColor = value as? String ?: ""
-            val color = Color.decode(hexColor)
+            val hexColor = value as? String ?: "#FFFFFFFF"
+            val color = ColorUtils.decodeColor(hexColor)
             val icon = ColorIcon(color)
-            val colorName = getColorName(color)
+            // Get color name based on RGB, ignoring Alpha
+            val colorName = ColorUtils.getColorNameFromRgb(color.red, color.green, color.blue)
 
-            val panel = JPanel(FlowLayout(FlowLayout.LEFT))
+            val panel = JPanel(FlowLayout(FlowLayout.LEFT)).apply {
+                accessibleContext.accessibleName = "Color Picker"
+            }
+
             panel.add(JLabel(icon))
             panel.add(JLabel(colorName))
 
-            return panel
-        }
+            if (isSelected) {
+                panel.background = table?.selectionBackground
+                panel.foreground = table?.selectionForeground
+            } else {
+                panel.background = table?.background
+                panel.foreground = table?.foreground
+            }
 
-        private fun getColorName(color: Color): String {
-            val colorName = ColorUtils.getColorNameFromRgb(color.red, color.green, color.blue)
-            return colorName
+            return panel
         }
     }
 
 
     @Suppress("UseJBColor")
     private class ColorIcon(private val color: Color) : Icon {
+
+        companion object {
+            private const val ICON_WIDTH = 16
+            private const val ICON_HEIGHT = 16
+            private const val BORDER_SIZE = 2
+            private const val CORNER_ROUNDNESS = 4
+        }
+
         override fun paintIcon(c: Component?, g: Graphics?, x: Int, y: Int) {
             val g2d = g as Graphics2D
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
             // White Border
             g2d.color = Color.WHITE
-            g2d.fillRoundRect(x, y, iconWidth, iconHeight, 4, 4)
+            g2d.fillRoundRect(x, y, ICON_WIDTH, ICON_HEIGHT, CORNER_ROUNDNESS, CORNER_ROUNDNESS)
 
             // Fill Border
             g2d.color = color
-            g2d.fillRoundRect(x + 2, y + 2, iconWidth - 4, iconHeight - 4, 4, 4)
+            g2d.fillRoundRect(x + BORDER_SIZE, y + BORDER_SIZE, ICON_WIDTH - 2 * BORDER_SIZE, ICON_HEIGHT - 2 * BORDER_SIZE, CORNER_ROUNDNESS, CORNER_ROUNDNESS)
         }
 
-        override fun getIconWidth() = 16
-        override fun getIconHeight() = 16
+        override fun getIconWidth() = ICON_WIDTH
+        override fun getIconHeight() = ICON_HEIGHT
     }
+
+
+
 }
