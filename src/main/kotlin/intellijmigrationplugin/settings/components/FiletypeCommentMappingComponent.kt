@@ -10,16 +10,16 @@ import javax.swing.*
 import javax.swing.table.DefaultTableModel
 
 data class FileTypeMapping(
-    var filetype: String,
-    var singleLineComment: String,
-    var multiLineComment: String,
-    var importStatement: String
+    var filetype: String, var singleLineComment: String, var multiLineComment: String, var importStatement: String
 )
 
 @Suppress("UseJBColor")
 class FiletypeCommentMappingComponent {
 
-    val tableModel = object: DefaultTableModel(arrayOf(arrayOf("", "", "", "")), arrayOf("Filetype", "Single-line Comment", "Multi-line Comment", "Import Statement")){
+    val tableModel = object : DefaultTableModel(
+        arrayOf(arrayOf("", "", "", "")),
+        arrayOf("Filetype", "Single-line Comment", "Multi-line Comment", "Import Statement")
+    ) {
         override fun setValueAt(value: Any, row: Int, column: Int) {
             if (row == 0 && column == 0) {
                 JOptionPane.showMessageDialog(null, "The fallback filetype cannot be updated")
@@ -69,23 +69,11 @@ class FiletypeCommentMappingComponent {
         val textField = JTextField()
         return object : DefaultCellEditor(textField) {
             override fun isCellEditable(event: java.util.EventObject): Boolean {
-                if (event.source is JBTable) {
-                    val sourceTable = event.source as JBTable
-                    val editingRow = sourceTable.editingRow
-                    val editingColumn = sourceTable.editingColumn
-println("$editingRow, $editingColumn")
-                    if (editingRow == 0 && editingColumn == 0) {
-                        // Prevent editing the first cell of the first row
-                        return false
-                    }
-
-                    return editingRow < sourceTable.rowCount - 1 || editingColumn < sourceTable.columnCount - 1
-                }
-
-                return false // If the event source is not a JTable, editing is not allowed
+                // Allow editing only if the current cell is not the last cell of the last row
+                val row = table.editingRow
+                val column = table.editingColumn
+                return row < table.rowCount - 1 || column < table.columnCount - 1
             }
-
-
 
             override fun stopCellEditing(): Boolean {
                 val newFiletype = textField.text.trim()
@@ -166,11 +154,14 @@ println("$editingRow, $editingColumn")
             tableModel.removeRow(0)
         }
         for (mappingEntry in mapping) {
-            tableModel.addRow(arrayOf(
-                mappingEntry.filetype,
-                mappingEntry.singleLineComment,
-                mappingEntry.multiLineComment,
-                mappingEntry.importStatement))
+            tableModel.addRow(
+                arrayOf(
+                    mappingEntry.filetype,
+                    mappingEntry.singleLineComment,
+                    mappingEntry.multiLineComment,
+                    mappingEntry.importStatement
+                )
+            )
         }
     }
 }
