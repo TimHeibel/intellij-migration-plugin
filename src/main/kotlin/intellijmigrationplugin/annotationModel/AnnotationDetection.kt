@@ -40,9 +40,17 @@ class AnnotationDetection {
                     }
                 } else {
                     // Check if the current annotation ends in the current line.
-                    if (regexEnd.containsMatchIn(line) || markerRegexMapping[currAnnotation]?.containsMatchIn(line) == true) {
-                        annotationSnippets.add(AnnotationSnippet(annotationStartLine, lineIndex - if (regexEnd.containsMatchIn(line)) 0 else 1, regexEnd.containsMatchIn(line), currAnnotation))
+                    if (regexEnd.containsMatchIn(line)) {
+                        annotationSnippets.add(AnnotationSnippet(annotationStartLine, lineIndex, true, currAnnotation))
                         annotationActive = false
+                        continue
+                    }
+
+                    // Check if a new annotation starts in the current line, thus terminating the old annotation.
+                    markerRegexMapping.entries.find { it.value.containsMatchIn(line) }?.let { matched ->
+                        annotationSnippets.add(AnnotationSnippet(annotationStartLine, lineIndex - 1, false, currAnnotation))
+                        currAnnotation = matched.key
+                        annotationStartLine = lineIndex
                     }
                 }
             }
