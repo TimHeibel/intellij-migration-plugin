@@ -1,6 +1,5 @@
 package intellijmigrationplugin.actions.annotation
 
-import intellijmigrationplugin.annotationModel.AnnotationType
 import intellijmigrationplugin.annotationModel.AnnotationInformation
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.command.WriteCommandAction
@@ -19,12 +18,13 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
         val project = event.getData(CommonDataKeys.PROJECT)
         val editor = event.getData(CommonDataKeys.EDITOR)
 
-        event.presentation.setEnabledAndVisible(project != null
+        event.presentation.isEnabledAndVisible = (project != null
                 && editor != null
                 && editor.selectionModel.hasSelection(false))
     }
 
-    abstract val annotationType : AnnotationType;
+    abstract val annotationType : String
+
     override fun actionPerformed(event: AnActionEvent) {
 
         //Get Required information from the event
@@ -44,7 +44,7 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
         WriteCommandAction.runWriteCommandAction(project) {
             document.insertString(document.getLineEndOffset(endSelectionLine), "\n${commentStart}END\n")
             document.insertString(document.getLineStartOffset(startSelectionLine),
-                "$commentStart${annotationType.name} $addInfo\n")
+                "$commentStart$annotationType $addInfo\n")
         }
 
     }
@@ -62,12 +62,9 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
         val annotationInformation = AnnotationInformation.instance
             ?: return default
 
-        // TODO(David)
-/*
-        annotationInformation.commentTypeMapping[fType]?.let {
+        annotationInformation.singleCommentMapping[".$fType"]?.let {
             return it
         }
-*/
 
         return default
     }
@@ -81,29 +78,8 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
 }
 
 /**
- * Sets MIGRATED-Annotations
- * @see AnnotationAction
- */
-class MIGRATEDAnnotationAction(override val annotationType: AnnotationType = AnnotationType.MIGRATED)
-    : AnnotationAction()
-
-/**
- * Sets LATER-Annotations
- * @see AnnotationAction
- */
-class LATERAnnotationAction(override val annotationType: AnnotationType = AnnotationType.LATER)
-    : AnnotationAction()
-
-/**
- * Sets UNUSED-Annotations
- * @see AnnotationAction
- */
-class UNUSEDAnnotationAction(override val annotationType: AnnotationType = AnnotationType.UNUSED)
-    : AnnotationAction()
-
-/**
  * Sets Annotation From User-Dialog
  * @see AnnotationAction
  */
-class DIALOGAnnotationAction(override val annotationType: AnnotationType, annotationInformation: String)
+class DIALOGAnnotationAction(override val annotationType: String, annotationInformation: String)
     : AnnotationAction(annotationInformation)
