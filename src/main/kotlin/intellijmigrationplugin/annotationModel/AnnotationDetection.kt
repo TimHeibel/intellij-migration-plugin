@@ -33,7 +33,7 @@ class AnnotationDetection {
                 line = document
                     .getText(TextRange(document.getLineStartOffset(lineIndex),
                         document.getLineEndOffset(lineIndex)))
-                if (!Regex("^(\\s)*${Regex.escape(commentType)}").containsMatchIn(line)) {
+                if (!Regex("^(\\h)*${Regex.escape(commentType)}").containsMatchIn(line)) {
                     lineIndex++
                     continue
                 }
@@ -75,7 +75,7 @@ class AnnotationDetection {
         }
 
         private fun getAnnotationRegex(commentType: String, annotationType: String) : Pair<String, Regex> {
-            return Pair(annotationType, Regex("^(\\s)*${Regex.escape(commentType)}(\\s)*${Regex.escape(annotationType)}($|\\s)", RegexOption.IGNORE_CASE))
+            return Pair(annotationType, Regex("^(\\h)*${Regex.escape(commentType)}(\\h)*${Regex.escape(annotationType)}($|\\s)", RegexOption.IGNORE_CASE))
         }
     }
 }
