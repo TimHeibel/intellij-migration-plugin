@@ -29,6 +29,11 @@ class AnnotationInformation private constructor() {
             return settings.legacyFolderPath
         }
 
+    val excludedFolderList: List<String>
+        get() {
+            return settings.excludedFoldersList
+        }
+
     val markerColorMapping: HashMap<AnnotationType, String>
         get() {
             val colorMapping = settings.keywordColorMapping
@@ -54,5 +59,4 @@ class AnnotationInformation private constructor() {
 
             return commentHashMap
         }
-
 }
