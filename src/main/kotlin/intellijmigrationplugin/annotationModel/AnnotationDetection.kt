@@ -33,13 +33,13 @@ class AnnotationDetection {
                 line = document
                     .getText(TextRange(document.getLineStartOffset(lineIndex),
                         document.getLineEndOffset(lineIndex)))
-                if (!line.startsWith(commentType)) {
+                if (!Regex("^(\\s)*${Regex.escape(commentType)}").containsMatchIn(line)) {
                     lineIndex++
                     continue
                 }
                 if(!annotationActive) {
                     for(regexPair in regexMapping) {
-                        if(regexPair.second.matches(line)) {
+                        if(regexPair.second.containsMatchIn(line)) {
                             annotationActive = true
                             currAnnotation = regexPair.first
                             annotationStartLine = lineIndex
@@ -48,7 +48,7 @@ class AnnotationDetection {
                     }
                 } else {
                     for(regexPair in regexMapping) {
-                        if(regexPair.second.matches(line)) {
+                        if(regexPair.second.containsMatchIn(line)) {
                             outputList.add(AnnotationSnippet(annotationStartLine, --lineIndex,
                                     false, currAnnotation))
                             annotationActive = false
@@ -56,7 +56,7 @@ class AnnotationDetection {
                         }
                     }
 
-                    if(annotationActive && regexEnd.second.matches(line)) {
+                    if(annotationActive && regexEnd.second.containsMatchIn(line)) {
                         outputList.add(AnnotationSnippet(annotationStartLine, lineIndex,
                                 true, currAnnotation))
                         annotationActive = false
@@ -75,7 +75,7 @@ class AnnotationDetection {
         }
 
         private fun getAnnotationRegex(commentType: String, annotationType: String) : Pair<String, Regex> {
-            return Pair(annotationType, Regex("${Regex.escape(commentType)}(\\s)*${annotationType}.*"))
+            return Pair(annotationType, Regex("^(\\s)*${Regex.escape(commentType)}(\\s)*${Regex.escape(annotationType)}($|\\s)", RegexOption.IGNORE_CASE))
         }
     }
 }
