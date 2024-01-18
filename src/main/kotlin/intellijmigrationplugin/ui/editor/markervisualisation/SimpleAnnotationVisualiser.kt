@@ -1,4 +1,4 @@
-package intellijmigrationplugin.ui.editor.visualiser
+package intellijmigrationplugin.ui.editor.markervisualisation
 
 
 import AnnotationVisualiser
@@ -7,8 +7,8 @@ import com.intellij.openapi.editor.markup.MarkupModel
 import com.intellij.openapi.editor.markup.TextAttributes
 import com.intellij.openapi.util.TextRange
 import intellijmigrationplugin.annotationModel.AnnotationInformation
-import intellijmigrationplugin.annotationModel.visualiser.HighlightAnnotationFile
-import intellijmigrationplugin.annotationModel.visualiser.HighlightAnnotationSnippet
+import intellijmigrationplugin.annotationModel.`markervisualisation+`.HighlightAnnotationFile
+import intellijmigrationplugin.annotationModel.`markervisualisation+`.HighlightAnnotationSnippet
 import kotlinx.coroutines.*
 
 class SimpleAnnotationVisualiser : AnnotationVisualiser {
@@ -33,7 +33,6 @@ class SimpleAnnotationVisualiser : AnnotationVisualiser {
         runBlocking {
             val annotationFile = HighlightAnnotationFile(sourcePath, markup.document)
             val snippets = annotationFile.computeSnippets()
-            println(snippets.count())
             highlightEditor(snippets)
         }
     }
@@ -48,6 +47,14 @@ class SimpleAnnotationVisualiser : AnnotationVisualiser {
             markup.addRangeHighlighter(startOffset, endOffset, 0, myAttr, HighlighterTargetArea.LINES_IN_RANGE)
             yield()
         }
+    }
+
+    override fun turnVisualisationOn() {
+        otherVisulations()
+    }
+
+    override fun turnVisualisationOff() {
+        markup.removeAllHighlighters()
     }
 
     private fun visualizeCoroutine() {

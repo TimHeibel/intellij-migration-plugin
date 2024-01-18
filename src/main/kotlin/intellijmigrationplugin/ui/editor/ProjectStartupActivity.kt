@@ -5,6 +5,7 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.StartupActivity
 import com.intellij.psi.PsiDocumentManager
+import intellijmigrationplugin.annotationModel.AnnotationInformation
 
 /**
  * This class is the starting point for the visualisation of the Annotations
@@ -28,6 +29,8 @@ class ProjectStartupActivity: StartupActivity {
             val listener = DocumentChangeListener(path, editor.markupModel)
             fileSelectionListener.tryToRegisterDocumentListener(path, editor.document, listener)
         }
+
+        AnnotationInformation.instance!!.fileSelectionChangeManager = fileSelectionListener
 
     }
 

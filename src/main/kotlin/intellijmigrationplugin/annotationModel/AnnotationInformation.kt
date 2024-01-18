@@ -2,6 +2,8 @@ package intellijmigrationplugin.annotationModel
 
 import com.intellij.openapi.application.ApplicationManager
 import intellijmigrationplugin.settings.MigrationSettingsState
+import intellijmigrationplugin.ui.editor.DocumentChangeListener
+import intellijmigrationplugin.ui.editor.FileSelectionChangeListener
 import java.awt.Color
 
 class AnnotationInformation private constructor() {
@@ -16,7 +18,6 @@ class AnnotationInformation private constructor() {
                 return field!!
             }
     }
-
 
     private val settings: MigrationSettingsState
         get() {
@@ -52,7 +53,6 @@ class AnnotationInformation private constructor() {
                 //val a = pair.value.substring(1,3)
                 colorHashMap[pair.key] = Color(r, g, b, 30)
             }
-
             return colorHashMap
         }
 
@@ -73,5 +73,15 @@ class AnnotationInformation private constructor() {
 
             return commentHashMap
         }
+
+    var showMarker: Boolean = true
+        set(value) {
+            field = value
+            if (!this::fileSelectionChangeManager.isInitialized) return
+            if (value) fileSelectionChangeManager.turnVisualisationOn()
+            else fileSelectionChangeManager.turnVisualisationOff()
+        }
+
+    lateinit var fileSelectionChangeManager: FileSelectionChangeListener
 
 }

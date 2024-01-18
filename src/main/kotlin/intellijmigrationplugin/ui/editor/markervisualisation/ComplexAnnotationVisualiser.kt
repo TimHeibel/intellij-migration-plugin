@@ -1,4 +1,4 @@
-package intellijmigrationplugin.ui.editor.visualiser
+package intellijmigrationplugin.ui.editor.markervisualisation
 
 import AnnotationVisualiser
 import com.intellij.openapi.editor.event.DocumentEvent
@@ -7,9 +7,9 @@ import com.intellij.openapi.editor.markup.MarkupModel
 import com.intellij.openapi.editor.markup.RangeHighlighter
 import com.intellij.openapi.editor.markup.TextAttributes
 import intellijmigrationplugin.annotationModel.*
-import intellijmigrationplugin.annotationModel.visualiser.HighlightAnnotationFile
-import intellijmigrationplugin.annotationModel.visualiser.HighlightAnnotationSnippet
-import intellijmigrationplugin.annotationModel.visualiser.RangeHighlightUpdate
+import intellijmigrationplugin.annotationModel.`markervisualisation+`.HighlightAnnotationFile
+import intellijmigrationplugin.annotationModel.`markervisualisation+`.HighlightAnnotationSnippet
+import intellijmigrationplugin.annotationModel.`markervisualisation+`.RangeHighlightUpdate
 import kotlinx.coroutines.runBlocking
 import java.util.*
 import kotlin.collections.HashMap
@@ -40,6 +40,14 @@ class ComplexAnnotationVisualiser: AnnotationVisualiser {
             val snippets = annotationFile.computeSnippets()
             highlightEditor(snippets)
         }
+    }
+
+    override fun turnVisualisationOn() {
+        visualiseAnnotation()
+    }
+
+    override fun turnVisualisationOff() {
+        markup.removeAllHighlighters()
     }
 
     private fun highlightEditor(snippets: MutableList<HighlightAnnotationSnippet>) {

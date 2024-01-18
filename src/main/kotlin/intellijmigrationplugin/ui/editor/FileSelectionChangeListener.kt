@@ -15,6 +15,7 @@ class FileSelectionChangeListener: FileEditorManagerListener {
     override fun selectionChanged(event: FileEditorManagerEvent) {
         if (event.newFile == null) return
         if (isDocumentListenerRegistered(event.newFile.canonicalPath!!)) return
+        if (isDocumentExcluded(event.newFile.canonicalPath!!)) return
 
         val document =  event.manager.selectedTextEditor!!.document
         val docChangeListener = DocumentChangeListener(event.newFile.canonicalPath!!, event.manager.selectedTextEditor!!.markupModel)
@@ -23,6 +24,7 @@ class FileSelectionChangeListener: FileEditorManagerListener {
 
     override fun fileOpened(source: FileEditorManager, file: VirtualFile) {
         if (isDocumentListenerRegistered(file.canonicalPath!!)) return
+        if (isDocumentExcluded(file.canonicalPath!!)) return
 
         val document = source.selectedTextEditor!!.document
         val listener = DocumentChangeListener(file.canonicalPath!!, source.selectedTextEditor!!.markupModel)
@@ -33,8 +35,17 @@ class FileSelectionChangeListener: FileEditorManagerListener {
         unregisterDocumentListener(file.canonicalPath!!)
     }
 
+    fun turnVisualisationOn() {
+        listeners.values.forEach {x -> x.turnVisualisationOn()}
+    }
+    fun turnVisualisationOff() {
+        listeners.values.forEach {x -> x.turnVisualisationOff()}
+    }
+
     fun tryToRegisterDocumentListener(path: String, document: Document, listener: DocumentChangeListener) {
         if (isDocumentListenerRegistered(path)) return
+        if (isDocumentExcluded(path)) return
+
         registerDocumentListener(path, document, listener)
     }
 
@@ -54,5 +65,12 @@ class FileSelectionChangeListener: FileEditorManagerListener {
     private fun isDocumentListenerRegistered(path: String): Boolean {
         return documents.containsKey(path)
     }
+
+    private fun isDocumentExcluded(path: String): Boolean {
+        //TODO: Excluded folder and files from the settings should not be marked
+        return false
+    }
+
+
 
 }

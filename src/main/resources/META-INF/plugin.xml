@@ -45,6 +45,29 @@
                     keymap="$default"
                     first-keystroke="control alt W"/>
         </action>
+
+
+        <action
+                id = "intellijmigrationplugin.actions.markervisualisation.MigratedFileOpener"
+                class = "intellijmigrationplugin.actions.markervisualisation.MigratedFileOpener"
+                text = "Open Migration Target File"
+                description = "Opens the specified target file from the migration annotation">
+                <add-to-group
+                    group-id="EditorPopupMenu"
+                    anchor= "last"/>
+        </action>
+        <action
+                id = "intellijmigrationplugin.actions.markervisualisation.ShowMarkerAction"
+                class = "intellijmigrationplugin.actions.markervisualisation.ShowMarkerAction"
+                text = "TurnOnMarker"
+                description = "Turns the annotation visualisation in the editor on and off">
+            <add-to-group
+                    group-id="ToolsMenu"
+                    anchor= "last"/>
+
+            <keyboard-shortcut keymap="$default" first-keystroke="meta control alt o"/>
+            <!-- control == option, alt = command, meta = control -->
+        </action>
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
