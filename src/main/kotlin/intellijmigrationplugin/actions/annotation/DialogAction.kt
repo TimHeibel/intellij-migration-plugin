@@ -14,7 +14,7 @@ class DialogAction : AnAction() {
         val project = event.getData(CommonDataKeys.PROJECT)
         val editor = event.getData(CommonDataKeys.EDITOR)
 
-        event.presentation.setEnabledAndVisible(project != null
+        event.presentation.isEnabledAndVisible = (project != null
                 && editor != null
                 && editor.selectionModel.hasSelection(false))
     }

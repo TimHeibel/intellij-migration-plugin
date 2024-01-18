@@ -29,7 +29,7 @@ class MigratedFileOpener: AnAction() {
         val virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file)!!
         print(virtualFile.name)
         fileEditorManager.openFile(virtualFile, true)
-        gotoLine(10, e.project!!)
+        gotoLine(100, e.project!!)
     }
 
     fun gotoLine(lineNumber: Int, project: Project): Boolean {

@@ -1,6 +1,7 @@
 package intellijmigrationplugin.settings.utils
 
 import intellijmigrationplugin.settings.utils.ColorUtils.ColorName
+import java.awt.Color
 
 /**
  * Utility class for working with predefined colors and finding the closest color name based on RGB values.
@@ -159,6 +160,7 @@ class ColorUtils {
         }
     }
 
+    @Suppress("UseJBColor")
     companion object {
         fun getColorNameFromRgb(r: Int, g: Int, b: Int): String {
             val colorList = initColorList()
@@ -173,6 +175,17 @@ class ColorUtils {
                 }
             }
             return closestMatch?.name ?: "No matched color name."
+        }
+        fun decodeColor(colorStr: String): Color {
+            return if (colorStr.length == 9) { // #RRGGBBAA format
+                val alpha = Integer.parseInt(colorStr.substring(1, 3), 16)
+                val red = Integer.parseInt(colorStr.substring(3, 5), 16)
+                val green = Integer.parseInt(colorStr.substring(5, 7), 16)
+                val blue = Integer.parseInt(colorStr.substring(7, 9), 16)
+                Color(red, green, blue, alpha)
+            } else {
+                Color.decode(colorStr)
+            }
         }
     }
 }

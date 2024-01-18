@@ -1,6 +1,7 @@
 package intellijmigrationplugin.settings
 
 import com.intellij.openapi.options.Configurable
+import intellijmigrationplugin.settings.components.FileTypeMapping
 import org.jetbrains.annotations.Nls
 import javax.swing.JComponent
 import javax.swing.table.DefaultTableModel
@@ -31,7 +32,7 @@ internal class MigrationsSettingsConfigurable : Configurable {
         val keyWordColorMappingModified =
             convertTableModelToList(settingsComponent?.keywordColorMappingComponent?.tableModel!!) != settings.keywordColorMapping
         val filetypeCommentMappingModified =
-            convertTableModelToList(settingsComponent?.filetypeCommentMappingComponent?.tableModel!!) != settings.fileTypeCommentMapping
+            convertTableModelToFileTypeMappingList(settingsComponent?.filetypeCommentMappingComponent?.tableModel!!) != settings.fileTypeCommentMapping
 
         return legacyFolderPathModified || excludedFoldersListModified!! || keyWordColorMappingModified || filetypeCommentMappingModified
     }
@@ -44,7 +45,7 @@ internal class MigrationsSettingsConfigurable : Configurable {
         settings.keywordColorMapping =
             convertTableModelToList(settingsComponent?.keywordColorMappingComponent?.tableModel!!)
         settings.fileTypeCommentMapping =
-            convertTableModelToList(settingsComponent?.filetypeCommentMappingComponent?.tableModel!!)
+            convertTableModelToFileTypeMappingList(settingsComponent?.filetypeCommentMappingComponent?.tableModel!!)
     }
 
     override fun reset() {
@@ -75,4 +76,23 @@ internal class MigrationsSettingsConfigurable : Configurable {
         return list
     }
 
-}
+    private fun convertTableModelToFileTypeMappingList(tableModel: DefaultTableModel): MutableList<FileTypeMapping> {
+        val list = mutableListOf<FileTypeMapping>()
+
+        for (row in 0 until tableModel.rowCount) {
+            val filetype = tableModel.getValueAt(row, 0).toString().trim()
+            val singleLineComment = tableModel.getValueAt(row, 1).toString().trim()
+            val multiLineComment = tableModel.getValueAt(row, 2).toString().trim()
+            val importStatement = tableModel.getValueAt(row, 3).toString().trim()
+
+            if (filetype.isNotEmpty()) {
+                val fileTypeMapping = FileTypeMapping(filetype, singleLineComment, multiLineComment, importStatement)
+                list.add(fileTypeMapping)
+                }
+            }
+
+            return list
+        }
+
+
+    }

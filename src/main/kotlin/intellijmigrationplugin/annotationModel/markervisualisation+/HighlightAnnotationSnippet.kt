@@ -11,7 +11,7 @@ class HighlightAnnotationSnippet: AnnotationSnippet {
 
     val id: UUID
 
-    constructor(start: Int, end: Int, type: String): super(start, end, type) {
+    constructor(start: Int, end: Int, type: String): super(start, end, true, type) {
         id = UUID.randomUUID()
     }
 
