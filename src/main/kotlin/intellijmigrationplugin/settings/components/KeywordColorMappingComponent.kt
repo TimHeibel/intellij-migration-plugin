@@ -117,7 +117,8 @@ class KeywordColorMappingComponent {
         ): Component {
             val hexColor = value as? String ?: "#FFFFFFFF"
             val color = ColorUtils.decodeColor(hexColor)
-            val icon = ColorIcon(color)
+            val iconColor = Color(color.red, color.green, color.blue) // Only show RGB not A (Opacity)
+            val icon = ColorIcon(iconColor)
             // Get color name based on RGB, ignoring Alpha
             val colorName = ColorUtils.getColorNameFromRgb(color.red, color.green, color.blue)
 
