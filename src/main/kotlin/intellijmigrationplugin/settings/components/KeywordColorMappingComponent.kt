@@ -71,8 +71,8 @@ class KeywordColorMappingComponent {
     }
 
     private fun addEmptyRow() {
-        // Add new row with white color at 50% opacity (#80FFFFFF)
-        tableModel.addRow(arrayOf("", "#80FFFFFF"))
+        // Add new row with white color at 13% Opacity (#22FFFFFF)
+        tableModel.addRow(arrayOf("", "#22ffffff"))
         tableModel.fireTableDataChanged()
 
         // Focus the first cell of the newly added row
