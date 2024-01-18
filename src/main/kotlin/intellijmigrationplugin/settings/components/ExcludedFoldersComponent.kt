@@ -7,6 +7,7 @@ import com.intellij.ui.CollectionListModel
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.components.JBList
 import com.intellij.util.ui.FormBuilder
+import java.nio.file.Paths
 import javax.swing.JComponent
 import javax.swing.JOptionPane
 
@@ -41,7 +42,13 @@ class ExcludedFoldersComponent(private val project: Project) {
 
         for (file in chosenFiles) {
             val path = file.path
-            if (path.startsWith(projectBasePath)) {
+
+            // Convert to Path objects for better comparison
+            val projectPath = Paths.get(projectBasePath).toAbsolutePath().normalize()
+            val filePath = Paths.get(path).toAbsolutePath().normalize()
+
+            // Check if filePath starts with projectPath
+            if (filePath.startsWith(projectPath) && filePath != projectPath) {
                 if (!excludedFoldersListModel.items.contains(path)) {
                     excludedFoldersListModel.add(path)
                 } else {
