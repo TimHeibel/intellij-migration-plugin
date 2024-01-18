@@ -18,6 +18,7 @@ import java.awt.event.ActionListener
 import java.io.File
 import java.io.FileNotFoundException
 import javax.swing.JButton
+import javax.swing.JLabel
 import javax.swing.JPanel
 
 /// This class is initializing a ToolWindow and adds the content from the MyStatisticsWindow class
@@ -37,12 +38,13 @@ class IDEWindow : ToolWindowFactory {
 
         private val lineAnalyser = LineAnalyser()
         var annotationInformation = AnnotationInformation.instance
-        val legacyFolderPath = annotationInformation?.legacyFolderPath != null
+        val legacyFolderPath = annotationInformation?.legacyFolderPath
+        val excludedLagacyFolders = annotationInformation?.excludedFolderList
 
         private val project = ProjectManager.getInstance().openProjects[0]
         private val FileAndFolderChooserComponent = FileAndFolderChooserComponent(project)
         private val IncludeFileAndFolderChooserComponent = FileAndFolderChooserComponent(project)
-        private val ExcludedFoldersComponent = ExcludedFoldersComponent(project)
+        private val excludedFoldersComponent = ExcludedFoldersComponent(project)
         fun getContent(): JPanel {
 
             val contentPane: JPanel = panel {
@@ -53,14 +55,30 @@ class IDEWindow : ToolWindowFactory {
                             .comment("Specify folders to be excluded from statistics.")
                     }
                     row {
-                        button("apply") {
+                        val excludeStatisticButton = JButton("run Statistic").apply {
                             addActionListener {
-                                // Code to execute when the button is clicked
-                                println("show window")
+                                //execute when the button is clicked
+                                val contentList = FileAndFolderChooserComponent.excludedFoldersListModel
+                                excludedLagacyFolders?.forEach { filePath ->
+                                    if(!contentList.contains(filePath)) {
+                                        contentList.add(filePath)
+                                    }
+                                }
+                                val legacyFolder = File(legacyFolderPath)
+
+                                // Iterate over files and folders in specified directory
+                                legacyFolder.listFiles()?.forEach { file ->
+                                    // Check if the file or folder should be excluded
+                                    if (!contentList.items.contains(file.absolutePath)) {
+                                        processFileOrDirectory(file)
+                                    }
+                                }
+
+                                println("Processing complete.")
                             }
                         }
+                        cell(excludeStatisticButton)
                     }
-                    row { cell() }
                 }
 
                 group("Include Folders") {
@@ -69,7 +87,7 @@ class IDEWindow : ToolWindowFactory {
                             .comment("comment")
                     }
                     row {
-                        val newButton = JButton("Apply").apply {
+                        val newButton = JButton("runStatistic").apply {
                             addActionListener {
                                 // Code to execute when the button is clicked
                                 val contentList = IncludeFileAndFolderChooserComponent.excludedFoldersListModel
@@ -78,17 +96,53 @@ class IDEWindow : ToolWindowFactory {
                                     val file = File(filePath)
                                     processFileOrDirectory(file)
                                 }
-
+                                updateStatistics()
                                 println("Processing complete.")
                             }
                         }
                         cell(newButton)
                     }
                 }
+                group("Statistic"){
+                    row {
+
+                        // Call the function initially to set the label text
+                        updateStatistics()
+                        cell(statisticLabel)
+                    }
+                }
             }
             return contentPane
         }
-            /*TODO: scroll cells with action buttons
+
+        // Use a dynamic label to display the current statistics
+        val statisticLabel = JLabel("")
+
+        // Define a function to update the label text
+        fun updateStatistics() {
+            statisticLabel.text = lineAnalyser.fileStatisticMap.toString()
+        }
+        private fun processFileOrDirectory(file: File) {
+            try {
+                if (file.isFile) {
+                    // Process the file
+                    println(file.absolutePath)
+                    lineAnalyser.pathToFile(file.absolutePath)
+                } else if (file.isDirectory) {
+                    // Recursively process each file/directory within this directory
+                    file.listFiles()?.forEach { subFile ->
+                        processFileOrDirectory(subFile)
+                    }
+                }
+            } catch (e: FileNotFoundException) {
+                println("File not found: ${e.message}")
+            } catch (e: SecurityException) {
+                println("Access denied: ${e.message}")
+            } catch (e: Exception) {
+                println("Error processing file or directory: ${e.message}")
+            }
+        }
+            /*TODO: Update printstatement
 
             val label = JBLabel("Select files or directories for analysis:")
             add(label)
@@ -113,26 +167,7 @@ class IDEWindow : ToolWindowFactory {
                 }
             })*/
 
-        private fun processFileOrDirectory(file: File) {
-            try {
-                if (file.isFile) {
-                    // Process the file
-                    println(file.absolutePath)
-                    lineAnalyser.pathToFile(file.absolutePath)
-                } else if (file.isDirectory) {
-                    // Recursively process each file/directory within this directory
-                    file.listFiles()?.forEach { subFile ->
-                        processFileOrDirectory(subFile)
-                    }
-                }
-            } catch (e: FileNotFoundException) {
-                println("File not found: ${e.message}")
-            } catch (e: SecurityException) {
-                println("Access denied: ${e.message}")
-            } catch (e: Exception) {
-                println("Error processing file or directory: ${e.message}")
-            }
-        }
+
     }
 }
 

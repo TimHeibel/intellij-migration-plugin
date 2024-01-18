@@ -21,7 +21,8 @@ class LineAnalyser {
     private var keywordsList: MutableList<String> = settings.keywordColorMapping.map { it.first }.toMutableList()
     private val regexPattern = ".*\\S|}"
     private val pattern: Pattern = Pattern.compile(regexPattern)
-    private val fileStatisticMap: MutableMap<String, Int> = mutableMapOf<String,Int>()
+    val fileStatisticMap: MutableMap<String, Int> = mutableMapOf<String,Int>()
+    val ideWindow = IDEWindow()
 
     init {
         // Initialize map with default values
@@ -36,19 +37,13 @@ class LineAnalyser {
         }
     }
     fun pathToFile(filePath: String) {
-        //TODO: read files from Projects and analyse lines
+
         resetFileStatisticMap()
         val lOC = countLinesInFile(filePath)
         sortLOCbyLabel(filePath)
 
-        //print statistic temporär
-        val linesMigrated = fileStatisticMap[keywordsList[0]] ?: -1
-        val linesLater = fileStatisticMap[keywordsList[1]] ?: -1
-        val linesUnused = fileStatisticMap[keywordsList[2]] ?: -1
-        val unmarked = lOC - (linesLater  + linesUnused + linesMigrated)
-        val percent= 100 - ((unmarked/lOC).toDouble() * 100)
-        println("lOC: $lOC $keywordsList[0] : $linesMigrated , $linesLater , $linesUnused, $unmarked")
-        println("$percent % out of 100%")
+        println(fileStatisticMap.toString())
+
     }
 
     //TODO: filter out comments and imports
