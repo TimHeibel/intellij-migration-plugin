@@ -66,14 +66,14 @@ class IDEWindow : ToolWindowFactory {
                                 }
                                 val legacyFolder = File(legacyFolderPath)
 
-                                // Iterate over files and folders in specified directory
+                                //TODO:
                                 legacyFolder.listFiles()?.forEach { file ->
                                     // Check if the file or folder should be excluded
                                     if (!contentList.items.contains(file.absolutePath)) {
                                         processFileOrDirectory(file)
                                     }
                                 }
-
+                                updateStatistics()
                                 println("Processing complete.")
                             }
                         }
@@ -92,6 +92,7 @@ class IDEWindow : ToolWindowFactory {
                                 // Code to execute when the button is clicked
                                 val contentList = IncludeFileAndFolderChooserComponent.excludedFoldersListModel
 
+                                //TODO: handle double files
                                 contentList.items.forEach { filePath ->
                                     val file = File(filePath)
                                     processFileOrDirectory(file)
@@ -105,7 +106,7 @@ class IDEWindow : ToolWindowFactory {
                 }
                 group("Statistic"){
                     row {
-
+                        //TODO: Issue 38
                         // Call the function initially to set the label text
                         updateStatistics()
                         cell(statisticLabel)
@@ -115,13 +116,13 @@ class IDEWindow : ToolWindowFactory {
             return contentPane
         }
 
-        // Use a dynamic label to display the current statistics
-        val statisticLabel = JLabel("")
 
-        // Define a function to update the label text
+        val statisticLabel = JLabel("")
         fun updateStatistics() {
             statisticLabel.text = lineAnalyser.fileStatisticMap.toString()
         }
+
+        //TODO: filterout excludedfiles
         private fun processFileOrDirectory(file: File) {
             try {
                 if (file.isFile) {
@@ -142,32 +143,6 @@ class IDEWindow : ToolWindowFactory {
                 println("Error processing file or directory: ${e.message}")
             }
         }
-            /*TODO: Update printstatement
-
-            val label = JBLabel("Select files or directories for analysis:")
-            add(label)
-
-            add(JButton("Select Files").apply {
-                addActionListener {
-                    val fileChooser = JFileChooser().apply {
-                        fileSystemView = javax.swing.filechooser.FileSystemView.getFileSystemView()
-
-                        currentDirectory = fileSystemView.homeDirectory
-                        fileSelectionMode = JFileChooser.FILES_AND_DIRECTORIES
-                        isMultiSelectionEnabled = true
-                    }
-
-                    val response = fileChooser.showOpenDialog(null)
-                    if (response == JFileChooser.APPROVE_OPTION) {
-                        fileChooser.selectedFiles.forEach { file ->
-                            processFileOrDirectory(file)
-                        }
-                        println("File selection complete.")
-                    }
-                }
-            })*/
-
-
     }
 }
 

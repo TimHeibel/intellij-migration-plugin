@@ -22,7 +22,6 @@ class LineAnalyser {
     private val regexPattern = ".*\\S|}"
     private val pattern: Pattern = Pattern.compile(regexPattern)
     val fileStatisticMap: MutableMap<String, Int> = mutableMapOf<String,Int>()
-    val ideWindow = IDEWindow()
 
     init {
         // Initialize map with default values
@@ -123,7 +122,7 @@ class LineAnalyser {
         return
     }
 
-
+    //TODO: filterout import and multiline comments
     private fun countLinesInSegment(segment: String): Int {
         var lOCSegment = 0
 
