@@ -1,15 +1,15 @@
 package intellijmigrationplugin.ui.dialogs
 
-import intellijmigrationplugin.annotationModel.AnnotationType
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.dsl.builder.*
+import intellijmigrationplugin.annotationModel.AnnotationInformation
 import javax.swing.JComponent
 
 class AnnotationDialog : DialogWrapper(true) {
 
     private lateinit var data : DataModel
 
-    val annotationType : AnnotationType
+    val annotationType : String
         get() = data.annotationType
     val annotationComment : String
         get() = data.annotationComment
@@ -19,21 +19,19 @@ class AnnotationDialog : DialogWrapper(true) {
         init()
     }
 
-    override fun createCenterPanel(): JComponent? {
+    override fun createCenterPanel(): JComponent {
 
         val data = DataModel()
         this.data = data
 
+        val annotations = AnnotationInformation.instance!!.markerColorMapping.keys
+
         return panel {
             buttonsGroup("Select Annotation-Type:") {
-                row {
-                    radioButton("MIGRATED", AnnotationType.MIGRATED).selected
-                }
-                row {
-                    radioButton("LATER", AnnotationType.LATER)
-                }
-                row {
-                    radioButton("UNUSED", AnnotationType.UNUSED)
+                for (annotation in annotations) {
+                    row {
+                        radioButton(annotation, annotation)
+                    }
                 }
             }.bind({data.annotationType}, {data.annotationType = it})
 
@@ -45,6 +43,6 @@ class AnnotationDialog : DialogWrapper(true) {
 }
 
 data class DataModel(
-    var annotationType : AnnotationType = AnnotationType.MIGRATED,
+    var annotationType : String = "",
     var annotationComment: String = "",
 )

@@ -7,7 +7,9 @@ import com.intellij.ui.CollectionListModel
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.components.JBList
 import com.intellij.util.ui.FormBuilder
+import java.nio.file.Paths
 import javax.swing.JComponent
+import javax.swing.JOptionPane
 
 class ExcludedFoldersComponent(private val project: Project) {
 
@@ -19,7 +21,6 @@ class ExcludedFoldersComponent(private val project: Project) {
         withTreeRootVisible(false)
         isTreeRootVisible
     }
-
 
     fun getComponent(): JComponent {
         configureExcludedFoldersList()
@@ -37,10 +38,29 @@ class ExcludedFoldersComponent(private val project: Project) {
 
     private fun addFolder() {
         val chosenFiles = FileChooser.chooseFiles(descriptor, project, null)
+        val projectBasePath = project.basePath ?: return
+
         for (file in chosenFiles) {
             val path = file.path
-            if (!excludedFoldersListModel.items.contains(path)) {
-                excludedFoldersListModel.add(path)
+
+            // Convert to Path objects for better comparison
+            val projectPath = Paths.get(projectBasePath).toAbsolutePath().normalize()
+            val filePath = Paths.get(path).toAbsolutePath().normalize()
+
+            // Check if filePath starts with projectPath
+            if (filePath.startsWith(projectPath) && filePath != projectPath) {
+                if (!excludedFoldersListModel.items.contains(path)) {
+                    excludedFoldersListModel.add(path)
+                } else {
+                    // Path is already in List, do not add it again
+                }
+            } else {
+                JOptionPane.showMessageDialog(
+                    null,
+                    "The selected folder is not a subfolder of the project.",
+                    "Invalid Folder",
+                    JOptionPane.ERROR_MESSAGE
+                )
             }
         }
     }
