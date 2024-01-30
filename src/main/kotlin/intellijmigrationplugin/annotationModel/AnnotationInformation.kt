@@ -1,9 +1,8 @@
 package intellijmigrationplugin.annotationModel
 
 import com.intellij.openapi.application.ApplicationManager
+import intellijmigrationplugin.annotationModel.documents.OpenDocumentManager
 import intellijmigrationplugin.settings.MigrationSettingsState
-import intellijmigrationplugin.ui.editor.DocumentChangeListener
-import intellijmigrationplugin.ui.editor.FileSelectionChangeListener
 import java.awt.Color
 import intellijmigrationplugin.settings.components.FileTypeMapping
 
@@ -81,13 +80,13 @@ class AnnotationInformation private constructor() {
         }
 
 
-    lateinit var fileSelectionChangeManager: FileSelectionChangeListener
+    lateinit var documentManager: OpenDocumentManager
     var showMarker: Boolean = true
         set(value) {
             field = value
-            if (!this::fileSelectionChangeManager.isInitialized) return
-            if (value) fileSelectionChangeManager.turnVisualisationOn()
-            else fileSelectionChangeManager.turnVisualisationOff()
+            if (!this::documentManager.isInitialized) return
+            if (value) documentManager.turnVisualisationOn()
+            else documentManager.turnVisualisationOff()
         }
 
     val singleCommentMapping: HashMap<String, String>

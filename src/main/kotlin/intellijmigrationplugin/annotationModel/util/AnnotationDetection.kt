@@ -1,7 +1,9 @@
-package intellijmigrationplugin.annotationModel
+package intellijmigrationplugin.annotationModel.util
 
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.util.TextRange
+import intellijmigrationplugin.annotationModel.AnnotationInformation
+import intellijmigrationplugin.annotationModel.AnnotationSnippet
 import kotlinx.coroutines.*
 
 class AnnotationDetection {

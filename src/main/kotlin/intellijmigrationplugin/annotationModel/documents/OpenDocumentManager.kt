@@ -1,4 +1,4 @@
-package intellijmigrationplugin.ui.editor
+package intellijmigrationplugin.annotationModel.documents
 
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent
@@ -6,7 +6,12 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.vfs.VirtualFile
 import java.util.concurrent.ConcurrentHashMap
 
-class FileSelectionManager: FileEditorManagerListener {
+/**
+ * This class is instantiated once in the project startup phase.
+ * A list contains all documents that are opened as tab.
+ * Functionality regarding the state of a specific document are exposed through specific functions.
+ */
+class OpenDocumentManager: FileEditorManagerListener {
 
     private val openDocuments: ConcurrentHashMap<String, AnnotationDocumentHandler> = ConcurrentHashMap()
 

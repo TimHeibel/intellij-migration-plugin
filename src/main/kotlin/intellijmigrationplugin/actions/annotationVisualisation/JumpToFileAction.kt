@@ -12,7 +12,7 @@ import intellijmigrationplugin.annotationModel.AnnotationInformation
 import java.io.File
 
 
-class MigratedFileOpener: AnAction() {
+class JumpToFileAction: AnAction() {
 
 
     override fun actionPerformed(e: AnActionEvent) {

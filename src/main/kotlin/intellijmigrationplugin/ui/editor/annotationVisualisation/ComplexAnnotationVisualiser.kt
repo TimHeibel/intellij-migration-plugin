@@ -1,4 +1,4 @@
-package intellijmigrationplugin.ui.editor.markervisualisation
+package intellijmigrationplugin.ui.editor.annotationVisualisation
 
 import AnnotationVisualiser
 import com.intellij.openapi.editor.event.DocumentEvent

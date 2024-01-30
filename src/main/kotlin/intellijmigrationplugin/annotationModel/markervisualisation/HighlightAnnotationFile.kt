@@ -1,8 +1,8 @@
-package intellijmigrationplugin.annotationModel.`markervisualisation+`
+package intellijmigrationplugin.annotationModel.markervisualisation
 
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.event.DocumentEvent
-import intellijmigrationplugin.annotationModel.AnnotationDetection
+import intellijmigrationplugin.annotationModel.util.AnnotationDetection
 import intellijmigrationplugin.annotationModel.AnnotationFile
 import kotlinx.coroutines.yield
 

@@ -1,4 +1,4 @@
-package intellijmigrationplugin.annotationModel.`markervisualisation+`
+package intellijmigrationplugin.annotationModel.markervisualisation
 
 import intellijmigrationplugin.annotationModel.AnnotationSnippet
 import java.util.*

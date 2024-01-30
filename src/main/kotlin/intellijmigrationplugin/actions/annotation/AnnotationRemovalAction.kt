@@ -4,7 +4,7 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.command.WriteCommandAction
-import intellijmigrationplugin.annotationModel.AnnotationDetection
+import intellijmigrationplugin.annotationModel.util.AnnotationDetection
 
 class AnnotationRemovalAction : AnAction() {
     override fun actionPerformed(event: AnActionEvent) {
