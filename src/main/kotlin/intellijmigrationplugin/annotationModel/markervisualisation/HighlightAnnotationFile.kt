@@ -17,7 +17,9 @@ class HighlightAnnotationFile: AnnotationFile {
     }
 
     suspend fun computeSnippets(): MutableList<HighlightAnnotationSnippet> {
-        annotations = AnnotationDetection.detectAnnotationInFile(document, ".java", 0, document.lineCount)
+        val splits = fileName.split(".")
+        val fileType = "."+splits.last()
+        annotations = AnnotationDetection.detectAnnotationInFile(document, fileType, 0, document.lineCount)
 
         for (i in 0..annotations.count()-1) {
             val currentAnnotation = annotations[i]

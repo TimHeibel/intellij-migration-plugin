@@ -28,8 +28,8 @@
 
 
         <action
-                id = "intellijmigrationplugin.actions.markervisualisation.MigratedFileOpener"
-                class = "intellijmigrationplugin.actions.markervisualisation.MigratedFileOpener"
+                id = "intellijmigrationplugin.actions.annotationVisualisation.JumpToFileAction"
+                class = "intellijmigrationplugin.actions.annotationVisualisation.JumpToFileAction"
                 text = "Open Migration Target File"
                 description = "Opens the specified target file from the migration annotation">
                 <add-to-group
@@ -37,8 +37,8 @@
                     anchor= "last"/>
         </action>
         <action
-                id = "intellijmigrationplugin.actions.markervisualisation.ShowMarkerAction"
-                class = "intellijmigrationplugin.actions.markervisualisation.ShowMarkerAction"
+                id = "intellijmigrationplugin.actions.annotationVisualisation.ShowAnnotationVisualisationAction"
+                class = "intellijmigrationplugin.actions.annotationVisualisation.ShowAnnotationVisualisationAction"
                 text = "TurnOnMarker"
                 description = "Turns the annotation visualisation in the editor on and off">
             <add-to-group
@@ -62,10 +62,32 @@
                     keymap="$default"
                     first-keystroke="control alt E"/>
         </action>
+
+        <action
+                id = "intellijmigrationplugin.actions.annotationVisualisation.JumpToAnnotationAction"
+                class = "intellijmigrationplugin.actions.annotationVisualisation.JumpToAnnotationAction"
+                text = "Jump to Annotation"
+                description = "Jumps if the cursor is in an active annotation">
+            <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group"/>
+            <keyboard-shortcut
+                    keymap="$default"
+                    first-keystroke="control alt shift j"/>
+        </action>
+
+        <action
+                id = "intellijmigrationplugin.actions.annotationVisualisation.ShowAnnotationTypeAction"
+                class = "intellijmigrationplugin.actions.annotationVisualisation.ShowAnnotationTypeAction"
+                text = "Show Annotation"
+                description = "Shows the current annotation type">
+            <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group"/>
+            <keyboard-shortcut
+                    keymap="$default"
+                    first-keystroke="control alt shift p"/>
+        </action>
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <postStartupActivity implementation="intellijmigrationplugin.ui.editor.ProjectStartupActivity"/>
+        <postStartupActivity implementation="intellijmigrationplugin.annotationModel.ProjectStartupActivity"/>
 
         <applicationConfigurable
             parentId="tools"
@@ -74,6 +96,9 @@
             displayName="Migration Plugin"/>
         <applicationService
                 serviceImplementation="intellijmigrationplugin.settings.MigrationSettingsState"/>
+
+        <notificationGroup id="Custom Notification Group"
+                           displayType="BALLOON"/>
     </extensions>
 
 

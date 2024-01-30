@@ -74,9 +74,9 @@ class AnnotationDetection {
             val commentType = AnnotationInformation.instance!!.singleCommentMapping[fileType]
                     ?: "//"
             val keywords = AnnotationInformation.instance!!.keywords
+            val regexes = keywords.map { x ->  getAnnotationRegex(commentType, x) }
+            val regexEnd = getAnnotationRegex(commentType, "end")
 
-            val regexes = keywords.map { x -> Regex("//\\s*$x(\$|\\s)", RegexOption.IGNORE_CASE) }
-            val regexEnd = Regex("//\\s*end(\$|\\s)", RegexOption.IGNORE_CASE)
             yield()
             for (i in lineStart..lineEnd - 1) {
 
@@ -103,7 +103,7 @@ class AnnotationDetection {
         }
 
         // Generates a regex pattern for a given annotation type and comment syntax
-        private fun getAnnotationRegex(commentType: String, annotationType: String): Regex {
+        fun getAnnotationRegex(commentType: String, annotationType: String): Regex {
             return Regex("^(\\h)*${Regex.escape(commentType)}(\\h)*${Regex.escape(annotationType)}($|\\s)", RegexOption.IGNORE_CASE)
         }
 

@@ -7,9 +7,9 @@ import com.intellij.openapi.editor.markup.MarkupModel
 import com.intellij.openapi.editor.markup.RangeHighlighter
 import com.intellij.openapi.editor.markup.TextAttributes
 import intellijmigrationplugin.annotationModel.*
-import intellijmigrationplugin.annotationModel.`markervisualisation+`.HighlightAnnotationFile
-import intellijmigrationplugin.annotationModel.`markervisualisation+`.HighlightAnnotationSnippet
-import intellijmigrationplugin.annotationModel.`markervisualisation+`.RangeHighlightUpdate
+import intellijmigrationplugin.annotationModel.markervisualisation.HighlightAnnotationFile
+import intellijmigrationplugin.annotationModel.markervisualisation.HighlightAnnotationSnippet
+import intellijmigrationplugin.annotationModel.markervisualisation.RangeHighlightUpdate
 import kotlinx.coroutines.runBlocking
 import java.util.*
 import kotlin.collections.HashMap

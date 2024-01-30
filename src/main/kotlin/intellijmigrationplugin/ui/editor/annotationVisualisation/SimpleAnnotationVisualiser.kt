@@ -7,8 +7,8 @@ import com.intellij.openapi.editor.markup.MarkupModel
 import com.intellij.openapi.editor.markup.TextAttributes
 import com.intellij.openapi.util.TextRange
 import intellijmigrationplugin.annotationModel.AnnotationInformation
-import intellijmigrationplugin.annotationModel.`markervisualisation+`.HighlightAnnotationFile
-import intellijmigrationplugin.annotationModel.`markervisualisation+`.HighlightAnnotationSnippet
+import intellijmigrationplugin.annotationModel.markervisualisation.HighlightAnnotationFile
+import intellijmigrationplugin.annotationModel.markervisualisation.HighlightAnnotationSnippet
 import kotlinx.coroutines.*
 
 class SimpleAnnotationVisualiser : AnnotationVisualiser {

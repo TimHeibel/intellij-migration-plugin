@@ -1,4 +1,4 @@
-package intellijmigrationplugin.actions.markervisualisation
+package intellijmigrationplugin.actions.annotationVisualisation
 
 import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.AnAction

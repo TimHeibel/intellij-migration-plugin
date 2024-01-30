@@ -1,9 +1,6 @@
-package intellijmigrationplugin.actions.markervisualisation
+package intellijmigrationplugin.actions.annotationVisualisation
 
-import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.ToggleAction
-import com.intellij.openapi.actionSystem.ToggleOptionAction
 import com.intellij.openapi.actionSystem.ex.CheckboxAction
 import intellijmigrationplugin.annotationModel.AnnotationInformation
 

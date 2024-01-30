@@ -17,7 +17,7 @@ class ProjectStartupActivity: StartupActivity {
     override fun runActivity(project: Project) {
 
         val bus = project.messageBus
-        val fileSelectionListener = FileSelectionChangeListener()
+        val fileSelectionListener = FileSelectionManager()
         bus.connect().subscribe<FileEditorManagerListener>(FileEditorManagerListener.FILE_EDITOR_MANAGER, fileSelectionListener)
 
         val editors = FileEditorManager.getInstance(project).selectedTextEditorWithRemotes
@@ -26,8 +26,8 @@ class ProjectStartupActivity: StartupActivity {
             val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document)
             val vFile = psiFile!!.originalFile.virtualFile
             val path = vFile.canonicalPath!!
-            val listener = DocumentChangeListener(path, editor.markupModel)
-            fileSelectionListener.tryToRegisterDocumentListener(path, editor.document, listener)
+            val documentHandler = AnnotationDocumentHandler(path, editor)
+            fileSelectionListener.tryToRegisterDocumentListener(documentHandler)
         }
 
         AnnotationInformation.instance!!.fileSelectionChangeManager = fileSelectionListener
