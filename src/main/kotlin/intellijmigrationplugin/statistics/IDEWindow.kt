@@ -1,20 +1,14 @@
 package intellijmigrationplugin.statistics
 
-import com.intellij.openapi.actionSystem.AnAction
-import com.intellij.openapi.progress.ModalTaskOwner.component
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
+import com.intellij.ui.CollectionListModel
 import com.intellij.ui.content.ContentFactory
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.ui.dsl.gridLayout.HorizontalAlign
-import com.sun.java.accessibility.util.AWTEventMonitor.addActionListener
 import intellijmigrationplugin.annotationModel.AnnotationInformation
-import intellijmigrationplugin.settings.components.ExcludedFoldersComponent
-import org.jetbrains.plugins.notebooks.visualization.outputs.resetOutputInlayCustomHeight
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
 import java.io.File
 import java.io.FileNotFoundException
 import javax.swing.JButton
@@ -37,41 +31,37 @@ class IDEWindow : ToolWindowFactory {
     class MyStatisticsWindow(private val statisticsWindow: ToolWindow) {
 
         private val lineAnalyser = LineAnalyser()
-        var annotationInformation = AnnotationInformation.instance
-        val legacyFolderPath = annotationInformation?.legacyFolderPath
-        val excludedLagacyFolders = annotationInformation?.excludedFolderList
+        private var annotationInformation = AnnotationInformation.instance
+        private val legacyFolderPath = annotationInformation?.legacyFolderPath
+        private val excludedLegacyFolders = annotationInformation?.excludedFolderList
 
         private val project = ProjectManager.getInstance().openProjects[0]
-        private val FileAndFolderChooserComponent = FileAndFolderChooserComponent(project)
-        private val IncludeFileAndFolderChooserComponent = FileAndFolderChooserComponent(project)
-        private val excludedFoldersComponent = ExcludedFoldersComponent(project)
+        private val fileAndFolderChooserComponent = FileAndFolderChooserComponent(project)
+        private val includeFileAndFolderChooserComponent = FileAndFolderChooserComponent(project)
         fun getContent(): JPanel {
 
             val contentPane: JPanel = panel {
 
+                group("File Chooser") {
+                    row{
+                        cell()
+                    }
+                }
+
                 group("Exclude Folders") {
                     row {
-                        scrollCell(FileAndFolderChooserComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+                        scrollCell(fileAndFolderChooserComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
                             .comment("Specify folders to be excluded from statistics.")
                     }
                     row {
                         val excludeStatisticButton = JButton("run Statistic").apply {
                             addActionListener {
-                                //execute when the button is clicked
-                                val contentList = FileAndFolderChooserComponent.excludedFoldersListModel
-                                excludedLagacyFolders?.forEach { filePath ->
-                                    if(!contentList.contains(filePath)) {
-                                        contentList.add(filePath)
-                                    }
-                                }
-                                val legacyFolder = File(legacyFolderPath)
+                                //List that should be excluded
+                                val contentList = fileAndFolderChooserComponent.excludedFoldersListModel
+                                excludedLegacyFolders?.let { it1 -> contentList.add(it1) }
 
-                                //TODO:
-                                legacyFolder.listFiles()?.forEach { file ->
-                                    // Check if the file or folder should be excluded
-                                    if (!contentList.items.contains(file.absolutePath)) {
-                                        processFileOrDirectory(file)
-                                    }
+                                if(executionPossible() != null){
+                                    processFileOrDirectory(executionPossible()!!, contentList, false)
                                 }
                                 updateStatistics()
                                 println("Processing complete.")
@@ -83,20 +73,19 @@ class IDEWindow : ToolWindowFactory {
 
                 group("Include Folders") {
                     row {
-                        scrollCell(IncludeFileAndFolderChooserComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
-                            .comment("comment")
+                        scrollCell(includeFileAndFolderChooserComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+                            .comment("Specify folders to include in the Statistics.")
                     }
                     row {
                         val newButton = JButton("runStatistic").apply {
                             addActionListener {
                                 // Code to execute when the button is clicked
-                                val contentList = IncludeFileAndFolderChooserComponent.excludedFoldersListModel
+                                val contentList = includeFileAndFolderChooserComponent.excludedFoldersListModel
 
-                                //TODO: handle double files
-                                contentList.items.forEach { filePath ->
-                                    val file = File(filePath)
-                                    processFileOrDirectory(file)
+                                if(executionPossible() != null){
+                                    processFileOrDirectory(executionPossible()!!, contentList, true)
                                 }
+
                                 updateStatistics()
                                 println("Processing complete.")
                             }
@@ -115,25 +104,39 @@ class IDEWindow : ToolWindowFactory {
             }
             return contentPane
         }
+        private fun executionPossible(): File? {
+            when (legacyFolderPath) {
+                null -> {
+                    //TODO: error pop-up
+                    println("LEGACY PATH?????")
+                    return null
+                }
+                else -> {
+                    val legacyFolder = File(legacyFolderPath)
+                    return legacyFolder
+                }
+            }
+        }
 
-
-        val statisticLabel = JLabel("")
-        fun updateStatistics() {
+        private val statisticLabel = JLabel("")
+        private fun updateStatistics() {
             statisticLabel.text = lineAnalyser.fileStatisticMap.toString()
         }
 
-        //TODO: filterout excludedfiles
-        private fun processFileOrDirectory(file: File) {
+        private fun processFileOrDirectory(file: File, excludedFolderFileList: CollectionListModel<String>, included: Boolean) {
             try {
-                if (file.isFile) {
-                    // Process the file
-                    println(file.absolutePath)
-                    lineAnalyser.pathToFile(file.absolutePath)
-                } else if (file.isDirectory) {
-                    // Recursively process each file/directory within this directory
-                    file.listFiles()?.forEach { subFile ->
-                        processFileOrDirectory(subFile)
+                if(excludedFolderFileList.contains(file.path) == included ){
+                    if (file.isFile) {
+                        println(file.absolutePath)
+                        lineAnalyser.pathToFile(file.absolutePath)
+                    } else if (file.isDirectory) {
+                        // Recursively process each file/directory within this directory
+                        file.listFiles()?.forEach { subFile ->
+                            processFileOrDirectory(subFile, excludedFolderFileList, included)
+                        }
                     }
+                }else{
+                    return
                 }
             } catch (e: FileNotFoundException) {
                 println("File not found: ${e.message}")
