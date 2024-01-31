@@ -1,6 +1,7 @@
 package intellijmigrationplugin.statistics
 
 import com.intellij.openapi.application.ApplicationManager
+import intellijmigrationplugin.annotationModel.AnnotationInformation
 import intellijmigrationplugin.settings.MigrationSettingsState
 import java.io.BufferedReader
 import java.io.File
@@ -9,6 +10,8 @@ import java.io.IOException
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
+/// This class gets a file and counts the LOC (countLinesInFile) and
+// lines which are tags within the Annotations (sortByLabels)
 class LineAnalyser {
 
 
@@ -18,9 +21,12 @@ class LineAnalyser {
             return ApplicationManager.getApplication().getService(MigrationSettingsState::class.java)
         }
 
+    private var annotationInformation = AnnotationInformation.instance
     private var keywordsList: MutableList<String> = settings.keywordColorMapping.map { it.first }.toMutableList()
-    private val regexPattern = ".*\\S|}"
-    private val pattern: Pattern = Pattern.compile(regexPattern)
+    private var regexPattern = ".*\\S|}"
+    private var pattern: Pattern = Pattern.compile(regexPattern)
+    private var multiCommentStart = "/*"
+    private var multiCommentEnd = "*/"
     val fileStatisticMap: MutableMap<String, Int> = mutableMapOf<String,Int>()
 
     init {
@@ -29,37 +35,80 @@ class LineAnalyser {
             fileStatisticMap[keyword] = 0
         }
     }
-    private fun resetFileStatisticMap() {
-        fileStatisticMap.clear()
-        keywordsList.forEach { keyword ->
-            fileStatisticMap[keyword] = 0
-        }
-    }
     fun pathToFile(filePath: String) {
 
+        //TODO: Add pathname to StatisticInformation
         resetFileStatisticMap()
+        setFileFilters(filePath)
+        //TODO: multilinecomments?
+
+        //TODO: add this to Statistic Information
         val lOC = countLinesInFile(filePath)
+        //TODO: add ...
         sortLOCbyLabel(filePath)
 
         println(fileStatisticMap.toString())
 
     }
 
-    //TODO: filter out comments and imports
+    private fun resetFileStatisticMap() {
+        fileStatisticMap.clear()
+        keywordsList.forEach { keyword ->
+            fileStatisticMap[keyword] = 0
+        }
+    }
+
+    //TODO: filterout import and multiline comments (set regex, and Annotations)
+    private fun setFileFilters(path: String){
+        //update RegexPattern
+        val fileExtension = path.substringAfterLast('.', "")
+
+        val importMapping = annotationInformation?.importMapping
+        val singleCommentMapping = annotationInformation?.singleCommentMapping
+        var importStatement: String = "import"
+        var singleLineComment: String = "//"
+
+        if (importMapping!!.containsKey(fileExtension)) {
+            importStatement = importMapping[fileExtension]!!
+        }
+        if(singleCommentMapping!!.containsKey(fileExtension)){
+            singleLineComment = singleCommentMapping[fileExtension]!!
+        }
+        val transformedStr = singleLineComment.map { "\\$it" }.joinToString("")
+        this.regexPattern = "^(?!.*$transformedStr|^$importStatement).*\\S$"
+        this.pattern = Pattern.compile(regexPattern)
+
+        val multiCommentMapping = annotationInformation?.multiCommentMapping
+        val multiComments = multiCommentMapping?.getOrDefault(fileExtension, "/* */")
+        multiComments?.split(" ")?.let { parts ->
+            if (parts.size == 2) {
+                multiCommentStart = parts[0]
+                multiCommentEnd = parts[1]
+            }
+        }
+
+    }
+
     private fun countLinesInFile(filePath: String): Int {
         try {
             BufferedReader(FileReader(filePath)).use { br ->
                 var line: String?
                 var lOC = 0
+                var isComment: Boolean = false
 
                 while (br.readLine().also { line = it } != null) {
                     // Analyze each line using the regex pattern
                     val matcher: Matcher = pattern.matcher(line!!)
-                    if (matcher.matches()) {
+
+                    if(!isComment && line!!.contains(multiCommentStart)){
+                        isComment = true
+                        continue
+                    }else if(isComment && line!!.contains(multiCommentEnd)){
+                       isComment = false
+                    }else  if (!(isComment || !matcher.matches())) {
                         lOC++
                     }
                 }
-
                 return lOC
             }
         } catch (e: IOException) {
@@ -122,13 +171,21 @@ class LineAnalyser {
         return
     }
 
-    //TODO: filterout import and multiline comments
     private fun countLinesInSegment(segment: String): Int {
         var lOCSegment = 0
+        var isComment = false
 
         segment.lines().forEach { line ->
             val matcher: Matcher = pattern.matcher(line)
             if (matcher.matches()) {
+                lOCSegment++
+            }
+            if(!isComment && line!!.contains(multiCommentStart)){
+                isComment = true
+                return@forEach
+            }else if(isComment && line!!.contains(multiCommentEnd)){
+                isComment = false
+            }else  if (!(isComment || !matcher.matches())) {
                 lOCSegment++
             }
         }
