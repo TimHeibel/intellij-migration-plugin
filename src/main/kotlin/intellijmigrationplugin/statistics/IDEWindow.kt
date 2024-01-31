@@ -61,7 +61,7 @@ class IDEWindow : ToolWindowFactory {
                                 excludedLegacyFolders?.let { it1 -> contentList.add(it1) }
 
                                 if(executionPossible() != null){
-                                    processFileOrDirectory(executionPossible()!!, contentList, false)
+                                    processFileOrDirectory(executionPossible()!!, contentList, true)
                                 }
                                 updateStatistics()
                                 println("Processing complete.")
@@ -81,9 +81,10 @@ class IDEWindow : ToolWindowFactory {
                             addActionListener {
                                 // Code to execute when the button is clicked
                                 val contentList = includeFileAndFolderChooserComponent.excludedFoldersListModel
-
-                                if(executionPossible() != null){
-                                    processFileOrDirectory(executionPossible()!!, contentList, true)
+                                val legacyPath = executionPossible()
+                                if(legacyPath != null){
+                                    println("wup wup")
+                                    processFileOrDirectory(legacyPath, contentList, false)
                                 }
 
                                 updateStatistics()
@@ -123,16 +124,16 @@ class IDEWindow : ToolWindowFactory {
             statisticLabel.text = lineAnalyser.fileStatisticMap.toString()
         }
 
-        private fun processFileOrDirectory(file: File, excludedFolderFileList: CollectionListModel<String>, included: Boolean) {
+        private fun processFileOrDirectory(file: File, excludedFolderFileList: CollectionListModel<String>, excluded: Boolean) {
             try {
-                if(excludedFolderFileList.contains(file.path) == included ){
+                if(excludedFolderFileList.contains(file.path) == excluded ){
                     if (file.isFile) {
                         println(file.absolutePath)
                         lineAnalyser.pathToFile(file.absolutePath)
                     } else if (file.isDirectory) {
                         // Recursively process each file/directory within this directory
                         file.listFiles()?.forEach { subFile ->
-                            processFileOrDirectory(subFile, excludedFolderFileList, included)
+                            processFileOrDirectory(subFile, excludedFolderFileList, excluded)
                         }
                     }
                 }else{
