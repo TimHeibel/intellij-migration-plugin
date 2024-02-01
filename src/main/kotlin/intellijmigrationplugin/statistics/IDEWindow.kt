@@ -58,7 +58,6 @@ class IDEWindow : ToolWindowFactory {
                             addActionListener {
                                 //List that should be excluded
                                 val contentList = fileAndFolderChooserComponent.excludedFoldersListModel
-                                excludedLegacyFolders?.let { it1 -> contentList.add(it1) }
 
                                 if(executionPossible() != null){
                                     processFileOrDirectory(executionPossible()!!, contentList, true)
@@ -81,6 +80,7 @@ class IDEWindow : ToolWindowFactory {
                             addActionListener {
                                 // Code to execute when the button is clicked
                                 val contentList = includeFileAndFolderChooserComponent.excludedFoldersListModel
+
                                 val legacyPath = executionPossible()
                                 if(legacyPath != null){
                                     println("wup wup")
@@ -126,19 +126,23 @@ class IDEWindow : ToolWindowFactory {
 
         private fun processFileOrDirectory(file: File, excludedFolderFileList: CollectionListModel<String>, excluded: Boolean) {
             try {
-                if(excludedFolderFileList.contains(file.path) == excluded ){
-                    if (file.isFile) {
-                        println(file.absolutePath)
-                        lineAnalyser.pathToFile(file.absolutePath)
-                    } else if (file.isDirectory) {
-                        // Recursively process each file/directory within this directory
-                        file.listFiles()?.forEach { subFile ->
-                            processFileOrDirectory(subFile, excludedFolderFileList, excluded)
-                        }
-                    }
-                }else{
-                    return
+
+                if(excludedLegacyFolders!!.contains(file.path)) return
+
+                if(!excluded && excludedFolderFileList.contains(file.path)){
+                    processFolderFile(file)
                 }
+
+                if(excluded && excludedFolderFileList.contains(file.path)) return
+
+
+                if (file.isFile) lineAnalyser.pathToFile(file.absolutePath)
+
+                if(file.isDirectory)
+                    file.listFiles()?.forEach { subFile ->
+                        processFileOrDirectory(subFile, excludedFolderFileList, excluded)
+                    }
+                return
             } catch (e: FileNotFoundException) {
                 println("File not found: ${e.message}")
             } catch (e: SecurityException) {
@@ -146,6 +150,16 @@ class IDEWindow : ToolWindowFactory {
             } catch (e: Exception) {
                 println("Error processing file or directory: ${e.message}")
             }
+        }
+        private fun processFolderFile(file: File) {
+            if(excludedLegacyFolders!!.contains(file.path)) return
+
+            if (file.isFile) lineAnalyser.pathToFile(file.absolutePath)
+
+            if (file.isDirectory )
+                file.listFiles()?.forEach { subFile ->
+                    processFolderFile(subFile)
+                }
         }
     }
 }
