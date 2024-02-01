@@ -40,8 +40,6 @@ class LineAnalyser {
         //TODO: Add pathname to StatisticInformation
         resetFileStatisticMap()
         setFileFilters(filePath)
-        //TODO: multilinecomments?
-
         //TODO: add this to Statistic Information
         val lOC = countLinesInFile(filePath)
         //TODO: add ...
@@ -61,7 +59,7 @@ class LineAnalyser {
     //TODO: filterout import and multiline comments (set regex, and Annotations)
     private fun setFileFilters(path: String){
         //update RegexPattern
-        val fileExtension = path.substringAfterLast('.', "")
+        val fileExtension = "." + path.substringAfterLast('.', "")
 
         val importMapping = annotationInformation?.importMapping
         val singleCommentMapping = annotationInformation?.singleCommentMapping
@@ -78,6 +76,7 @@ class LineAnalyser {
         this.regexPattern = "^(?!.*$transformedStr|^$importStatement).*\\S$"
         this.pattern = Pattern.compile(regexPattern)
 
+        //getting the correct multiline comment markers
         val multiCommentMapping = annotationInformation?.multiCommentMapping
         val multiComments = multiCommentMapping?.getOrDefault(fileExtension, "/* */")
         multiComments?.split(" ")?.let { parts ->
@@ -86,6 +85,14 @@ class LineAnalyser {
                 multiCommentEnd = parts[1]
             }
         }
+
+        //adding singleLineComment to keyword List for SortByLabel function
+        for (i in 0 .. keywordsList.size){
+            val tmp = keywordsList[i]
+            keywordsList[i] = transformedStr + tmp
+        }
+        keywordsList.add(transformedStr + "END")
+
 
     }
 
@@ -105,6 +112,7 @@ class LineAnalyser {
                         continue
                     }else if(isComment && line!!.contains(multiCommentEnd)){
                        isComment = false
+                        continue
                     }else  if (!(isComment || !matcher.matches())) {
                         lOC++
                     }
@@ -129,6 +137,7 @@ class LineAnalyser {
                 val currentSegment = StringBuilder()
 
                 lines.forEach { line ->
+                    
                     if (currentSegmentKey == null) {
                         val foundStartKeyword : String = keywordsList.find { line.contains(it, ignoreCase = true) }.toString()
 
@@ -136,7 +145,7 @@ class LineAnalyser {
                             currentSegmentKey = foundStartKeyword
                             return@forEach
                         }
-                    } else if (line.contains("END", ignoreCase = true)) {
+                    } else if (line.contains(keywordsList.last(), ignoreCase = true)) {
                         val segmentKey = "${currentSegmentKey!!}-$segmentIndex"
                         val segmentContent = currentSegment.toString()
 
@@ -177,14 +186,12 @@ class LineAnalyser {
 
         segment.lines().forEach { line ->
             val matcher: Matcher = pattern.matcher(line)
-            if (matcher.matches()) {
-                lOCSegment++
-            }
             if(!isComment && line!!.contains(multiCommentStart)){
                 isComment = true
                 return@forEach
             }else if(isComment && line!!.contains(multiCommentEnd)){
                 isComment = false
+                return@forEach
             }else  if (!(isComment || !matcher.matches())) {
                 lOCSegment++
             }
