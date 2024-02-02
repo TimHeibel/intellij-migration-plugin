@@ -42,11 +42,11 @@ class IDEWindow : ToolWindowFactory {
 
             val contentPane: JPanel = panel {
 
-                group("File Chooser") {
+               /* group("File Chooser") {
                     row{
                         cell()
                     }
-                }
+                }*/
 
                 group("Exclude Folders") {
                     row {
@@ -136,7 +136,7 @@ class IDEWindow : ToolWindowFactory {
                 if(excluded && excludedFolderFileList.contains(file.path)) return
 
 
-                if (file.isFile) lineAnalyser.pathToFile(file.absolutePath)
+                if (file.isFile && excluded) lineAnalyser.pathToFile(file.absolutePath)
 
                 if(file.isDirectory)
                     file.listFiles()?.forEach { subFile ->

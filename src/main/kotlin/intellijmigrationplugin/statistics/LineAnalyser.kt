@@ -23,7 +23,7 @@ class LineAnalyser {
 
     private var annotationInformation = AnnotationInformation.instance
     private var keywordsList: MutableList<String> = settings.keywordColorMapping.map { it.first }.toMutableList()
-    private var regexPattern = ".*\\S|}"
+    private var regexPattern = "^(?!\\s*import)(?!\\s*\\/\\/).*[^\\s]$"
     private var pattern: Pattern = Pattern.compile(regexPattern)
     private var multiCommentStart = "/*"
     private var multiCommentEnd = "*/"
@@ -73,7 +73,7 @@ class LineAnalyser {
             singleLineComment = singleCommentMapping[fileExtension]!!
         }
         val transformedStr = singleLineComment.map { "\\$it" }.joinToString("")
-        this.regexPattern = "^(?!.*$transformedStr|^$importStatement).*\\S$"
+        this.regexPattern = "^(?!\\s*$transformedStr||^$importStatement).*\\S\$"
         this.pattern = Pattern.compile(regexPattern)
 
         //getting the correct multiline comment markers
@@ -87,7 +87,7 @@ class LineAnalyser {
         }
 
         //adding singleLineComment to keyword List for SortByLabel function
-        for (i in 0 .. keywordsList.size){
+        for (i in 0 .. (keywordsList.size-1)){
             val tmp = keywordsList[i]
             keywordsList[i] = transformedStr + tmp
         }
@@ -96,34 +96,6 @@ class LineAnalyser {
 
     }
 
-    private fun countLinesInFile(filePath: String): Int {
-        try {
-            BufferedReader(FileReader(filePath)).use { br ->
-                var line: String?
-                var lOC = 0
-                var isComment: Boolean = false
-
-                while (br.readLine().also { line = it } != null) {
-                    // Analyze each line using the regex pattern
-                    val matcher: Matcher = pattern.matcher(line!!)
-
-                    if(!isComment && line!!.contains(multiCommentStart)){
-                        isComment = true
-                        continue
-                    }else if(isComment && line!!.contains(multiCommentEnd)){
-                       isComment = false
-                        continue
-                    }else  if (!(isComment || !matcher.matches())) {
-                        lOC++
-                    }
-                }
-                return lOC
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        return -1
-    }
 
 
     private fun sortLOCbyLabel(filePath: String){
@@ -137,7 +109,7 @@ class LineAnalyser {
                 val currentSegment = StringBuilder()
 
                 lines.forEach { line ->
-                    
+                    //TODO: what if //MIGRATED in comment or multi-line comment?
                     if (currentSegmentKey == null) {
                         val foundStartKeyword : String = keywordsList.find { line.contains(it, ignoreCase = true) }.toString()
 
@@ -179,6 +151,40 @@ class LineAnalyser {
         }
         return
     }
+
+    private fun countLinesInFile(filePath: String): Int {
+        try {
+            BufferedReader(FileReader(filePath)).use { br ->
+                var line: String?
+                var lOC = 0
+                var isComment = false
+
+                while (br.readLine().also { line = it } != null) {
+                    // Analyze each line using the regex pattern
+                    val matcher: Matcher = pattern.matcher(line!!)
+
+                    when {
+                        !isComment && line!!.contains(multiCommentStart) -> {
+                            isComment = true
+                            continue
+                        }
+                        isComment && line!!.contains(multiCommentEnd) -> {
+                            isComment = false
+                            continue
+                        }
+                        !(isComment || !matcher.matches()) -> {
+                            lOC++
+                        }
+                    }
+                }
+                return lOC
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return -1
+    }
+
 
     private fun countLinesInSegment(segment: String): Int {
         var lOCSegment = 0
