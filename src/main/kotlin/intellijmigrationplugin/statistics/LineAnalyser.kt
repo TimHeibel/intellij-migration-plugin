@@ -22,23 +22,28 @@ class LineAnalyser {
         }
 
     private var annotationInformation = AnnotationInformation.instance
+    //search keywords
     private var keywordsList: MutableList<String> = settings.keywordColorMapping.map { it.first }.toMutableList()
+    private var detectKeywordsList: MutableList<String> = mutableListOf<String>()
     private var regexPattern = "^(?!\\s*import)(?!\\s*\\/\\/).*[^\\s]$"
-    private var pattern: Pattern = Pattern.compile(regexPattern)
+    private var pattern: Pattern = Pattern.compile(regexPattern, 8)
     private var multiCommentStart = "/*"
     private var multiCommentEnd = "*/"
+    //safe numbers of
     val fileStatisticMap: MutableMap<String, Int> = mutableMapOf<String,Int>()
 
-    init {
+    /*init {
         // Initialize map with default values
         keywordsList.forEach { keyword ->
             fileStatisticMap[keyword] = 0
         }
-    }
+    }*/
     fun pathToFile(filePath: String) {
 
         //TODO: Add pathname to StatisticInformation
-        resetFileStatisticMap()
+        println(filePath)
+        //resetFileStatisticMap()
+        fileStatisticMap.clear()
         setFileFilters(filePath)
         //TODO: add this to Statistic Information
         val lOC = countLinesInFile(filePath)
@@ -49,14 +54,14 @@ class LineAnalyser {
 
     }
 
-    private fun resetFileStatisticMap() {
+    /*private fun resetFileStatisticMap() {
         fileStatisticMap.clear()
         keywordsList.forEach { keyword ->
             fileStatisticMap[keyword] = 0
         }
-    }
+    }*/
 
-    //TODO: filterout import and multiline comments (set regex, and Annotations)
+    //updates regex and keywordsMap according to the file type
     private fun setFileFilters(path: String){
         //update RegexPattern
         val fileExtension = "." + path.substringAfterLast('.', "")
@@ -73,8 +78,8 @@ class LineAnalyser {
             singleLineComment = singleCommentMapping[fileExtension]!!
         }
         val transformedStr = singleLineComment.map { "\\$it" }.joinToString("")
-        this.regexPattern = "^(?!\\s*$transformedStr||^$importStatement).*\\S\$"
-        this.pattern = Pattern.compile(regexPattern)
+        this.regexPattern = "^(?!\\s*$importStatement)(?!\\s*$transformedStr).*[^\\s]\$"
+        this.pattern = Pattern.compile(regexPattern, 8)
 
         //getting the correct multiline comment markers
         val multiCommentMapping = annotationInformation?.multiCommentMapping
@@ -87,21 +92,21 @@ class LineAnalyser {
         }
 
         //adding singleLineComment to keyword List for SortByLabel function
-        for (i in 0 .. (keywordsList.size-1)){
-            val tmp = keywordsList[i]
-            keywordsList[i] = transformedStr + tmp
-        }
-        keywordsList.add(transformedStr + "END")
-
+        initialiseKeywords(transformedStr)
 
     }
+    private fun initialiseKeywords(transformedStr: String){
+        keywordsList.forEach { keyword ->
+            detectKeywordsList.add(transformedStr + keyword)
+            fileStatisticMap[keyword] = 0
+        }
+        detectKeywordsList.add(transformedStr + "End")
 
-
+    }
 
     private fun sortLOCbyLabel(filePath: String){
         val segments = mutableMapOf<String, Pair<String, Int>>()
         var segmentIndex = 0
-
 
         try {
             File(filePath).useLines { lines ->
@@ -111,17 +116,18 @@ class LineAnalyser {
                 lines.forEach { line ->
                     //TODO: what if //MIGRATED in comment or multi-line comment?
                     if (currentSegmentKey == null) {
-                        val foundStartKeyword : String = keywordsList.find { line.contains(it, ignoreCase = true) }.toString()
+                        val foundStartKeyword : String = detectKeywordsList.find { line.contains(it, ignoreCase = true) }.toString()
 
                         if (foundStartKeyword != "null") {
                             currentSegmentKey = foundStartKeyword
                             return@forEach
                         }
-                    } else if (line.contains(keywordsList.last(), ignoreCase = true)) {
+                    } else if (line.contains(detectKeywordsList.last(), ignoreCase = true)) {
                         val segmentKey = "${currentSegmentKey!!}-$segmentIndex"
                         val segmentContent = currentSegment.toString()
 
                         val linesOfCode = countLinesInSegment(segmentContent)
+                        //TODO: list has // infromt fileStatisticMap nicht
                         val tmpInt: Int = fileStatisticMap[currentSegmentKey]!! + linesOfCode
                         fileStatisticMap[currentSegmentKey!!] = tmpInt
 
@@ -159,22 +165,18 @@ class LineAnalyser {
                 var lOC = 0
                 var isComment = false
 
-                while (br.readLine().also { line = it } != null) {
+                while (br.readLine().also { line = it } != null){
                     // Analyze each line using the regex pattern
-                    val matcher: Matcher = pattern.matcher(line!!)
+                    val matcher: Matcher = pattern.matcher(line)
 
-                    when {
-                        !isComment && line!!.contains(multiCommentStart) -> {
-                            isComment = true
-                            continue
-                        }
-                        isComment && line!!.contains(multiCommentEnd) -> {
-                            isComment = false
-                            continue
-                        }
-                        !(isComment || !matcher.matches()) -> {
-                            lOC++
-                        }
+                    if(!isComment && line!!.contains(multiCommentStart)){
+                        isComment = true
+                        continue
+                    }else if(isComment && line!!.contains(multiCommentEnd)){
+                        isComment = false
+                        continue
+                    }else  if (!(isComment || !matcher.matches())) {
+                        lOC++
                     }
                 }
                 return lOC
