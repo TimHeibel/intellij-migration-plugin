@@ -4,10 +4,10 @@ import XY
 class PrimeNumbers:
     lower = 900
     upper = 1000
-    ''' 
+    """
     test = "should not be detected"
     #migrated should also not be detected
-    '''
+    """
 
 # #migrated this should not be detected
     print("Prime numbers between", lower, "and", upper, "are:")
@@ -17,7 +17,9 @@ class PrimeNumbers:
     for num in range(lower, upper + 1):
         # all prime numbers are greater than 1
         if num > 1:
-            for i in range(2, num):
+            for i in range(2, num): """
+            very wild multiline comment
+            """
                 if (num % i) == 0:
                     break
             else:
