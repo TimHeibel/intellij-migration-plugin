@@ -42,11 +42,6 @@ class IDEWindow : ToolWindowFactory {
 
             val contentPane: JPanel = panel {
 
-               /* group("File Chooser") {
-                    row{
-                        cell()
-                    }
-                }*/
 
                 group("Exclude Folders") {
                     row {
@@ -83,7 +78,6 @@ class IDEWindow : ToolWindowFactory {
 
                                 val legacyPath = executionPossible()
                                 if(legacyPath != null){
-                                    println("wup wup")
                                     processFileOrDirectory(legacyPath, contentList, false)
                                 }
 
@@ -121,7 +115,7 @@ class IDEWindow : ToolWindowFactory {
 
         private val statisticLabel = JLabel("")
         private fun updateStatistics() {
-            statisticLabel.text = lineAnalyser.fileStatisticMap.toString()
+            statisticLabel.text = "update"
         }
 
         private fun processFileOrDirectory(file: File, excludedFolderFileList: CollectionListModel<String>, excluded: Boolean) {
@@ -136,7 +130,7 @@ class IDEWindow : ToolWindowFactory {
                 if(excluded && excludedFolderFileList.contains(file.path)) return
 
 
-                if (file.isFile && excluded) lineAnalyser.pathToFile(file.absolutePath)
+                if (file.isFile && excluded) lineAnalyser.getFileStatistic(file.absolutePath)
 
                 if(file.isDirectory)
                     file.listFiles()?.forEach { subFile ->
@@ -152,9 +146,11 @@ class IDEWindow : ToolWindowFactory {
             }
         }
         private fun processFolderFile(file: File) {
+
+
             if(excludedLegacyFolders!!.contains(file.path)) return
 
-            if (file.isFile) lineAnalyser.pathToFile(file.absolutePath)
+            if(file.isFile) lineAnalyser.getFileStatistic(file.absolutePath)
 
             if (file.isDirectory )
                 file.listFiles()?.forEach { subFile ->
