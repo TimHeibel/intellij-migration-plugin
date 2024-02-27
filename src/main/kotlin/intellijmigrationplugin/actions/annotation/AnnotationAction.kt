@@ -4,8 +4,10 @@ import intellijmigrationplugin.annotationModel.AnnotationInformation
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Document
+import com.intellij.openapi.ui.DialogWrapper
 import intellijmigrationplugin.annotationModel.AnnotationDetection
 import intellijmigrationplugin.annotationModel.AnnotationSnippet
+import intellijmigrationplugin.ui.dialogs.CollisionDialog
 
 
 /**
@@ -36,15 +38,29 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
         val document = editor.document
         val primaryCaret = editor.caretModel.primaryCaret
 
-        //Get Start and End of current selection
-        val startSelection = primaryCaret.selectionStart
-        val endSelection = primaryCaret.selectionEnd
-        val startSelectionLine = document.getLineNumber(startSelection)
-        val endSelectionLine = document.getLineNumber(endSelection)
-
-        val commentStart : String = getCommentTypeByEvent(event)
-
         WriteCommandAction.runWriteCommandAction(project) {
+
+            //Get Start and End of current selection
+            val startSelection = primaryCaret.selectionStart
+            val endSelection = primaryCaret.selectionEnd
+            val startSelectionLine = document.getLineNumber(startSelection)
+            val endSelectionLine = document.getLineNumber(endSelection)
+
+            val commentStart : String = getCommentTypeByEvent(event)
+
+            val collidingAnnotations =
+                    getAnnotationCollisions(document, getFileTypeByEvent(event), startSelectionLine, endSelectionLine)
+
+            if(collidingAnnotations.isNotEmpty()) {
+                val dialog = CollisionDialog()
+                dialog.show()
+
+                if(dialog.exitCode != DialogWrapper.OK_EXIT_CODE) {
+                    return@runWriteCommandAction
+                }
+            }
+
+
             document.insertString(document.getLineEndOffset(endSelectionLine), "\n${commentStart}END\n")
             document.insertString(document.getLineStartOffset(startSelectionLine),
                 "$commentStart$annotationType $addInfo\n")
