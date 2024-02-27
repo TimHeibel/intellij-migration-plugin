@@ -101,7 +101,8 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
         val collisionAnnotations = ArrayList<AnnotationSnippet>()
 
         for (annotation in existingAnnotations) {
-            if(annotation.start in startLine..endLine || annotation.end in startLine..endLine) {
+            if(annotation.start in startLine..endLine || annotation.end in startLine..endLine ||
+                    startLine in annotation.start..annotation.end) {
                 collisionAnnotations.add(annotation)
             }
         }
