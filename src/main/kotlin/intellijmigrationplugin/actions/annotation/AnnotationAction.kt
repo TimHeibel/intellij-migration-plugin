@@ -95,15 +95,29 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
     }
 
     private fun getAnnotationCollisions(document : Document, fileType : String?, startLine : Int, endLine : Int)
-            : ArrayList<AnnotationSnippet> {
+            : ArrayList<Pair<AnnotationSnippet,CollisionCode>> {
 
         val existingAnnotations = AnnotationDetection.detectAnnotationInFile(document, fileType)
-        val collisionAnnotations = ArrayList<AnnotationSnippet>()
+        val collisionAnnotations = ArrayList<Pair<AnnotationSnippet,CollisionCode>>()
 
         for (annotation in existingAnnotations) {
-            if(annotation.start in startLine..endLine || annotation.end in startLine..endLine ||
-                    startLine in annotation.start..annotation.end) {
-                collisionAnnotations.add(annotation)
+            if (annotation.start in startLine..endLine && annotation.end in startLine..endLine) {
+                collisionAnnotations.add(Pair(annotation, CollisionCode.COMPLETE_INSIDE))
+                continue
+            }
+
+            if (annotation.start in startLine..endLine) {
+                collisionAnnotations.add(Pair(annotation, CollisionCode.START_INSIDE))
+                continue
+            }
+
+            if (annotation.end in startLine..endLine) {
+                collisionAnnotations.add(Pair(annotation, CollisionCode.END_INSIDE))
+                continue
+            }
+
+            if (startLine in annotation.start..annotation.end) {
+                collisionAnnotations.add(Pair(annotation, CollisionCode.SURROUNDING))
             }
         }
 
@@ -124,3 +138,10 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
  */
 class DIALOGAnnotationAction(override val annotationType: String, annotationInformation: String)
     : AnnotationAction(annotationInformation)
+
+private enum class CollisionCode {
+    START_INSIDE,
+    END_INSIDE,
+    COMPLETE_INSIDE,
+    SURROUNDING
+}
