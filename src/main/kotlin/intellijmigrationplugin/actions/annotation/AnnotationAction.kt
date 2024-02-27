@@ -78,6 +78,21 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
 
     }
 
+    private fun getAnnotationCollisions(document : Document, fileType : String?, startLine : Int, endLine : Int)
+            : ArrayList<AnnotationSnippet> {
+
+        val existingAnnotations = AnnotationDetection.detectAnnotationInFile(document, fileType)
+        val collisionAnnotations = ArrayList<AnnotationSnippet>()
+
+        for (annotation in existingAnnotations) {
+            if(annotation.start in startLine..endLine || annotation.end in startLine..endLine) {
+                collisionAnnotations.add(annotation)
+            }
+        }
+
+        return collisionAnnotations
+    }
+
     override fun getActionUpdateThread(): ActionUpdateThread {
 
         return ActionUpdateThread.BGT
