@@ -9,23 +9,10 @@ class AnnotationActionUtils {
         internal fun removeAnnotation(annotation: AnnotationSnippet, document: Document) {
 
             if(annotation.hasEnd) {
-                var offset = document.getLineEndOffset(annotation.end) + 1
-
-                if(offset > document.textLength) {
-                    offset -= 1
-                }
-
-                document.replaceString(document.getLineStartOffset(annotation.end),
-                        offset, "")
+                removeLine(annotation.end, document)
             }
 
-            var offset = document.getLineEndOffset(annotation.start) + 1
-            if(offset > document.textLength) {
-                offset -= 1
-            }
-
-            document.replaceString(document.getLineStartOffset(annotation.start),
-                    offset, "")
+            removeLine(annotation.start, document)
         }
 
         internal fun placeAnnotation(annotationType: String, annotationComment : String, startLine: Int, endLine: Int,
@@ -38,6 +25,19 @@ class AnnotationActionUtils {
 
         internal fun getLineFromDocument(line: Int, document: Document) : String {
             return document.getText(TextRange(document.getLineStartOffset(line), document.getLineEndOffset(line)))
+        }
+
+        internal fun removeLine(line: Int, document: Document) {
+
+            var endOffset = document.getLineEndOffset(line) + 1
+
+            if (endOffset >= document.textLength) {
+                endOffset -= 1
+            }
+
+            val range = TextRange(document.getLineStartOffset(line), endOffset)
+
+            document.replaceString(range.startOffset, range.endOffset, "")
         }
     }
 }
