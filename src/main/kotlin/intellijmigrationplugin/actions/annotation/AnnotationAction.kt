@@ -5,6 +5,7 @@ import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.ui.DialogWrapper
+import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils
 import intellijmigrationplugin.annotationModel.AnnotationDetection
 import intellijmigrationplugin.annotationModel.AnnotationSnippet
 import intellijmigrationplugin.ui.dialogs.CollisionDialog
@@ -58,12 +59,11 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
                 if(dialog.exitCode != DialogWrapper.OK_EXIT_CODE) {
                     return@runWriteCommandAction
                 }
+
+
             }
 
-
-            document.insertString(document.getLineEndOffset(endSelectionLine), "\n${commentStart}END\n")
-            document.insertString(document.getLineStartOffset(startSelectionLine),
-                "$commentStart$annotationType $addInfo\n")
+            AnnotationActionUtils.placeAnnotation(annotationType, addInfo, startSelectionLine, endSelectionLine, commentStart, document)
         }
 
     }
@@ -129,6 +129,8 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
         return ActionUpdateThread.BGT
 
     }
+
+
 
 }
 
