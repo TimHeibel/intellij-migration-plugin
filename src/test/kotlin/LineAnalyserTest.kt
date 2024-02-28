@@ -10,6 +10,26 @@ class LineAnalyserTest {
 
     //test analiseLines()
     @Test
+    fun analyseJavaFile(){
+        val pathname = "/home/finnika/Documents/Uni/5 Semester/SE Projekt/intellij-migration-plugin/src/test/resources/Main.java"
+        val fileInformation = arrayOf("import", "//", "\\/\\/", "/*", "*/")
+        val regex = Pattern.compile("^(?!\\s*import)(?!\\s*\\/\\/).*[^\\s]\$", 8)
+        val keywords = mutableListOf("MIGRATED", "LATER")
+
+        val result = lineAnalyser.analiseLines(pathname, regex, fileInformation, keywords)
+
+        //expected result
+        val linesPerKeyword: MutableMap<String, Int> = mutableMapOf()
+        linesPerKeyword["UNMARKED"] = 2
+        linesPerKeyword["MIGRATED"] = 3
+        linesPerKeyword["LATER"] = 1
+
+        for ((keyword, expected) in linesPerKeyword) {
+            Assertions.assertEquals(expected, result[keyword])
+            println("$keyword: $expected")
+        }
+    }
+    @Test
     fun analysePhythonFile() {
         val pathname = "/home/finnika/Documents/Uni/5 Semester/SE Projekt/intellij-migration-plugin/src/test/resources/PhythonTestCode.py"
         val fileInformation = arrayOf("import", "#", "\\#", "\"\"\"", "\"\"\"")

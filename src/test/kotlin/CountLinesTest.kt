@@ -40,7 +40,7 @@ class CountLinesTest {
     fun lineEqualsCheck(){
         val pathname = "/home/finnika/Documents/Uni/5 Semester/SE Projekt/intellij-migration-plugin/src/test/resources/Main.java"
         val segment = "//Migrated SE project 2023/24 "
-        val keyword = "MIGRATED"
+        val keyword = "//MIGRATED"
         val fileInformation = arrayOf("import", "//", "\\/\\/", "/*", "*/")
         var detectedKeywords = 0
 

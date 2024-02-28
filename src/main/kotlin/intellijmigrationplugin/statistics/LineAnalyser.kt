@@ -72,7 +72,6 @@ class LineAnalyser {
     }
 
     fun setRegex(fileInformation: Array<String>): Pattern{
-        //TODO (implement function)
 
         // isLineOfCode?
         val transformedStr = fileInformation[2]
@@ -83,9 +82,9 @@ class LineAnalyser {
         return pattern
     }
 
-    private fun isValidKeyword(keyword: String, line: String, fileInformation: Array<String>): Boolean{
-        val transformedStr = fileInformation[2]
-        val pattern = Pattern.compile("^\\s*$transformedStr$keyword\\b.*",2)
+    fun isValidKeyword(keyword: String, line: String, fileInformation: Array<String>): Boolean{
+        val transformedKeyword = keyword.replace(fileInformation[1], fileInformation[2])
+        val pattern = Pattern.compile("^\\s*$transformedKeyword\\b.*",2)
         val matcher: Matcher = pattern.matcher(line)
         return matcher.matches()
     }
@@ -98,26 +97,27 @@ class LineAnalyser {
     ): MutableMap<String, Int> {
 
         val commentedKeywordsList = editKeywordsList(keywords, fileInformation)
+        val endKeyword = commentedKeywordsList.last()
+        commentedKeywordsList.remove(endKeyword)
         val linesPerKeyword: MutableMap<String, Int> = mutableMapOf()
+        val currentSegment = StringBuilder()
 
         for (keyword in keywords) {
             linesPerKeyword[keyword] = 0
         }
-        linesPerKeyword["unmarked"] = 0
+        linesPerKeyword["UNMARKED"] = 0
 
         try {
             BufferedReader(FileReader(filePath)).use { br ->
                 var line: String?
                 var isComment = false
-                val currentSegment = StringBuilder()
+
 
                 var currentSegmentKey: String? = null
 
                 while (br.readLine().also { line = it } != null){
 
                     //split into StringSegments
-
-                    //TODO: multiline-comments mix with code are not filtered out
                     //is multiline Comment
 
                     if (isComment){
@@ -136,21 +136,27 @@ class LineAnalyser {
                         val foundStartKeyword: String =
                             commentedKeywordsList.find { line!!.contains(it, ignoreCase = true) }.toString()
                         //check if keyword is in comment
-                        val keyword = foundStartKeyword.removePrefix("//")
+                        val keyword = foundStartKeyword
                         if (isValidKeyword(keyword, line!!, fileInformation)) {
                             currentSegmentKey = foundStartKeyword
 
                             val segmentContent = currentSegment.toString()
                             val segmentLoC = countLinesInSegment(segmentContent, regex, fileInformation)
-                            linesPerKeyword["unmarked"] = linesPerKeyword["unmarked"]!! + segmentLoC
+                            linesPerKeyword["UNMARKED"] = linesPerKeyword["UNMARKED"]!! + segmentLoC
 
                             currentSegment.clear()
 
                             continue
                         }
-                    }  // //End detected and countline in Segment
-                    if (line!!.contains(commentedKeywordsList.last(), ignoreCase = true) && isValidKeyword("End", line!!, fileInformation)){
-                        val currentKeyword = currentSegmentKey!!.removePrefix("//")
+                    }
+                    if (currentSegmentKey == null){
+                        //append line to segment
+                        currentSegment.append(line).append("\n")
+                        continue
+                    }
+                    // //End detected and countline in Segment
+                    if (line!!.contains(endKeyword, ignoreCase = true) && isValidKeyword(endKeyword, line!!, fileInformation)){
+                        val currentKeyword = currentSegmentKey!!.removePrefix(fileInformation[1])
                         currentSegmentKey = null
                         val segmentContent = currentSegment.toString()
                         val segmentLoC = countLinesInSegment(segmentContent, regex, fileInformation)
@@ -160,10 +166,13 @@ class LineAnalyser {
                         currentSegment.clear()
 
                     }
-                    //append line to segment
                     currentSegment.append(line).append("\n")
 
                 }
+                //last segment
+                val segmentContent = currentSegment.toString()
+                val segmentLoC = countLinesInSegment(segmentContent, regex, fileInformation)
+                linesPerKeyword["UNMARKED"] = linesPerKeyword["UNMARKED"]!! + segmentLoC
 
             }
 
@@ -174,7 +183,7 @@ class LineAnalyser {
         return linesPerKeyword
     }
 
-    private fun countLinesInSegment(segment: String,regex: Pattern, fileInformation: Array<String>): Int {
+    fun countLinesInSegment(segment: String,regex: Pattern, fileInformation: Array<String>): Int {
         var lOCSegment = 0
         var isComment = false
 
