@@ -2,6 +2,7 @@
 import intellijmigrationplugin.statistics.LineAnalyser
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import java.util.regex.Pattern
 
 class LineAnalyserTest {
     var lineAnalyser = LineAnalyser()
@@ -9,13 +10,24 @@ class LineAnalyserTest {
 
     //test analiseLines()
     @Test
-    fun keywordsListPhython(){
-
-
-    }
-    @Test
     fun analysePhythonFile() {
-        //for testing assertions
+        val pathname = "/home/finnika/Documents/Uni/5 Semester/SE Projekt/intellij-migration-plugin/src/test/resources/PhythonTestCode.py"
+        val fileInformation = arrayOf("import", "#", "\\#", "\"\"\"", "\"\"\"")
+        val regex = Pattern.compile("^(?!\\s*import)(?!\\s*\\#).*[^\\s]\$", 8)
+        val keywords = mutableListOf("MIGRATED", "LATER")
+
+        val result = lineAnalyser.analiseLines(pathname, regex, fileInformation, keywords)
+
+        //expected result
+        val linesPerKeyword: MutableMap<String, Int> = mutableMapOf()
+        linesPerKeyword["UNMARKED"] = 5
+        linesPerKeyword["MIGRATED"] = 7
+        linesPerKeyword["LATER"] = 0
+
+        for ((keyword, expected) in linesPerKeyword) {
+            Assertions.assertEquals(expected, result[keyword])
+            println("$keyword: $expected")
+        }
 
     }
 

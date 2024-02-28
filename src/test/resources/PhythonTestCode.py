@@ -17,13 +17,14 @@ class PrimeNumbers:
     for num in range(lower, upper + 1):
         # all prime numbers are greater than 1
         if num > 1:
-            for i in range(2, num): """
-            very wild multiline comment
+            for i in range(2, num):
+             """
+            multiline comment
             """
                 if (num % i) == 0:
                     break
             else:
                 print(num)
     #End
-
-    # LoC = 10 Migrated = 7
+    print("Hello Itestra!")
+    # LoC = 12 Migrated = 7 Unmarked = 5
