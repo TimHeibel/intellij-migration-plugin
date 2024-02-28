@@ -1,6 +1,7 @@
 package intellijmigrationplugin.actions.annotation.utils
 
 import com.intellij.openapi.editor.Document
+import com.intellij.openapi.util.TextRange
 import intellijmigrationplugin.annotationModel.AnnotationSnippet
 
 class AnnotationActionUtils {
@@ -33,6 +34,10 @@ class AnnotationActionUtils {
             document.insertString(document.getLineEndOffset(endLine), "\n${commentStart}END")
             document.insertString(document.getLineStartOffset(startLine),
                     "$commentStart$annotationType $annotationComment\n")
+        }
+
+        internal fun getLineFromDocument(line: Int, document: Document) : String {
+            return document.getText(TextRange(document.getLineStartOffset(line), document.getLineEndOffset(line)))
         }
     }
 }
