@@ -14,6 +14,7 @@ import java.io.FileNotFoundException
 import javax.swing.JButton
 import javax.swing.JLabel
 import javax.swing.JPanel
+import javax.swing.JTextField
 
 /// This class is initializing a ToolWindow and adds the content from the MyStatisticsWindow class
 class IDEWindow : ToolWindowFactory {
@@ -35,15 +36,34 @@ class IDEWindow : ToolWindowFactory {
         private val legacyFolderPath = annotationInformation?.legacyFolderPath
         private val excludedLegacyFolders = annotationInformation?.excludedFolderList
 
+
         private val project = ProjectManager.getInstance().openProjects[0]
         private val fileAndFolderChooserComponent = FileAndFolderChooserComponent(project)
         private val includeFileAndFolderChooserComponent = FileAndFolderChooserComponent(project)
+
+        private val csvTest = CSVEditor()
+
+        data class DataModel(
+            var fileEnding: String = "",
+        )
+        val data = DataModel()
         fun getContent(): JPanel {
 
             val contentPane: JPanel = panel {
 
 
                 group("Exclude Folders") {
+
+                    row("Enter File-Ending:") {
+                        val textField = JTextField(15)
+                        cell(textField)
+                        val safeButton = JButton("safe").apply {
+                            addActionListener{
+                                filterFileByEnding(textField.text, fileAndFolderChooserComponent.excludedFoldersListModel, File(legacyFolderPath!!), true)
+                            }
+                        }
+                        cell(safeButton)
+                    }
                     row {
                         scrollCell(fileAndFolderChooserComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
                             .comment("Specify folders to be excluded from statistics.")
@@ -55,7 +75,9 @@ class IDEWindow : ToolWindowFactory {
                                 val contentList = fileAndFolderChooserComponent.excludedFoldersListModel
 
                                 if(executionPossible() != null){
-                                    processFileOrDirectory(executionPossible()!!, contentList, true)
+                                    val keywords = annotationInformation?.keywords
+                                    val csvPath = csvTest.createCSVFile(keywords!!)
+                                    processFileOrDirectory(executionPossible()!!, contentList, true, csvPath)
                                 }
                                 updateStatistics()
                                 println("Processing complete.")
@@ -66,6 +88,18 @@ class IDEWindow : ToolWindowFactory {
                 }
 
                 group("Include Folders") {
+
+                    row("Enter File-Ending:") {
+                        val textField = JTextField(20)
+                        cell(textField)
+                        val safeButton = JButton("safe").apply {
+                            addActionListener{
+                                data.fileEnding = textField.text
+                                filterFileByEnding(textField.text, includeFileAndFolderChooserComponent.excludedFoldersListModel, File(legacyFolderPath!!), false)
+                            }
+                        }
+                        cell(safeButton)
+                    }
                     row {
                         scrollCell(includeFileAndFolderChooserComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
                             .comment("Specify folders to include in the Statistics.")
@@ -78,9 +112,12 @@ class IDEWindow : ToolWindowFactory {
 
                                 val legacyPath = executionPossible()
                                 if(legacyPath != null){
-                                    processFileOrDirectory(legacyPath, contentList, false)
+                                    //create CSV file
+                                    val keywords = annotationInformation?.keywords
+                                    val csvPath = csvTest.createCSVFile(keywords!!)
+                                    processFileOrDirectory(legacyPath, contentList, false, csvPath)
                                 }
-
+                                //TODO: show CSV file in UI #38
                                 updateStatistics()
                                 println("Processing complete.")
                             }
@@ -113,28 +150,54 @@ class IDEWindow : ToolWindowFactory {
             }
         }
 
+        private fun filterFileByEnding(fileEnding: String, contentList: CollectionListModel<String>, file: File, excluded: Boolean) {
+            try {
+                if(excludedLegacyFolders!!.contains(file.path)) return
+                if(contentList.contains(file.path)) return
+
+                if (!excluded && file.isFile && file.path.endsWith(fileEnding))
+                    includeFileAndFolderChooserComponent.excludedFoldersListModel.add(file.path)
+                if(excluded && file.isFile && file.path.endsWith(fileEnding))
+                    fileAndFolderChooserComponent.excludedFoldersListModel.add(file.path)
+
+                if(file.isDirectory)
+                    file.listFiles()?.forEach { subFile ->
+                        filterFileByEnding(fileEnding, contentList, subFile, excluded)
+                    }
+                return
+            } catch (e: FileNotFoundException) {
+                println("File not found: ${e.message}")
+            } catch (e: SecurityException) {
+                println("Access denied: ${e.message}")
+            } catch (e: Exception) {
+                println("Error processing file or directory: ${e.message}")
+            }
+
+        }
+
         private val statisticLabel = JLabel("")
         private fun updateStatistics() {
+            // Todo: #38
             statisticLabel.text = "update"
         }
 
-        private fun processFileOrDirectory(file: File, excludedFolderFileList: CollectionListModel<String>, excluded: Boolean) {
+        private fun processFileOrDirectory(file: File, excludedFolderFileList: CollectionListModel<String>, excluded: Boolean, csvPath: String) {
             try {
 
                 if(excludedLegacyFolders!!.contains(file.path)) return
 
                 if(!excluded && excludedFolderFileList.contains(file.path)){
-                    processFolderFile(file)
+                    processFolderFile(file, csvPath)
                 }
 
                 if(excluded && excludedFolderFileList.contains(file.path)) return
 
 
-                if (file.isFile && excluded) lineAnalyser.getFileStatistic(file.absolutePath)
+                if (file.isFile && excluded) lineAnalyser.getFileStatistic(file.absolutePath, csvPath)
 
                 if(file.isDirectory)
                     file.listFiles()?.forEach { subFile ->
-                        processFileOrDirectory(subFile, excludedFolderFileList, excluded)
+                        processFileOrDirectory(subFile, excludedFolderFileList, excluded, csvPath)
                     }
                 return
             } catch (e: FileNotFoundException) {
@@ -145,16 +208,16 @@ class IDEWindow : ToolWindowFactory {
                 println("Error processing file or directory: ${e.message}")
             }
         }
-        private fun processFolderFile(file: File) {
+        private fun processFolderFile(file: File, csvPath: String) {
 
 
             if(excludedLegacyFolders!!.contains(file.path)) return
 
-            if(file.isFile) lineAnalyser.getFileStatistic(file.absolutePath)
+            if(file.isFile) lineAnalyser.getFileStatistic(file.absolutePath, csvPath)
 
             if (file.isDirectory )
                 file.listFiles()?.forEach { subFile ->
-                    processFolderFile(subFile)
+                    processFolderFile(subFile, csvPath)
                 }
         }
     }
