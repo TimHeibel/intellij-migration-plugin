@@ -25,7 +25,9 @@ class AnnotationRemovalAction : AnAction() {
 
         //Get Start and End of current selection
         val startSelection = primaryCaret.selectionStart
+        val endSelection = primaryCaret.selectionEnd
         val startSelectionLine = document.getLineNumber(startSelection)
+        val endSelectionLine = document.getLineNumber(endSelection)
 
         WriteCommandAction.runWriteCommandAction(project) {
 
@@ -33,7 +35,7 @@ class AnnotationRemovalAction : AnAction() {
 
             for (annotation in annotationMapping.asReversed()) {
 
-                if(annotation.start >= startSelectionLine) {
+                if(annotation.start in startSelectionLine .. endSelectionLine) {
                     AnnotationActionUtils.removeAnnotation(annotation, document)
                 }
             }
