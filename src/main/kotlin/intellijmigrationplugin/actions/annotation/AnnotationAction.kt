@@ -5,6 +5,7 @@ import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.ui.DialogWrapper
+import com.intellij.openapi.util.TextRange
 import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils
 import intellijmigrationplugin.annotationModel.AnnotationDetection
 import intellijmigrationplugin.annotationModel.AnnotationSnippet
@@ -44,8 +45,8 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
             //Get Start and End of current selection
             val startSelection = primaryCaret.selectionStart
             val endSelection = primaryCaret.selectionEnd
-            val startSelectionLine = document.getLineNumber(startSelection)
-            val endSelectionLine = document.getLineNumber(endSelection)
+            var startSelectionLine = document.getLineNumber(startSelection)
+            var endSelectionLine = document.getLineNumber(endSelection)
 
             val commentStart : String = getCommentTypeByEvent(event)
 
@@ -59,8 +60,72 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
                 if(dialog.exitCode != DialogWrapper.OK_EXIT_CODE) {
                     return@runWriteCommandAction
                 }
+            }
 
+            for (collision in collidingAnnotations.reversed()) {
+                when (collision.second) {
+                    CollisionCode.START_INSIDE -> {
+                        val collisionStartLine = AnnotationActionUtils.getLineFromDocument(collision.first.start, document)
 
+                        AnnotationActionUtils.removeLine(collision.first.start, document)
+                        endSelectionLine -= 1
+
+                        if(collision.first.end in endSelectionLine + 1 .. endSelectionLine + 2) {
+                            if(collision.first.hasEnd) {
+                                AnnotationActionUtils.removeLine(collision.first.end - 1, document)
+                            }
+                            continue
+                        }
+
+                        document.insertString(document.getLineEndOffset(endSelectionLine), "\n${collisionStartLine}")
+                    }
+                    CollisionCode.END_INSIDE -> {
+                        if(collision.first.hasEnd) {
+                            AnnotationActionUtils.removeLine(collision.first.end, document)
+                            endSelectionLine -= 1
+                        }
+
+                        if(collision.first.start in startSelectionLine - 1 .. startSelectionLine) {
+                            AnnotationActionUtils.removeLine(collision.first.start, document)
+                            startSelectionLine -= 1
+                            endSelectionLine -= 1
+                            continue
+                        }
+
+                        document.insertString(document.getLineEndOffset(startSelectionLine - 1), "\n${commentStart}END")
+                        startSelectionLine += 1
+                        endSelectionLine += 1
+                    }
+                    CollisionCode.COMPLETE_INSIDE -> {
+                        AnnotationActionUtils.removeAnnotation(collision.first, document)
+                        endSelectionLine -= 1
+
+                        if(collision.first.hasEnd) {
+                            endSelectionLine -= 1
+                        }
+                    }
+                    CollisionCode.SURROUNDING -> {
+                        val collisionStartLine = AnnotationActionUtils.getLineFromDocument(collision.first.start, document)
+
+                        if(collision.first.end in endSelectionLine .. endSelectionLine + 1) {
+                            if(collision.first.hasEnd) {
+                                AnnotationActionUtils.removeLine(collision.first.end, document)
+                            }
+                        } else {
+                            document.insertString(document.getLineEndOffset(endSelectionLine), "\n${collisionStartLine}")
+                        }
+
+                        if(collision.first.start in startSelectionLine - 1 .. startSelectionLine) {
+                            AnnotationActionUtils.removeLine(collision.first.start, document)
+                            startSelectionLine -= 1
+                            endSelectionLine -= 1
+                        } else {
+                            document.insertString(document.getLineStartOffset(startSelectionLine) - 1, "\n${commentStart}END")
+                            startSelectionLine += 1
+                            endSelectionLine += 1
+                        }
+                    }
+                }
             }
 
             AnnotationActionUtils.placeAnnotation(annotationType, addInfo, startSelectionLine, endSelectionLine, commentStart, document)
