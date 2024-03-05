@@ -23,9 +23,17 @@ class AnnotationActionUtils {
                     "$commentStart$annotationType $annotationComment\n")
         }
 
-        internal fun getLineFromDocument(line: Int, document: Document) : String {
-            return document.getText(TextRange(document.getLineStartOffset(line), document.getLineEndOffset(line)))
+        internal fun placeOneLineAnnotation(annotationType: String, annotationComment: String, line: Int,
+                                            commentStart: String, document: Document) {
+            document.insertString(document.getLineStartOffset(line),
+                    "$commentStart$annotationType $annotationComment\n")
+            document.insertString(document.getLineEndOffset(line), "\n${commentStart}END")
         }
+
+        internal fun Document.getLine(line: Int): String {
+            return this.getText(TextRange(this.getLineStartOffset(line), this.getLineEndOffset(line)))
+        }
+
 
         internal fun removeLine(line: Int, document: Document) {
 

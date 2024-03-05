@@ -2,6 +2,7 @@ package intellijmigrationplugin.annotationModel
 
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.util.TextRange
+import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.getLine
 
 class AnnotationDetection {
 
@@ -20,7 +21,6 @@ class AnnotationDetection {
 
             // Variables to track state of annotation parsing
             var annotationActive = false
-            var currAnnotation = ""
             var annotationStartLine = 0
 
             for (lineIndex in 0 until document.lineCount) {
@@ -33,23 +33,25 @@ class AnnotationDetection {
 
                 if (!annotationActive) {
                     // Look for a line that starts a new annotation
-                    markerRegexMapping.entries.find { it.value.containsMatchIn(line) }?.let { matched ->
+                    markerRegexMapping.entries.find { it.value.containsMatchIn(line) }?.let { _ ->
                         annotationActive = true
-                        currAnnotation = matched.key
                         annotationStartLine = lineIndex
                     }
                 } else {
                     // Check if the current annotation ends in the current line.
                     if (regexEnd.containsMatchIn(line)) {
-                        annotationSnippets.add(AnnotationSnippet(annotationStartLine, lineIndex, true, currAnnotation))
+
+                        val annotation = AnnotationSnippet.fromStartLine(document.getLine(annotationStartLine), commentType, annotationStartLine, lineIndex, true)
+                        annotationSnippets.add(annotation!!)
                         annotationActive = false
                         continue
                     }
 
                     // Check if a new annotation starts in the current line, thus terminating the old annotation.
-                    markerRegexMapping.entries.find { it.value.containsMatchIn(line) }?.let { matched ->
-                        annotationSnippets.add(AnnotationSnippet(annotationStartLine, lineIndex - 1, false, currAnnotation))
-                        currAnnotation = matched.key
+                    markerRegexMapping.entries.find { it.value.containsMatchIn(line) }?.let { _ ->
+
+                        val annotation = AnnotationSnippet.fromStartLine(document.getLine(annotationStartLine), commentType, annotationStartLine, lineIndex - 1, false)
+                        annotationSnippets.add(annotation!!)
                         annotationStartLine = lineIndex
                     }
                 }
@@ -57,7 +59,8 @@ class AnnotationDetection {
 
             // Add a final annotation snippet if an annotation block was left open
             if (annotationActive) {
-                annotationSnippets.add(AnnotationSnippet(annotationStartLine, document.lineCount - 1, false, currAnnotation))
+                val annotation = AnnotationSnippet.fromStartLine(document.getLine(annotationStartLine), commentType, annotationStartLine, document.lineCount - 1, false)
+                annotationSnippets.add(annotation!!)
             }
 
             return annotationSnippets
