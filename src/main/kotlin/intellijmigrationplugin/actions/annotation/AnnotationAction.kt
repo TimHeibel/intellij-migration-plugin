@@ -3,12 +3,14 @@ package intellijmigrationplugin.actions.annotation
 import intellijmigrationplugin.annotationModel.AnnotationInformation
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.editor.Document
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.openapi.util.TextRange
 import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils
 import intellijmigrationplugin.annotationModel.AnnotationDetection
 import intellijmigrationplugin.annotationModel.AnnotationSnippet
+import intellijmigrationplugin.annotationModel.CollisionCode
 import intellijmigrationplugin.ui.dialogs.CollisionDialog
 
 
@@ -40,97 +42,137 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
         val document = editor.document
         val primaryCaret = editor.caretModel.primaryCaret
 
-        WriteCommandAction.runWriteCommandAction(project) {
 
-            //Get Start and End of current selection
-            val startSelection = primaryCaret.selectionStart
-            val endSelection = primaryCaret.selectionEnd
-            var startSelectionLine = document.getLineNumber(startSelection)
-            var endSelectionLine = document.getLineNumber(endSelection)
 
-            val commentStart : String = getCommentTypeByEvent(event)
+        //Get Start and End of current selection
+        var startSelection = primaryCaret.selectionStart
+        var endSelection = primaryCaret.selectionEnd
 
-            val collidingAnnotations =
-                    getAnnotationCollisions(document, getFileTypeByEvent(event), startSelectionLine, endSelectionLine)
-
-            if(collidingAnnotations.isNotEmpty()) {
-                val dialog = CollisionDialog()
-                dialog.show()
-
-                if(dialog.exitCode != DialogWrapper.OK_EXIT_CODE) {
-                    return@runWriteCommandAction
-                }
-            }
-
-            for (collision in collidingAnnotations.reversed()) {
-                when (collision.second) {
-                    CollisionCode.START_INSIDE -> {
-                        val collisionStartLine = AnnotationActionUtils.getLineFromDocument(collision.first.start, document)
-
-                        AnnotationActionUtils.removeLine(collision.first.start, document)
-                        endSelectionLine -= 1
-
-                        if(collision.first.end in endSelectionLine + 1 .. endSelectionLine + 2) {
-                            if(collision.first.hasEnd) {
-                                AnnotationActionUtils.removeLine(collision.first.end - 1, document)
-                            }
-                            continue
-                        }
-
-                        document.insertString(document.getLineEndOffset(endSelectionLine), "\n${collisionStartLine}")
-                    }
-                    CollisionCode.END_INSIDE -> {
-                        if(collision.first.hasEnd) {
-                            AnnotationActionUtils.removeLine(collision.first.end, document)
-                            endSelectionLine -= 1
-                        }
-
-                        if(collision.first.start in startSelectionLine - 1 .. startSelectionLine) {
-                            AnnotationActionUtils.removeLine(collision.first.start, document)
-                            startSelectionLine -= 1
-                            endSelectionLine -= 1
-                            continue
-                        }
-
-                        document.insertString(document.getLineEndOffset(startSelectionLine - 1), "\n${commentStart}END")
-                        startSelectionLine += 1
-                        endSelectionLine += 1
-                    }
-                    CollisionCode.COMPLETE_INSIDE -> {
-                        AnnotationActionUtils.removeAnnotation(collision.first, document)
-                        endSelectionLine -= 1
-
-                        if(collision.first.hasEnd) {
-                            endSelectionLine -= 1
-                        }
-                    }
-                    CollisionCode.SURROUNDING -> {
-                        val collisionStartLine = AnnotationActionUtils.getLineFromDocument(collision.first.start, document)
-
-                        if(collision.first.end in endSelectionLine .. endSelectionLine + 1) {
-                            if(collision.first.hasEnd) {
-                                AnnotationActionUtils.removeLine(collision.first.end, document)
-                            }
-                        } else {
-                            document.insertString(document.getLineEndOffset(endSelectionLine), "\n${collisionStartLine}")
-                        }
-
-                        if(collision.first.start in startSelectionLine - 1 .. startSelectionLine) {
-                            AnnotationActionUtils.removeLine(collision.first.start, document)
-                            startSelectionLine -= 1
-                            endSelectionLine -= 1
-                        } else {
-                            document.insertString(document.getLineStartOffset(startSelectionLine) - 1, "\n${commentStart}END")
-                            startSelectionLine += 1
-                            endSelectionLine += 1
-                        }
-                    }
-                }
-            }
-
-            AnnotationActionUtils.placeAnnotation(annotationType, addInfo, startSelectionLine, endSelectionLine, commentStart, document)
+        if(endSelection == startSelection){
+            thisLogger().warn("Nothing to Annotate")
+            return
         }
 
+        endSelection -= 1
+
+        var startSelectionLine = document.getLineNumber(startSelection)
+        var endSelectionLine = document.getLineNumber(endSelection)
+
+        val commentStart : String = getCommentTypeByEvent(event)
+
+        var collidingAnnotations =
+                getAnnotationCollisions(document, getFileTypeByEvent(event), startSelectionLine, endSelectionLine)
+
+        if(collidingAnnotations.isNotEmpty()) {
+            val dialog = CollisionDialog()
+            dialog.show()
+
+            if(dialog.exitCode != DialogWrapper.OK_EXIT_CODE) {
+                return
+            }
+        }
+
+        WriteCommandAction.runWriteCommandAction(project) {
+
+            collidingAnnotations =
+                    getAnnotationCollisions(document, getFileTypeByEvent(event), startSelectionLine, endSelectionLine)
+
+            handleCollisions(collidingAnnotations, commentStart, editor)
+
+            startSelection = primaryCaret.selectionStart
+            endSelection = primaryCaret.selectionEnd
+
+            startSelectionLine = document.getLineNumber(startSelection)
+
+            if(endSelection == startSelection){
+                AnnotationActionUtils.placeOneLineAnnotation(annotationType, addInfo, startSelectionLine, commentStart, document)
+                return@runWriteCommandAction
+            }
+
+            endSelection -= 1
+
+
+            endSelectionLine = document.getLineNumber(endSelection)
+
+            AnnotationActionUtils.placeAnnotation(annotationType, addInfo, startSelectionLine, endSelectionLine, commentStart, document)
+
+        }
+
+    }
+
+    private fun handleCollisions(collidingAnnotations: ArrayList<Pair<AnnotationSnippet, CollisionCode>>, commentStart: String, editor: Editor) {
+
+        val document = editor.document
+        val primaryCaret = editor.caretModel.primaryCaret
+
+        for (collision in collidingAnnotations.reversed()) {
+
+            val startSelection = primaryCaret.selectionStart
+            var endSelection = primaryCaret.selectionEnd
+
+            endSelection -= 1
+
+            val startLine = document.getLineNumber(startSelection)
+            val endLine = document.getLineNumber(endSelection)
+
+            when (collision.second) {
+                CollisionCode.START_INSIDE -> handleStartInsideCollision(collision, document, endLine, commentStart)
+
+                CollisionCode.END_INSIDE -> handleEndInsideCollision(collision, document, startLine, commentStart)
+
+                CollisionCode.COMPLETE_INSIDE -> handleCompleteInsideCollision(collision, document)
+
+                CollisionCode.SURROUNDING -> handleSurroundingCollision(collision, document, endLine, startLine, commentStart)
+            }
+        }
+
+    }
+
+    private fun handleSurroundingCollision(collision: Pair<AnnotationSnippet, CollisionCode>, document: Document, endLine: Int, startLine: Int, commentStart: String) {
+
+        replaceAnnotationStart(collision, commentStart, endLine, document)
+
+        replaceAnnotationEnd(collision, startLine, document, commentStart)
+    }
+
+    private fun handleCompleteInsideCollision(collision: Pair<AnnotationSnippet, CollisionCode>, document: Document) {
+        AnnotationActionUtils.removeAnnotation(collision.first, document)
+    }
+
+    private fun handleEndInsideCollision(collision: Pair<AnnotationSnippet, CollisionCode>, document: Document, startLine: Int, commentStart: String) {
+
+        if (collision.first.hasEnd) {
+            AnnotationActionUtils.removeLine(collision.first.end, document)
+        }
+
+        replaceAnnotationEnd(collision, startLine, document, commentStart)
+    }
+
+    private fun handleStartInsideCollision(collision: Pair<AnnotationSnippet, CollisionCode>, document: Document, endLine: Int, commentStart: String) {
+
+        replaceAnnotationStart(collision, commentStart, endLine, document)
+
+        AnnotationActionUtils.removeLine(collision.first.start, document)
+    }
+
+    private fun replaceAnnotationEnd(collision: Pair<AnnotationSnippet, CollisionCode>, startLine: Int, document: Document, commentStart: String) {
+        if (collision.first.start in startLine - 1..startLine) {
+            AnnotationActionUtils.removeLine(collision.first.start, document)
+
+        } else {
+            document.insertString(document.getLineStartOffset(startLine) - 1, "\n${commentStart}END")
+        }
+    }
+    private fun replaceAnnotationStart(collision: Pair<AnnotationSnippet, CollisionCode>, commentStart: String, endLine: Int, document: Document) {
+        val collisionStartLine = collision.first.createStartLine(commentStart)
+
+        if (collision.first.end == endLine || ((collision.first.end == (endLine + 1)) && collision.first.hasEnd)) {
+            if (collision.first.hasEnd) {
+                AnnotationActionUtils.removeLine(collision.first.end, document)
+            }
+        } else {
+            document.insertString(document.getLineEndOffset(endLine), "\n${collisionStartLine}")
+        }
     }
 
     private fun getCommentTypeByEvent(event: AnActionEvent) : String {
@@ -166,24 +208,10 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
         val collisionAnnotations = ArrayList<Pair<AnnotationSnippet,CollisionCode>>()
 
         for (annotation in existingAnnotations) {
-            if (annotation.start in startLine..endLine && annotation.end in startLine..endLine) {
-                collisionAnnotations.add(Pair(annotation, CollisionCode.COMPLETE_INSIDE))
-                continue
-            }
 
-            if (annotation.start in startLine..endLine) {
-                collisionAnnotations.add(Pair(annotation, CollisionCode.START_INSIDE))
-                continue
-            }
+            val collisionCode = annotation.hasCollision(startLine, endLine) ?: continue
 
-            if (annotation.end in startLine..endLine) {
-                collisionAnnotations.add(Pair(annotation, CollisionCode.END_INSIDE))
-                continue
-            }
-
-            if (startLine in annotation.start..annotation.end) {
-                collisionAnnotations.add(Pair(annotation, CollisionCode.SURROUNDING))
-            }
+            collisionAnnotations.add(Pair(annotation, collisionCode))
         }
 
         return collisionAnnotations
@@ -205,10 +233,3 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
  */
 class DIALOGAnnotationAction(override val annotationType: String, annotationInformation: String)
     : AnnotationAction(annotationInformation)
-
-private enum class CollisionCode {
-    START_INSIDE,
-    END_INSIDE,
-    COMPLETE_INSIDE,
-    SURROUNDING
-}
