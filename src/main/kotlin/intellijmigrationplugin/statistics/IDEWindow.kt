@@ -41,7 +41,7 @@ class IDEWindow : ToolWindowFactory {
         private val fileAndFolderChooserComponent = FileAndFolderChooserComponent(project)
         private val includeFileAndFolderChooserComponent = FileAndFolderChooserComponent(project)
 
-        private val csvTest = CSVEditor()
+        private val csvEditor = CSVEditor()
 
         data class DataModel(
             var fileEnding: String = "",
@@ -76,10 +76,11 @@ class IDEWindow : ToolWindowFactory {
 
                                 if(executionPossible() != null){
                                     val keywords = annotationInformation?.keywords
-                                    val csvPath = csvTest.createCSVFile(keywords!!)
+                                    val csvPath = csvEditor.createCSVFile(keywords!!, legacyFolderPath!!)
                                     processFileOrDirectory(executionPossible()!!, contentList, true, csvPath)
+                                    updateStatistics(csvPath)
                                 }
-                                updateStatistics()
+
                                 println("Processing complete.")
                             }
                         }
@@ -114,11 +115,12 @@ class IDEWindow : ToolWindowFactory {
                                 if(legacyPath != null){
                                     //create CSV file
                                     val keywords = annotationInformation?.keywords
-                                    val csvPath = csvTest.createCSVFile(keywords!!)
+                                    val csvPath = csvEditor.createCSVFile(keywords!!, legacyFolderPath!!)
                                     processFileOrDirectory(legacyPath, contentList, false, csvPath)
+                                    updateStatistics(csvPath)
                                 }
                                 //TODO: show CSV file in UI #38
-                                updateStatistics()
+
                                 println("Processing complete.")
                             }
                         }
@@ -129,7 +131,7 @@ class IDEWindow : ToolWindowFactory {
                     row {
                         //TODO: Issue 38
                         // Call the function initially to set the label text
-                        updateStatistics()
+
                         cell(statisticLabel)
                     }
                 }
@@ -176,9 +178,19 @@ class IDEWindow : ToolWindowFactory {
         }
 
         private val statisticLabel = JLabel("")
-        private fun updateStatistics() {
+        private fun updateStatistics(csvPath: String) {
             // Todo: #38
-            statisticLabel.text = "update"
+
+            val file = File(csvPath)
+            val str = StringBuilder()
+            file.bufferedReader().use { br ->
+                var line: String
+                while (br.readLine().also { line = it } != null) {
+                    str.append(line)
+                }
+                println(str.toString())
+            }
+            statisticLabel.text = str.toString()
         }
 
         private fun processFileOrDirectory(file: File, excludedFolderFileList: CollectionListModel<String>, excluded: Boolean, csvPath: String) {

@@ -9,8 +9,9 @@ import java.util.regex.Pattern
 
 class LineAnalyser {
 
-    fun getFileStatistic(filePath: String): MutableMap<String,Int> {
+    fun getFileStatistic(filePath: String, csvName: String): MutableMap<String,Int> {
 
+        val csvEditor = CSVEditor()
         //get file specific information
         val annotationInformation = AnnotationInformation.instance
         val importMapping = annotationInformation!!.importMapping
@@ -25,7 +26,8 @@ class LineAnalyser {
 
         //go through file
         val statisticMap = analiseLines(filePath, regex, fileInformation, keywords)
-        println(statisticMap)
+        //add line to csv
+        csvEditor.addLine(statisticMap, csvName, filePath)
 
         return statisticMap
     }
