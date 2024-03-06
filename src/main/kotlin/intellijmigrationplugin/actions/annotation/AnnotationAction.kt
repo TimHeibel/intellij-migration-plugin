@@ -7,7 +7,10 @@ import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.ui.DialogWrapper
-import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils
+import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.placeAnnotation
+import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.placeOneLineAnnotation
+import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.removeAnnotation
+import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.removeLine
 import intellijmigrationplugin.annotationModel.AnnotationDetection
 import intellijmigrationplugin.annotationModel.AnnotationSnippet
 import intellijmigrationplugin.annotationModel.CollisionCode
@@ -85,7 +88,7 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
             startSelectionLine = document.getLineNumber(startSelection)
 
             if(endSelection == startSelection){
-                AnnotationActionUtils.placeOneLineAnnotation(annotationType, addInfo, startSelectionLine, commentStart, document)
+                document.placeOneLineAnnotation(annotationType, addInfo, startSelectionLine, commentStart)
                 return@runWriteCommandAction
             }
 
@@ -94,7 +97,7 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
 
             endSelectionLine = document.getLineNumber(endSelection)
 
-            AnnotationActionUtils.placeAnnotation(annotationType, addInfo, startSelectionLine, endSelectionLine, commentStart, document)
+            document.placeAnnotation(annotationType, addInfo, startSelectionLine, endSelectionLine, commentStart)
 
         }
 
@@ -136,13 +139,13 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
     }
 
     private fun handleCompleteInsideCollision(collision: Pair<AnnotationSnippet, CollisionCode>, document: Document) {
-        AnnotationActionUtils.removeAnnotation(collision.first, document)
+        document.removeAnnotation(collision.first)
     }
 
     private fun handleEndInsideCollision(collision: Pair<AnnotationSnippet, CollisionCode>, document: Document, startLine: Int, commentStart: String) {
 
         if (collision.first.hasEnd) {
-            AnnotationActionUtils.removeLine(collision.first.end, document)
+            document.removeLine(collision.first.end)
         }
 
         replaceAnnotationEnd(collision, startLine, document, commentStart)
@@ -152,12 +155,12 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
 
         replaceAnnotationStart(collision, commentStart, endLine, document)
 
-        AnnotationActionUtils.removeLine(collision.first.start, document)
+        document.removeLine(collision.first.start)
     }
 
     private fun replaceAnnotationEnd(collision: Pair<AnnotationSnippet, CollisionCode>, startLine: Int, document: Document, commentStart: String) {
         if (collision.first.start in startLine - 1..startLine) {
-            AnnotationActionUtils.removeLine(collision.first.start, document)
+            document.removeLine(collision.first.start)
 
         } else {
             document.insertString(document.getLineStartOffset(startLine) - 1, "\n${commentStart}END")
@@ -168,7 +171,7 @@ abstract class AnnotationAction(private val addInfo: String = "") : AnAction() {
 
         if (collision.first.end == endLine || ((collision.first.end == (endLine + 1)) && collision.first.hasEnd)) {
             if (collision.first.hasEnd) {
-                AnnotationActionUtils.removeLine(collision.first.end, document)
+                document.removeLine(collision.first.end)
             }
         } else {
             document.insertString(document.getLineEndOffset(endLine), "\n${collisionStartLine}")

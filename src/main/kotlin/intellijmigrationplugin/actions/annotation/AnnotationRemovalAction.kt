@@ -4,7 +4,7 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.command.WriteCommandAction
-import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils
+import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.removeAnnotation
 import intellijmigrationplugin.annotationModel.AnnotationDetection
 
 class AnnotationRemovalAction : AnAction() {
@@ -36,7 +36,7 @@ class AnnotationRemovalAction : AnAction() {
             for (annotation in annotationMapping.asReversed()) {
 
                 if(annotation.start in startSelectionLine .. endSelectionLine) {
-                    AnnotationActionUtils.removeAnnotation(annotation, document)
+                    document.removeAnnotation(annotation)
                 }
             }
         }

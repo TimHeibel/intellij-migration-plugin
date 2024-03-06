@@ -6,28 +6,28 @@ import intellijmigrationplugin.annotationModel.AnnotationSnippet
 
 class AnnotationActionUtils {
     companion object {
-        internal fun removeAnnotation(annotation: AnnotationSnippet, document: Document) {
+        internal fun Document.removeAnnotation(annotation: AnnotationSnippet) {
 
             if(annotation.hasEnd) {
-                removeLine(annotation.end, document)
+                removeLine(annotation.end)
             }
 
-            removeLine(annotation.start, document)
+            removeLine(annotation.start)
         }
 
-        internal fun placeAnnotation(annotationType: String, annotationComment : String, startLine: Int, endLine: Int,
-                                     commentStart: String, document: Document) {
+        internal fun Document.placeAnnotation(annotationType: String, annotationComment : String, startLine: Int, endLine: Int,
+                                              commentStart: String) {
 
-            document.insertString(document.getLineEndOffset(endLine), "\n${commentStart}END")
-            document.insertString(document.getLineStartOffset(startLine),
+            this.insertString(this.getLineEndOffset(endLine), "\n${commentStart}END")
+            this.insertString(this.getLineStartOffset(startLine),
                     "$commentStart$annotationType $annotationComment\n")
         }
 
-        internal fun placeOneLineAnnotation(annotationType: String, annotationComment: String, line: Int,
-                                            commentStart: String, document: Document) {
-            document.insertString(document.getLineStartOffset(line),
+        internal fun Document.placeOneLineAnnotation(annotationType: String, annotationComment: String, line: Int,
+                                            commentStart: String) {
+            this.insertString(this.getLineStartOffset(line),
                     "$commentStart$annotationType $annotationComment\n")
-            document.insertString(document.getLineEndOffset(line), "\n${commentStart}END")
+            this.insertString(this.getLineEndOffset(line), "\n${commentStart}END")
         }
 
         internal fun Document.getLine(line: Int): String {
@@ -35,17 +35,17 @@ class AnnotationActionUtils {
         }
 
 
-        internal fun removeLine(line: Int, document: Document) {
+        internal fun Document.removeLine(line: Int) {
 
-            var endOffset = document.getLineEndOffset(line) + 1
+            var endOffset = this.getLineEndOffset(line) + 1
 
-            if (endOffset >= document.textLength) {
+            if (endOffset >= this.textLength) {
                 endOffset -= 1
             }
 
-            val range = TextRange(document.getLineStartOffset(line), endOffset)
+            val range = TextRange(this.getLineStartOffset(line), endOffset)
 
-            document.replaceString(range.startOffset, range.endOffset, "")
+            this.replaceString(range.startOffset, range.endOffset, "")
         }
     }
 }
