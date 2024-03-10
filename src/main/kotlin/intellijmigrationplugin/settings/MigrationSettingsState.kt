@@ -30,9 +30,9 @@ internal class MigrationSettingsState : PersistentStateComponent<MigrationSettin
 
     @OptionTag(converter = PairListConverter::class)
     var keywordColorMapping: MutableList<Pair<String, String>> = mutableListOf(
-        Pair("MIGRATED", "#8032cd32"),
-        Pair("LATER", "#82ffa500"),
-        Pair("UNUSED", "#82808080")
+        Pair("MIGRATED", "#2032cd32"),
+        Pair("LATER", "#22ffa500"),
+        Pair("UNUSED", "#22808080")
     )
 
     override fun getState(): MigrationSettingsState {

@@ -96,7 +96,7 @@ abstract class AnnotationAction(private val annotationType : String, private val
             endSelectionLine = document.getLineNumber(endSelection)
 
             document.placeAnnotation(annotationType, addInfo, startSelectionLine, endSelectionLine, commentStart)
-
+            
         }
 
     }
@@ -297,8 +297,6 @@ abstract class AnnotationAction(private val annotationType : String, private val
         return ActionUpdateThread.BGT
 
     }
-
-
 
 }
 

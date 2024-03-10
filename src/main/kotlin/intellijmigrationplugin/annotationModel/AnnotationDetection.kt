@@ -2,6 +2,7 @@ package intellijmigrationplugin.annotationModel
 
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.util.TextRange
+
 import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.getLine
 
 /**
@@ -31,6 +32,7 @@ class AnnotationDetection {
 
             // Variables to track state of annotation parsing
             var annotationActive = false
+
             var annotationStartLine = 0
 
             for (lineIndex in 0 until document.lineCount) {
@@ -45,12 +47,12 @@ class AnnotationDetection {
                     // Look for a line that starts a new annotation
                     markerRegexMapping.entries.find { it.value.containsMatchIn(line) }?.let { _ ->
                         annotationActive = true
+
                         annotationStartLine = lineIndex
                     }
                 } else {
                     // Check if the current annotation ends in the current line.
                     if (regexEnd.containsMatchIn(line)) {
-
                         val annotation = AnnotationSnippet.fromStartLine(document.getLine(annotationStartLine), commentType, annotationStartLine, lineIndex, true)
                         annotationSnippets.add(annotation!!)
                         annotationActive = false
@@ -77,6 +79,44 @@ class AnnotationDetection {
         }
 
         /**
+         * Note line numbers from 0 to n-1 number of lines
+         * @param lineStart: inclusive line index
+         * @param lineEnd: exclusive line index
+         */
+        suspend fun detectAnnotationInFile(document: Document, fileType: String?, lineStart: Int, lineEnd: Int): MutableList<Pair<Int, String>> {
+            val outputList = mutableListOf<Pair<Int, String>>()
+            val commentType = AnnotationInformation.instance!!.singleCommentMapping[fileType]
+                    ?: "//"
+            val keywords = AnnotationInformation.instance!!.keywords
+
+            val regexes = keywords.map { x -> Regex("//\\s*$x(\$|\\s)", RegexOption.IGNORE_CASE) }
+            val regexEnd = Regex("//\\s*end(\$|\\s)", RegexOption.IGNORE_CASE)
+            yield()
+            for (i in lineStart..lineEnd - 1) {
+
+                val startOffset = document.getLineStartOffset(i)
+                val endOffset = document.getLineEndOffset(i)
+                val line = document.getText(TextRange(startOffset, endOffset))
+
+                if (line.contains(regexEnd)) {
+                    outputList.add(Pair(i, "end"))
+                    continue
+                }
+                var j = 0
+                for (regex in regexes) {
+                    if (line.contains(regex)) {
+                        outputList.add(Pair(i, keywords[j]))
+                        break
+                    }
+                    j++
+                }
+                yield()
+            }
+            return outputList
+
+        }
+
+        /**
          * Generates a regex pattern for a given [annotationType] and [commentType].
          *
          * @param commentType The comment syntax used in the document.
@@ -98,3 +138,4 @@ class AnnotationDetection {
         }
     }
 }
+

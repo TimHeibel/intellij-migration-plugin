@@ -1,5 +1,6 @@
 package intellijmigrationplugin.annotationModel
 
+
 /**
  * Represents an annotation snippet within a document
  *
@@ -12,8 +13,8 @@ package intellijmigrationplugin.annotationModel
  */
 class AnnotationSnippet(var start: Int, var end: Int, var hasEnd: Boolean, var type: String, var addInfo: String = "") {
 
-    companion object {
 
+    companion object {
         /**
          * Creates an [AnnotationSnippet] from a given [line] and under consideration
          * of the specific [commentStart].
@@ -96,8 +97,12 @@ class AnnotationSnippet(var start: Int, var end: Int, var hasEnd: Boolean, var t
     fun inRange(line: Int): Boolean {
         return line in start..end
     }
-
+    
+    override fun toString(): String {
+        return "Startline: $start, Endline: $end, Type: $type"
+    }
 }
+
 
 /**
  * Enum class representing different collision scenarios between annotations.

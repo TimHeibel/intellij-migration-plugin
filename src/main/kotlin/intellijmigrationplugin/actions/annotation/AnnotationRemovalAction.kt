@@ -10,6 +10,7 @@ import intellijmigrationplugin.annotationModel.AnnotationDetection
 /**
  * An action that removes annotations within the selected text range in the editor.
  */
+
 class AnnotationRemovalAction : AnAction() {
     override fun actionPerformed(event: AnActionEvent) {
 
@@ -32,12 +33,12 @@ class AnnotationRemovalAction : AnAction() {
         val startSelectionLine = document.getLineNumber(startSelection)
         val endSelectionLine = document.getLineNumber(endSelection)
 
+
         WriteCommandAction.runWriteCommandAction(project) {
 
             val annotationMapping = AnnotationDetection.detectAnnotationInFile(document, vFile.extension)
 
             for (annotation in annotationMapping.asReversed()) {
-
                 if(annotation.start in startSelectionLine .. endSelectionLine) {
                     document.removeAnnotation(annotation)
                 }

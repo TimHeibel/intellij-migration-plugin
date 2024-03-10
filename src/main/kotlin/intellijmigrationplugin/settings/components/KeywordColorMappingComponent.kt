@@ -71,8 +71,8 @@ class KeywordColorMappingComponent {
     }
 
     private fun addEmptyRow() {
-        // Add new row with white color at 50% opacity (#80FFFFFF)
-        tableModel.addRow(arrayOf("", "#80FFFFFF"))
+        // Add new row with white color at 13% Opacity (#22FFFFFF)
+        tableModel.addRow(arrayOf("", "#22ffffff"))
         tableModel.fireTableDataChanged()
 
         // Focus the first cell of the newly added row
@@ -117,7 +117,8 @@ class KeywordColorMappingComponent {
         ): Component {
             val hexColor = value as? String ?: "#FFFFFFFF"
             val color = ColorUtils.decodeColor(hexColor)
-            val icon = ColorIcon(color)
+            val iconColor = Color(color.red, color.green, color.blue) // Only show RGB not A (Opacity)
+            val icon = ColorIcon(iconColor)
             // Get color name based on RGB, ignoring Alpha
             val colorName = ColorUtils.getColorNameFromRgb(color.red, color.green, color.blue)
 

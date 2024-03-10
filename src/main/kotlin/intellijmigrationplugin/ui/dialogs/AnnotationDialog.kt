@@ -30,7 +30,6 @@ class AnnotationDialog : DialogWrapper(true) {
             row("Select Annotation-Type:") {
                 comboBox(annotations).bindItem(data :: annotationType.toNullableProperty())
             }
-
             row("Enter Annotation-Comment:") {
                 textField().bindText(data :: annotationComment)
             }

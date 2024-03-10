@@ -1,30 +1,26 @@
 package intellijmigrationplugin.annotationModel
 
+import com.intellij.openapi.editor.Document
+import com.intellij.openapi.editor.event.DocumentEvent
+import com.intellij.openapi.util.TextRange
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class AnnotationFile {
+open class AnnotationFile {
 
 
     var fileName: String
-    var filePathRelativeToLegacyFoler: String
-    var commentType: String
-    var annotationSnippets: ArrayList<AnnotationSnippet>
     var endLine: Int
+    private var snippets: MutableList<AnnotationSnippet>
+    protected var document: Document
 
-    constructor(fileName: String, filePathRelativeToLegacyFoler: String, commentType: String,
-                annotationSnippets: ArrayList<AnnotationSnippet>, endLine: Int) {
+    constructor(fileName: String, document: Document) {
         this.fileName = fileName
-        this.filePathRelativeToLegacyFoler = filePathRelativeToLegacyFoler
-        this.commentType = commentType
-        this.annotationSnippets = annotationSnippets
-        this.endLine = endLine
+        snippets = mutableListOf()
+        this.endLine = -1
+        this.document = document
     }
-
-    constructor(): this("TestFile", "/src/main/", "//",
-            ArrayList(),83)
-
 
     fun computeRangePerAnnotationType(type: AnnotationType): Int {
         return 0;
@@ -34,5 +30,6 @@ class AnnotationFile {
         val annotationRanges = HashMap<AnnotationType, Int>()
         return annotationRanges
     }
+
 
 }
