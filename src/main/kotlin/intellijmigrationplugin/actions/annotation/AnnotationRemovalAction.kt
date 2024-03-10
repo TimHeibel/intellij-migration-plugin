@@ -7,6 +7,9 @@ import com.intellij.openapi.command.WriteCommandAction
 import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.removeAnnotation
 import intellijmigrationplugin.annotationModel.AnnotationDetection
 
+/**
+ * An action that removes annotations within the selected text range in the editor.
+ */
 class AnnotationRemovalAction : AnAction() {
     override fun actionPerformed(event: AnActionEvent) {
 

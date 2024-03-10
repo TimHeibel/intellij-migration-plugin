@@ -18,7 +18,7 @@ import intellijmigrationplugin.ui.dialogs.CollisionDialog
 
 
 /**
- * Abstract class used to create uniform Annotations independent of AnnotationType
+ * class used to create uniform Annotations independent of [annotationType]
  *
  * @property annotationType declares the type of Annotation to be set.
  * @property actionPerformed placement of Annotations
@@ -101,6 +101,13 @@ abstract class AnnotationAction(private val annotationType : String, private val
 
     }
 
+    /**
+     * Handles collisions between [collidingAnnotations] and the selected text range in the [editor].
+     *
+     * @param collidingAnnotations The list of annotations that collide with the selected text range.
+     * @param commentStart The comment syntax used in the document.
+     * @param editor The editor instance.
+     */
     private fun handleCollisions(collidingAnnotations: ArrayList<Pair<AnnotationSnippet, CollisionCode>>, commentStart: String, editor: Editor) {
 
         val document = editor.document
@@ -129,6 +136,15 @@ abstract class AnnotationAction(private val annotationType : String, private val
 
     }
 
+    /**
+     * Handles a collision where the annotation surrounds the selected text range.
+     *
+     * @param collision The collision information, defined as a pair of an [AnnotationSnippet] and a [CollisionCode].
+     * @param document The document instance.
+     * @param endLine The end line of the selected text range.
+     * @param startLine The start line of the selected text range.
+     * @param commentStart The comment syntax used in the document.
+     */
     private fun handleSurroundingCollision(collision: Pair<AnnotationSnippet, CollisionCode>, document: Document, endLine: Int, startLine: Int, commentStart: String) {
 
         replaceAnnotationStart(collision, commentStart, endLine, document)
@@ -136,10 +152,24 @@ abstract class AnnotationAction(private val annotationType : String, private val
         replaceAnnotationEnd(collision, startLine, document, commentStart)
     }
 
+    /**
+     * Handles a collision where the annotation is completely inside the selected text range.
+     *
+     * @param collision The collision information, defined as a pair of an [AnnotationSnippet] and a [CollisionCode].
+     * @param document The document instance.
+     */
     private fun handleCompleteInsideCollision(collision: Pair<AnnotationSnippet, CollisionCode>, document: Document) {
         document.removeAnnotation(collision.first)
     }
 
+    /**
+     * Handles a collision where the end of the annotation is inside the selected text range.
+     *
+     * @param collision The collision information, defined as a pair of an [AnnotationSnippet] and a [CollisionCode].
+     * @param document The document instance.
+     * @param startLine The start line of the selected text range.
+     * @param commentStart The comment syntax used in the document.
+     */
     private fun handleEndInsideCollision(collision: Pair<AnnotationSnippet, CollisionCode>, document: Document, startLine: Int, commentStart: String) {
 
         if (collision.first.hasEnd) {
@@ -149,6 +179,14 @@ abstract class AnnotationAction(private val annotationType : String, private val
         replaceAnnotationEnd(collision, startLine, document, commentStart)
     }
 
+    /**
+     * Handles a collision where the start of the annotation is inside the selected text range.
+     *
+     * @param collision The collision information, defined as a pair of an [AnnotationSnippet] and a [CollisionCode].
+     * @param document The document instance.
+     * @param endLine The end line of the selected text range.
+     * @param commentStart The comment syntax used in the document.
+     */
     private fun handleStartInsideCollision(collision: Pair<AnnotationSnippet, CollisionCode>, document: Document, endLine: Int, commentStart: String) {
 
         replaceAnnotationStart(collision, commentStart, endLine, document)
@@ -156,6 +194,14 @@ abstract class AnnotationAction(private val annotationType : String, private val
         document.removeLine(collision.first.start)
     }
 
+    /**
+     * Replaces or removes the end of the annotation in case of a collision.
+     *
+     * @param collision The collision information.
+     * @param startLine The start line of the selected text range.
+     * @param document The document instance.
+     * @param commentStart The comment syntax used in the document.
+     */
     private fun replaceAnnotationEnd(collision: Pair<AnnotationSnippet, CollisionCode>, startLine: Int, document: Document, commentStart: String) {
         if (collision.first.start in startLine - 1..startLine) {
             document.removeLine(collision.first.start)
@@ -164,6 +210,15 @@ abstract class AnnotationAction(private val annotationType : String, private val
             document.insertString(document.getLineStartOffset(startLine) - 1, "\n${commentStart}END")
         }
     }
+
+    /**
+     * Replaces or removes the start of the annotation in case of a collision.
+     *
+     * @param collision The collision information.
+     * @param commentStart The comment syntax used in the document.
+     * @param endLine The end line of the selected text range.
+     * @param document The document instance.
+     */
     private fun replaceAnnotationStart(collision: Pair<AnnotationSnippet, CollisionCode>, commentStart: String, endLine: Int, document: Document) {
         val collisionStartLine = collision.first.createStartLine(commentStart)
 
@@ -193,6 +248,12 @@ abstract class AnnotationAction(private val annotationType : String, private val
         return default
     }
 
+    /**
+     * Retrieves the comment syntax based on the event.
+     *
+     * @param event The action event triggered by the user.
+     * @return The comment syntax used in the document, or the default if not found.
+     */
     private fun getFileTypeByEvent(event: AnActionEvent) : String? {
 
         val vFile = event.getData(PlatformCoreDataKeys.VIRTUAL_FILE)
@@ -202,8 +263,21 @@ abstract class AnnotationAction(private val annotationType : String, private val
 
     }
 
-    private fun getAnnotationCollisions(document : Document, fileType : String?, startLine : Int, endLine : Int)
-            : ArrayList<Pair<AnnotationSnippet,CollisionCode>> {
+    /**
+     * Retrieves a [AnnotationSnippet] List that collide with the specified text range in the document.
+     *
+     * @param document The document to search for annotations.
+     * @param fileType The type of the file associated with the document.
+     * @param startLine The start line of the text range.
+     * @param endLine The end line of the text range.
+     * @return A list of annotation snippets along with their collision codes.
+     */
+    private fun getAnnotationCollisions(
+            document : Document,
+            fileType : String?,
+            startLine : Int,
+            endLine : Int
+    ) : ArrayList<Pair<AnnotationSnippet,CollisionCode>> {
 
         val existingAnnotations = AnnotationDetection.detectAnnotationInFile(document, fileType)
         val collisionAnnotations = ArrayList<Pair<AnnotationSnippet,CollisionCode>>()
@@ -229,7 +303,10 @@ abstract class AnnotationAction(private val annotationType : String, private val
 }
 
 /**
- * Sets Annotation From User-Dialog
+ * An annotation action that sets an annotation based on user input from a dialog.
+ *
+ * @param annotationType The type of annotation to be performed by the action.
+ * @param annotationInformation Additional information for the annotation.
  * @see AnnotationAction
  */
 class DIALOGAnnotationAction(annotationType: String, annotationInformation: String)

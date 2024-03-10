@@ -4,10 +4,20 @@ import com.intellij.openapi.editor.Document
 import com.intellij.openapi.util.TextRange
 import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.getLine
 
+/**
+ * Utility class for detecting annotations in a given document for a specific file type.
+ */
 class AnnotationDetection {
 
     companion object {
-        // Detects annotations in a given document for a specific file type
+
+        /**
+         * Detects annotations in a given [document] for a specific [fileType].
+         *
+         * @param document The document to analyze for annotations.
+         * @param fileType The type of the file associated with the document.
+         * @return An [ArrayList] of [AnnotationSnippet] objects representing detected annotations.
+         */
         fun detectAnnotationInFile(document: Document, fileType: String?): ArrayList<AnnotationSnippet> {
             val annotationSnippets = ArrayList<AnnotationSnippet>()
             val commentType = AnnotationInformation.instance?.singleCommentMapping?.get(".$fileType") ?: "//"
@@ -66,11 +76,23 @@ class AnnotationDetection {
             return annotationSnippets
         }
 
-        // Generates a regex pattern for a given annotation type and comment syntax
+        /**
+         * Generates a regex pattern for a given [annotationType] and [commentType].
+         *
+         * @param commentType The comment syntax used in the document.
+         * @param annotationType The type of annotation.
+         * @return The generated [Regex] pattern for the annotation.
+         */
         private fun getAnnotationRegex(commentType: String, annotationType: String): Regex {
             return Regex("^(\\h)*${Regex.escape(commentType)}(\\h)*${Regex.escape(annotationType)}($|\\s)", RegexOption.IGNORE_CASE)
         }
 
+        /**
+         * Checks if the [String] starts with the specified [commentType].
+         *
+         * @param commentType The comment syntax to check for at the beginning of the string.
+         * @return `true` if the string starts with the comment syntax, `false` otherwise.
+         */
         private fun String.startsWithComment(commentType: String): Boolean {
             return this.trimStart().startsWith(commentType)
         }
