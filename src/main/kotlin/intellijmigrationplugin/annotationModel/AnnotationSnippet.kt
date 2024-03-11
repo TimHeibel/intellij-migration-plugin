@@ -11,7 +11,7 @@ package intellijmigrationplugin.annotationModel
  * @property addInfo Additional information associated with the annotation.
  * @constructor Creates a new instance of [AnnotationSnippet] with the specified parameters.
  */
-class AnnotationSnippet(var start: Int, var end: Int, var hasEnd: Boolean, var type: String, var addInfo: String = "") {
+open class AnnotationSnippet(var start: Int, var end: Int, var hasEnd: Boolean, var type: String, var addInfo: String = "") {
 
 
     companion object {
