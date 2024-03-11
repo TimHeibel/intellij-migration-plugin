@@ -9,13 +9,9 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.CollectionListModel
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.components.JBList
-import com.intellij.ui.tree.TreeCollector.TreePathRoots
 import com.intellij.util.ui.FormBuilder
 import intellijmigrationplugin.annotationModel.AnnotationInformation
-import intellijmigrationplugin.settings.components.ExcludedFoldersComponent
-import java.util.StringTokenizer
 import javax.swing.JComponent
-import javax.swing.filechooser.FileFilter
 
 class FileAndFolderChooserComponent(private val project: Project) {
 
@@ -31,6 +27,7 @@ class FileAndFolderChooserComponent(private val project: Project) {
     val root = arrayListOf(virtualFile)
     var excludedFoldersListModel = CollectionListModel<String>()
     private val choosenFilesFoldersList = JBList(excludedFoldersListModel)
+
     private val descriptor = FileChooserDescriptorFactory.createSingleFileOrFolderDescriptor().apply {
         title = "Choose Subfolder or File"
         description = "Select a subfolder or a file of the project"
@@ -50,7 +47,6 @@ class FileAndFolderChooserComponent(private val project: Project) {
             return excludedFoldersList?.let { !it.contains(filePath) } ?: true
         }
     }
-
 
     fun getComponent(): JComponent {
         configureExcludedFoldersList()

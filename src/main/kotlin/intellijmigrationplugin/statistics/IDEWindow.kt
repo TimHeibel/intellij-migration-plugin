@@ -16,6 +16,7 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JTextField
 
+
 /// This class is initializing a ToolWindow and adds the content from the MyStatisticsWindow class
 class IDEWindow : ToolWindowFactory {
 
@@ -42,6 +43,8 @@ class IDEWindow : ToolWindowFactory {
         private val includeFileAndFolderChooserComponent = FileAndFolderChooserComponent(project)
 
         private val csvEditor = CSVEditor()
+        private val csvFileCompoment = CSVFileCompoment()
+        
 
         data class DataModel(
             var fileEnding: String = "",
@@ -49,10 +52,10 @@ class IDEWindow : ToolWindowFactory {
         val data = DataModel()
         fun getContent(): JPanel {
 
-            val contentPane: JPanel = panel {
+            var contentPane: JPanel = panel {
 
 
-                group("Exclude Folders") {
+                collapsibleGroup("Exclude Folders") {
 
                     row("Enter File-Ending:") {
                         val textField = JTextField(15)
@@ -88,7 +91,7 @@ class IDEWindow : ToolWindowFactory {
                     }
                 }
 
-                group("Include Folders") {
+                collapsibleGroup("Include Folders") {
 
                     row("Enter File-Ending:") {
                         val textField = JTextField(20)
@@ -117,10 +120,8 @@ class IDEWindow : ToolWindowFactory {
                                     val keywords = annotationInformation?.keywords
                                     val csvPath = csvEditor.createCSVFile(keywords!!, legacyFolderPath!!)
                                     processFileOrDirectory(legacyPath, contentList, false, csvPath)
-                                    updateStatistics(csvPath)
+                                    csvFileCompoment.addLink(csvPath)
                                 }
-                                //TODO: show CSV file in UI #38
-
                                 println("Processing complete.")
                             }
                         }
@@ -128,16 +129,16 @@ class IDEWindow : ToolWindowFactory {
                     }
                 }
                 group("Statistic"){
-                    row {
-                        //TODO: Issue 38
-                        // Call the function initially to set the label text
-
-                        cell(statisticLabel)
+                    row{
+                        scrollCell(csvFileCompoment.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+                            .comment("Statistic files will be shown here")
                     }
                 }
             }
             return contentPane
         }
+
+
         private fun executionPossible(): File? {
             when (legacyFolderPath) {
                 null -> {
@@ -180,7 +181,6 @@ class IDEWindow : ToolWindowFactory {
         private val statisticLabel = JLabel("")
         private fun updateStatistics(csvPath: String) {
             // Todo: #38
-
             val file = File(csvPath)
             val str = StringBuilder()
             file.bufferedReader().use { br ->
