@@ -1,7 +1,9 @@
 
+<!-- Plugin description -->
 # MigrateMate
 ## Introduction
 MigrateMate is an innovative IntelliJ plugin designed to enhance the experience of migrating and managing legacy code. It provides intuitive visualization, dynamic customization, and efficient navigation, streamlining the legacy code migration process.
+<!-- Plugin description end -->
 
 ## Features
 - **Dynamic Keyword Customization**: Add keywords dynamically to suit your project's specific needs.
