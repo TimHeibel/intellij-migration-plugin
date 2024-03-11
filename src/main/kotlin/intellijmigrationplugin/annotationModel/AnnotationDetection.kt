@@ -4,6 +4,7 @@ import com.intellij.openapi.editor.Document
 import com.intellij.openapi.util.TextRange
 
 import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.getLine
+import kotlinx.coroutines.*
 
 /**
  * Utility class for detecting annotations in a given document for a specific file type.
