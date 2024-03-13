@@ -19,4 +19,8 @@ class CsvTest {
 
         csvEditor.addLine(linesPerKeyword, filePath, fileName)
     }
+    @Test
+    fun createCSVEndLine(){
+        csvEditor.endLine("/home/finnika/Documents/Uni/5 Semester/SE Projekt/intellij-migration-plugin/newStatistics2024-03-06|09:44:02.csv")
+    }
 }

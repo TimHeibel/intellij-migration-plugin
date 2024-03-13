@@ -1,7 +1,8 @@
-package intellijmigrationplugin.statistics
+package intellijmigrationplugin.statistics.component
 
 import com.intellij.ide.BrowserUtil
 import com.intellij.ui.components.ActionLink
+import intellijmigrationplugin.statistics.CSVEditor
 import java.awt.Cursor
 import java.awt.GridLayout
 import javax.swing.JComponent
@@ -12,6 +13,7 @@ class CSVFileCompoment {
 
     val cvsList = mutableListOf<String>()
     val contentPanel = JPanel()
+    val csvEditor = CSVEditor()
 
     fun getComponent(): JComponent {
 
@@ -20,6 +22,8 @@ class CSVFileCompoment {
     }
 
     fun addLink(csvPath: String): JPanel{
+        //TODO: show statistic files that are already there #38
+        csvEditor.endLine(csvPath)
 
         cvsList.add(csvPath)
 

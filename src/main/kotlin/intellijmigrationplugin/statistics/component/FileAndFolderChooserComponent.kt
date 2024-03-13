@@ -1,4 +1,4 @@
-package intellijmigrationplugin.statistics
+package intellijmigrationplugin.statistics.component
 
 import com.intellij.openapi.fileChooser.FileChooser
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory

@@ -9,6 +9,10 @@ import com.intellij.ui.content.ContentFactory
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.ui.dsl.gridLayout.HorizontalAlign
 import intellijmigrationplugin.annotationModel.AnnotationInformation
+import intellijmigrationplugin.statistics.component.CSVFileCompoment
+import intellijmigrationplugin.statistics.component.FileAndFolderChooserComponent
+import intellijmigrationplugin.statistics.component.FileChooserComponent
+import intellijmigrationplugin.statistics.component.RunStatisticComponent
 import java.io.File
 import java.io.FileNotFoundException
 import javax.swing.JButton
@@ -41,10 +45,12 @@ class IDEWindow : ToolWindowFactory {
         private val project = ProjectManager.getInstance().openProjects[0]
         private val fileAndFolderChooserComponent = FileAndFolderChooserComponent(project)
         private val includeFileAndFolderChooserComponent = FileAndFolderChooserComponent(project)
+        private val fileChooserComponent = FileChooserComponent(project)
+        private val runStatisticComponent = RunStatisticComponent()
 
         private val csvEditor = CSVEditor()
         private val csvFileCompoment = CSVFileCompoment()
-        
+
 
         data class DataModel(
             var fileEnding: String = "",
@@ -53,6 +59,18 @@ class IDEWindow : ToolWindowFactory {
         fun getContent(): JPanel {
 
             var contentPane: JPanel = panel {
+
+                group (".file-ignore"){
+                    //TODO: write and anylise a file ignore #37
+                    row {
+                        cell(fileChooserComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+                            .comment("Select the ignore File")
+                    }
+                    row {
+                        cell(runStatisticComponent.runStatisticButton())
+                    }
+
+                }
 
 
                 collapsibleGroup("Exclude Folders") {
