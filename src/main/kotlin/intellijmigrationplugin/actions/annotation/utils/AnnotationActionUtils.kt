@@ -1,15 +1,57 @@
 package intellijmigrationplugin.actions.annotation.utils
 
+import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.PlatformCoreDataKeys
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.util.TextRange
+import intellijmigrationplugin.annotationModel.AnnotationInformation
 import intellijmigrationplugin.annotationModel.AnnotationSnippet
 
 /**
- * Utility class for performing actions related to annotations within a document.
+ * Utility class for performing actions related to annotations within a document or editor.
  */
 class AnnotationActionUtils {
     companion object {
+
+        /**
+         * Retrieves the comment syntax based on the event.
+         *
+         * @param event The action event triggered by the user.
+         * @return The comment syntax used in the document, or the default if not found.
+         */
+        internal fun getCommentTypeByEvent(event: AnActionEvent) : String {
+
+            val default = "//"
+
+            val fType = getFileTypeByEvent(event)
+                    ?: return default
+
+            val annotationInformation = AnnotationInformation.instance
+                    ?: return default
+
+            annotationInformation.singleCommentMapping[".$fType"]?.let {
+                return it
+            }
+
+            return default
+        }
+
+        /**
+         * Retrieves the file type based on the given [event].
+         *
+         * @param event The action event triggered by the user.
+         * @return The file extension representing the file type, or `null` if the file type cannot be determined.
+         */
+        internal fun getFileTypeByEvent(event: AnActionEvent) : String? {
+
+            val vFile = event.getData(PlatformCoreDataKeys.VIRTUAL_FILE)
+                    ?: return null
+
+            return vFile.extension
+
+        }
+
 
         /**
          * Removes the specified [annotation] from the [Document].
