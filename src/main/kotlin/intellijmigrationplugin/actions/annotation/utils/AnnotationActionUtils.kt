@@ -1,5 +1,6 @@
 package intellijmigrationplugin.actions.annotation.utils
 
+import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.util.TextRange
 import intellijmigrationplugin.annotationModel.AnnotationSnippet
@@ -89,6 +90,34 @@ class AnnotationActionUtils {
             val range = TextRange(this.getLineStartOffset(line), endOffset)
 
             this.replaceString(range.startOffset, range.endOffset, "")
+        }
+
+        /**
+         * Merges two annotations represented by [first] and [second] into a single annotation in the document.
+         * Note: This function does not check if the annotations are consecutive and similar.
+         *
+         * @param first The first annotation snippet.
+         * @param second The second annotation snippet.
+         */
+        internal fun Document.mergeAnnotations(first: AnnotationSnippet, second: AnnotationSnippet) {
+            var startAnnotation = first
+            var endAnnotation = second
+
+            if(first.start > second.start) {
+                startAnnotation = second
+                endAnnotation = first
+            }
+
+            if(startAnnotation.end > endAnnotation.start) {
+                thisLogger().warn("Annotations overlap, which should not be possible. Abort merge")
+                return
+            }
+
+            removeLine(endAnnotation.start)
+
+            if(startAnnotation.hasEnd) {
+                removeLine(startAnnotation.end)
+            }
         }
     }
 }
