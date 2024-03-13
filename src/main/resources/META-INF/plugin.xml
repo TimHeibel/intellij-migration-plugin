@@ -61,6 +61,13 @@
                     keymap="$default"
                     first-keystroke="control alt E"/>
         </action>
+        <action
+                id = "intellijmigrationplugin.actions.annotation.CleanupAction"
+                class = "intellijmigrationplugin.actions.annotation.CleanupAction"
+                text = "Cleanup Annotations"
+                description = "Merges all similar consecutive Annotations">
+            <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group"/>
+        </action>
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
