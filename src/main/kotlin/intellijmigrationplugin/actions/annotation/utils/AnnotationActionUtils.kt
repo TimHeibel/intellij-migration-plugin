@@ -161,5 +161,10 @@ class AnnotationActionUtils {
                 removeLine(startAnnotation.end)
             }
         }
+
+        internal fun Document.canMerge(first: AnnotationSnippet, second: AnnotationSnippet) : Boolean {
+            return true
+            TODO("Placeholder")
+        }
     }
 }
