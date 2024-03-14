@@ -1,8 +1,9 @@
-package intellijmigrationplugin.annotationModel
+package intellijmigrationplugin.annotationModel.util
 
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.util.TextRange
-
+import intellijmigrationplugin.annotationModel.AnnotationInformation
+import intellijmigrationplugin.annotationModel.AnnotationSnippet
 import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.getLine
 import kotlinx.coroutines.*
 
@@ -89,9 +90,9 @@ class AnnotationDetection {
             val commentType = AnnotationInformation.instance!!.singleCommentMapping[fileType]
                     ?: "//"
             val keywords = AnnotationInformation.instance!!.keywords
+            val regexes = keywords.map { x ->  getAnnotationRegex(commentType, x) }
+            val regexEnd = getAnnotationRegex(commentType, "end")
 
-            val regexes = keywords.map { x -> Regex("//\\s*$x(\$|\\s)", RegexOption.IGNORE_CASE) }
-            val regexEnd = Regex("//\\s*end(\$|\\s)", RegexOption.IGNORE_CASE)
             yield()
             for (i in lineStart..lineEnd - 1) {
 
@@ -116,6 +117,7 @@ class AnnotationDetection {
             return outputList
 
         }
+
 
         /**
          * Generates a regex pattern for a given [annotationType] and [commentType].

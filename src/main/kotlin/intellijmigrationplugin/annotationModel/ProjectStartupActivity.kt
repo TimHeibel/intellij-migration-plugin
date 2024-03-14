@@ -1,11 +1,12 @@
-package intellijmigrationplugin.ui.editor
+package intellijmigrationplugin.annotationModel
 
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.StartupActivity
 import com.intellij.psi.PsiDocumentManager
-import intellijmigrationplugin.annotationModel.AnnotationInformation
+import intellijmigrationplugin.annotationModel.documents.AnnotationDocumentHandler
+import intellijmigrationplugin.annotationModel.documents.OpenDocumentManager
 
 /**
  * This class is the starting point for the visualisation of the Annotations
@@ -17,8 +18,8 @@ class ProjectStartupActivity: StartupActivity {
     override fun runActivity(project: Project) {
 
         val bus = project.messageBus
-        val fileSelectionListener = FileSelectionChangeListener()
-        bus.connect().subscribe<FileEditorManagerListener>(FileEditorManagerListener.FILE_EDITOR_MANAGER, fileSelectionListener)
+        val documentManager = OpenDocumentManager()
+        bus.connect().subscribe<FileEditorManagerListener>(FileEditorManagerListener.FILE_EDITOR_MANAGER, documentManager)
 
         val editors = FileEditorManager.getInstance(project).selectedTextEditorWithRemotes
 
@@ -26,11 +27,11 @@ class ProjectStartupActivity: StartupActivity {
             val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document)
             val vFile = psiFile!!.originalFile.virtualFile
             val path = vFile.canonicalPath!!
-            val listener = DocumentChangeListener(path, editor.markupModel)
-            fileSelectionListener.tryToRegisterDocumentListener(path, editor.document, listener)
+            val documentHandler = AnnotationDocumentHandler(path, editor)
+            documentManager.tryToRegisterDocumentListener(documentHandler)
         }
 
-        AnnotationInformation.instance!!.fileSelectionChangeManager = fileSelectionListener
+        AnnotationInformation.instance!!.documentManager = documentManager
 
     }
 
