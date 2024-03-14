@@ -27,20 +27,20 @@ class AnnotationDialog : DialogWrapper(true) {
         val annotations = AnnotationInformation.instance!!.markerColorMapping.keys
 
         return panel {
-            buttonsGroup("Select Annotation-Type:") {
-                for (annotation in annotations) {
-                    row {
-                        radioButton(annotation, annotation)
-                    }
-                }
-            }.bind({data.annotationType}, {data.annotationType = it})
-
+            row("Select Annotation-Type:") {
+                comboBox(annotations).bindItem(data :: annotationType.toNullableProperty())
+            }
             row("Enter Annotation-Comment:") {
                 textField().bindText(data :: annotationComment)
             }
         }
+
     }
 }
+
+
+
+
 
 data class DataModel(
     var annotationType : String = "",

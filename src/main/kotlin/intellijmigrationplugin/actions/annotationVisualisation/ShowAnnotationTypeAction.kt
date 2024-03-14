@@ -18,46 +18,21 @@ class ShowAnnotationTypeAction: AnAction() {
 
 
     override fun actionPerformed(e: AnActionEvent) {
+
+        val information = AnnotationInformation.instance!!
+
         val editor = e.getData(CommonDataKeys.EDITOR)!!
         val cursorOffset = editor.caretModel.offset
         val cursorLine = editor.document.getLineNumber(cursorOffset)
+        information.lastCursorLine = cursorLine
 
-        val vFile = e.getData(CommonDataKeys.VIRTUAL_FILE)
-                ?: return
-        val fileType = vFile.extension
+        val psiFile = e.getData(CommonDataKeys.VIRTUAL_FILE)
+        val path = psiFile?.canonicalPath!!
 
-        val commentType = AnnotationInformation.instance!!.singleCommentMapping[fileType]
-                ?: "//"
-        val keywords = AnnotationInformation.instance!!.keywords
-        val regexes = keywords.map { x -> AnnotationDetection.getAnnotationRegex(commentType, x) }
-        val regexEnd = AnnotationDetection.getAnnotationRegex(commentType, "end")
-        var annotation = "end"
+        val snippet = information.documentManager.getSnippetForLine(path, cursorLine)
+        if (snippet == null) return
 
-        lineLoop@ for (lineNumber in cursorLine downTo 0) {
-
-            val lineStartOffset = editor.document.getLineStartOffset(lineNumber)
-            val lineEndOffset = editor.document.getLineEndOffset(lineNumber)
-            val line = editor.document.getText(TextRange(lineStartOffset, lineEndOffset))
-
-            if (line.contains(regexEnd)) break
-            var j = 0
-            for (regex in regexes) {
-                if (line.contains(regex)) {
-                    annotation = keywords[j]
-                    break@lineLoop
-                }
-                j++
-            }
-        }
-
-        if (annotation == "end") return
-
-        /*NotificationGroupManager.getInstance()
-                .getNotificationGroup("Custom Notification Group")
-                .createNotification(annotation, NotificationType.INFORMATION)
-                .notify(editor.project)*/
-
-        HintManager.getInstance().showInformationHint(editor, annotation)
+        HintManager.getInstance().showInformationHint(editor, snippet.type)
 
     }
 }

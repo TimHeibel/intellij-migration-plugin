@@ -60,7 +60,6 @@
             <keyboard-shortcut keymap="$default" first-keystroke="control alt shift o"/>
             <!-- control == option, alt = command, meta = control -->
         </action>
-
         <action
                 id = "intellijmigrationplugin.actions.annotation.RemovalAction"
                 class = "intellijmigrationplugin.actions.annotation.AnnotationRemovalAction"

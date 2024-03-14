@@ -5,6 +5,12 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.command.WriteCommandAction
 import intellijmigrationplugin.annotationModel.util.AnnotationDetection
+import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.removeAnnotation
+
+
+/**
+ * An action that removes annotations within the selected text range in the editor.
+ */
 
 class AnnotationRemovalAction : AnAction() {
     override fun actionPerformed(event: AnActionEvent) {
@@ -24,34 +30,18 @@ class AnnotationRemovalAction : AnAction() {
 
         //Get Start and End of current selection
         val startSelection = primaryCaret.selectionStart
+        val endSelection = primaryCaret.selectionEnd
         val startSelectionLine = document.getLineNumber(startSelection)
+        val endSelectionLine = document.getLineNumber(endSelection)
+
 
         WriteCommandAction.runWriteCommandAction(project) {
 
             val annotationMapping = AnnotationDetection.detectAnnotationInFile(document, vFile.extension)
 
             for (annotation in annotationMapping.asReversed()) {
-
-                if(annotation.start >= startSelectionLine) {
-
-                    if(annotation.hasEnd) {
-                        var offset = document.getLineEndOffset(annotation.end) + 1
-
-                        if(offset > document.textLength) {
-                            offset -= 1
-                        }
-
-                        document.replaceString(document.getLineStartOffset(annotation.end),
-                            offset, "")
-                    }
-
-                    var offset = document.getLineEndOffset(annotation.start) + 1
-                    if(offset > document.textLength) {
-                        offset -= 1
-                    }
-
-                    document.replaceString(document.getLineStartOffset(annotation.start),
-                            offset, "")
+                if(annotation.start in startSelectionLine .. endSelectionLine) {
+                    document.removeAnnotation(annotation)
                 }
             }
         }

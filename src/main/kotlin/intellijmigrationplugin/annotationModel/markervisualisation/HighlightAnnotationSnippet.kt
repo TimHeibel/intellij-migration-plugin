@@ -17,7 +17,7 @@ class HighlightAnnotationSnippet: AnnotationSnippet {
 
 
     fun contains(line: Int): Boolean {
-        return line in start..end;
+        return line in start..end-1
     }
 
 
