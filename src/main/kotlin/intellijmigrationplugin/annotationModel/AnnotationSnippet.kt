@@ -35,7 +35,7 @@ open class AnnotationSnippet(var start: Int, var end: Int, var hasEnd: Boolean, 
 
             val type = match.groups["annotationType"]!!.value
 
-            if(!(AnnotationInformation.instance?.markerColorMapping?.keys?.contains(type) ?: return null)) {
+            if(!(AnnotationInformation.instance?.markerColorMapping?.keys?.map { key -> key.lowercase() }?.contains(type.lowercase()) ?: return null)) {
                 return null
             }
 
