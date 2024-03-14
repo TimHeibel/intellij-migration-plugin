@@ -9,7 +9,7 @@ class CsvTest {
 
         val keywords = mutableListOf("MIGRATED", "LATER")
 
-        val filePath = csvEditor.createCSVFile( keywords, "/home/finnika/Documents/Uni/5 Semester/SE Projekt/intellij-migration-plugin")
+        val filePath = csvEditor.createCSVFile( keywords, "./")
         
         val linesPerKeyword: MutableMap<String, Int> = mutableMapOf()
         linesPerKeyword["MIGRATED"] = 3
@@ -19,8 +19,5 @@ class CsvTest {
 
         csvEditor.addLine(linesPerKeyword, filePath, fileName)
     }
-    @Test
-    fun createCSVEndLine(){
-        csvEditor.endLine("/home/finnika/Documents/Uni/5 Semester/SE Projekt/intellij-migration-plugin/src/test/resources/newStatistics2024-03-14|15:39:44.csv")
-    }
+
 }
