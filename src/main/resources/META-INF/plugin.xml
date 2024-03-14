@@ -66,6 +66,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <postStartupActivity implementation="intellijmigrationplugin.ui.editor.ProjectStartupActivity"/>
 
+        <toolWindow factoryClass="intellijmigrationplugin.statistics.IDEWindow" id="Statistics"/>
         <applicationConfigurable
             parentId="tools"
             instance="intellijmigrationplugin.settings.MigrationsSettingsConfigurable"

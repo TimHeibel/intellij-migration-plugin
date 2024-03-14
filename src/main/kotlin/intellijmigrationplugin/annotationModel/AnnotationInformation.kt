@@ -31,6 +31,10 @@ class AnnotationInformation private constructor() {
             return settings.legacyFolderPath
         }
 
+    val excludedFolderList: List<String>
+        get() {
+            return settings.excludedFoldersList
+        }
     val markerColorMapping: HashMap<String, String>
         get() {
             val colorMapping = settings.keywordColorMapping
