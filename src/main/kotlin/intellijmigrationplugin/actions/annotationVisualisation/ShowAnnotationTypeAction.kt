@@ -52,10 +52,10 @@ class ShowAnnotationTypeAction: AnAction() {
 
         if (annotation == "end") return
 
-        NotificationGroupManager.getInstance()
+        /*NotificationGroupManager.getInstance()
                 .getNotificationGroup("Custom Notification Group")
                 .createNotification(annotation, NotificationType.INFORMATION)
-                .notify(editor.project)
+                .notify(editor.project)*/
 
         HintManager.getInstance().showInformationHint(editor, annotation)
 

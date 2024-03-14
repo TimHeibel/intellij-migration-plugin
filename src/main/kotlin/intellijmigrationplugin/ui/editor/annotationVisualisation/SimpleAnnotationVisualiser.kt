@@ -21,18 +21,14 @@ class SimpleAnnotationVisualiser : AnnotationVisualiser {
         this.markup = markup
     }
 
-    override fun updateAnnotationVisualisation(event: com.intellij.openapi.editor.event.DocumentEvent) {
-        otherVisulations()
-    }
-
-    override fun visualiseAnnotation() {
-        otherVisulations()
-    }
-
-    private fun otherVisulations() {
+    override fun updateAnnotationVisualisation(snippets: MutableList<HighlightAnnotationSnippet>) {
         runBlocking {
-            val annotationFile = HighlightAnnotationFile(sourcePath, markup.document)
-            val snippets = annotationFile.computeSnippets()
+            highlightEditor(snippets)
+        }
+    }
+
+    override fun visualiseAnnotation(snippets: MutableList<HighlightAnnotationSnippet>) {
+        runBlocking {
             highlightEditor(snippets)
         }
     }
@@ -49,8 +45,10 @@ class SimpleAnnotationVisualiser : AnnotationVisualiser {
         }
     }
 
-    override fun turnVisualisationOn() {
-        otherVisulations()
+    override fun turnVisualisationOn(snippets: MutableList<HighlightAnnotationSnippet>) {
+        runBlocking {
+            highlightEditor(snippets)
+        }
     }
 
     override fun turnVisualisationOff() {

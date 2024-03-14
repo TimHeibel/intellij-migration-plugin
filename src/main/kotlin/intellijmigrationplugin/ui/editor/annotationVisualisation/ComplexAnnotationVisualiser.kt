@@ -29,21 +29,21 @@ class ComplexAnnotationVisualiser: AnnotationVisualiser {
     }
 
 
-    override fun updateAnnotationVisualisation(event: DocumentEvent) {
-        val lineRange = annotationFile.handleEvent(event)
-        updateEditorHighlighting(lineRange)
+    override fun updateAnnotationVisualisation(snippets: MutableList<HighlightAnnotationSnippet>) {
+        //val lineRange = annotationFile.handleEvent(event)
+        //updateEditorHighlighting(lineRange)
     }
 
 
-    override fun visualiseAnnotation() {
+    override fun visualiseAnnotation(snippets: MutableList<HighlightAnnotationSnippet>) {
         runBlocking {
             val snippets = annotationFile.computeSnippets()
             highlightEditor(snippets)
         }
     }
 
-    override fun turnVisualisationOn() {
-        visualiseAnnotation()
+    override fun turnVisualisationOn(snippets: MutableList<HighlightAnnotationSnippet>) {
+        //visualiseAnnotation()
     }
 
     override fun turnVisualisationOff() {

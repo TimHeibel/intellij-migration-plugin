@@ -11,10 +11,14 @@ class HighlightAnnotationSnippet: AnnotationSnippet {
 
     val id: UUID
 
-    constructor(start: Int, end: Int, type: String): super(start, end, true, type) {
+    constructor(start: Int, end: Int, type: String, hasEnd: Boolean): super(start, end, hasEnd, type) {
         id = UUID.randomUUID()
     }
 
+
+    fun contains(line: Int): Boolean {
+        return line in start..end;
+    }
 
 
 }

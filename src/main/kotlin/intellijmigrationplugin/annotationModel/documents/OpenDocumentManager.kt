@@ -4,6 +4,9 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent
 import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.vfs.VirtualFile
+import intellijmigrationplugin.annotationModel.AnnotationInformation
+import intellijmigrationplugin.annotationModel.markervisualisation.HighlightAnnotationFile
+import intellijmigrationplugin.annotationModel.markervisualisation.HighlightAnnotationSnippet
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -17,11 +20,13 @@ class OpenDocumentManager: FileEditorManagerListener {
 
     override fun selectionChanged(event: FileEditorManagerEvent) {
         if (event.newFile == null) return
+        if (event.manager.selectedTextEditor == null) return
         val documentHandler = AnnotationDocumentHandler(event.newFile.canonicalPath!!, event.manager.selectedTextEditor!!)
         tryToRegisterDocumentListener(documentHandler)
     }
 
     override fun fileOpened(source: FileEditorManager, file: VirtualFile) {
+        if (source.selectedTextEditor == null) return
         val documentHandler = AnnotationDocumentHandler(file.canonicalPath!!, source.selectedTextEditor!!)
         tryToRegisterDocumentListener(documentHandler)
     }
@@ -41,6 +46,7 @@ class OpenDocumentManager: FileEditorManagerListener {
         if (isDocumentRegistered(documentHandler.path)) return
         if (isDocumentExcluded(documentHandler.path)) return
         registerDocument(documentHandler)
+        if (AnnotationInformation.instance!!.showMarker) documentHandler.turnVisualisationOn()
     }
 
     fun tryToDeregisterDocument(path: String) {
@@ -65,6 +71,28 @@ class OpenDocumentManager: FileEditorManagerListener {
     private fun isDocumentExcluded(path: String): Boolean {
         //TODO: Excluded folder and files from the settings should not be marked
         return false
+    }
+
+    /**
+     * @return Empty list if the specified file is not open, or it does not contain annotations. <br/>
+     * List of all [HighlightAnnotationSnippet] in the specified file.
+     */
+    fun getSnippetsOfOpenFile(path: String): MutableList<HighlightAnnotationSnippet> {
+        if (!openDocuments.containsKey(path)) return mutableListOf()
+        return openDocuments[path]!!.getSnippets()
+    }
+
+    /**
+     * @return Null if the current line does not contain a [HighlightAnnotationSnippet]. <br/>
+     * The [HighlightAnnotationSnippet] for the specified line.
+     */
+    fun getSnippetForLine(path: String, line: Int): HighlightAnnotationSnippet? {
+        var snippets = getSnippetsOfOpenFile(path);
+        if (snippets.isEmpty()) return null
+        for (snippet in snippets) {
+            if (snippet.contains(line)) return snippet
+        }
+        return null;
     }
 
 }

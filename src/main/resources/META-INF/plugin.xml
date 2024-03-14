@@ -15,6 +15,15 @@
                     group-id="EditorPopupMenu"
                     anchor= "last"/>
         </group>
+        <group
+                id = "intellijmigrationplugin.AnnotationAction.Group.Jump"
+                text = "Jump"
+                popup = "true">
+            <add-to-group
+                    group-id="intellijmigrationplugin.AnnotationAction.Group"
+                    anchor="last"/>
+        </group>
+
         <action
                 id = "intellijmigrationplugin.actions.annotation.DialogAction"
                 class = "intellijmigrationplugin.actions.annotation.DialogAction"
@@ -27,7 +36,7 @@
         </action>
 
 
-        <action
+       <!-- <action
                 id = "intellijmigrationplugin.actions.annotationVisualisation.JumpToFileAction"
                 class = "intellijmigrationplugin.actions.annotationVisualisation.JumpToFileAction"
                 text = "Open Migration Target File"
@@ -35,7 +44,7 @@
                 <add-to-group
                     group-id="EditorPopupMenu"
                     anchor= "last"/>
-        </action>
+        </action> -->
         <action
                 id = "intellijmigrationplugin.actions.annotationVisualisation.ShowAnnotationVisualisationAction"
                 class = "intellijmigrationplugin.actions.annotationVisualisation.ShowAnnotationVisualisationAction"
@@ -64,14 +73,36 @@
         </action>
 
         <action
-                id = "intellijmigrationplugin.actions.annotationVisualisation.JumpToAnnotationAction"
-                class = "intellijmigrationplugin.actions.annotationVisualisation.JumpToAnnotationAction"
-                text = "Jump to Annotation"
+                id = "intellijmigrationplugin.actions.annotationVisualisation.Jump.JumpToAnnotationTopAction"
+                class = "intellijmigrationplugin.actions.annotationVisualisation.Jump.JumpToAnnotationTopAction"
+                text = "To Top"
                 description = "Jumps if the cursor is in an active annotation">
-            <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group"/>
+            <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group.Jump"/>
             <keyboard-shortcut
                     keymap="$default"
                     first-keystroke="control alt shift j"/>
+        </action>
+
+        <action
+                id = "intellijmigrationplugin.actions.annotationVisualisation.Jump.JumpToAnnotationBottomAction"
+                class = "intellijmigrationplugin.actions.annotationVisualisation.Jump.JumpToAnnotationBottomAction"
+                text = "To Bottom"
+                description = "Jumps to the bottom of Annotation, if the cursor is in an active annotation">
+            <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group.Jump"/>
+            <keyboard-shortcut
+                    keymap="$default"
+                    first-keystroke="control alt shift b"/>
+        </action>
+
+        <action
+                id = "intellijmigrationplugin.actions.annotationVisualisation.Jump.JumpToLastCursorAnnotationAction"
+                class = "intellijmigrationplugin.actions.annotationVisualisation.Jump.JumpToLastCursorAnnotationAction"
+                text = "To Last Cursor Selection"
+                description = "Jumps to previous cursor line">
+            <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group.Jump"/>
+            <keyboard-shortcut
+                    keymap="$default"
+                    first-keystroke="control alt shift l"/>
         </action>
 
         <action

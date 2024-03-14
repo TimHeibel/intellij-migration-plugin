@@ -5,10 +5,12 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.event.DocumentEvent
 import intellijmigrationplugin.annotationModel.AnnotationInformation
 import intellijmigrationplugin.annotationModel.markervisualisation.HighlightAnnotationFile
+import intellijmigrationplugin.annotationModel.markervisualisation.HighlightAnnotationSnippet
 import intellijmigrationplugin.ui.editor.annotationVisualisation.SimpleAnnotationVisualiser
+import kotlinx.coroutines.runBlocking
 
 /**
- * handles events and the state for a single document, which is opened as a tab at the top bar
+ * Handles events and the state for a single document, which is opened as a tab at the top bar
  */
 class AnnotationDocumentHandler {
 
@@ -22,6 +24,12 @@ class AnnotationDocumentHandler {
         this.path = path
         this.editor = editor
         visualiser = SimpleAnnotationVisualiser(path, editor.markupModel)
+        highlightAnnotationFile = HighlightAnnotationFile(path, editor.document)
+
+        runBlocking {
+            val snippets = highlightAnnotationFile.computeSnippets()
+            visualiser.visualiseAnnotation(snippets)
+        }
     }
 
     override fun hashCode(): Int {
@@ -35,11 +43,18 @@ class AnnotationDocumentHandler {
     fun documentChanged(event: DocumentEvent) {
         //Change highlight annotation file aka model
         //var changes = highlightAnnotationFile.handleEvent(event)
+        AnnotationInformation.instance!!.lastCursorLine = null;
+        var snippets: MutableList<HighlightAnnotationSnippet>
+        runBlocking {
+            snippets = highlightAnnotationFile.computeSnippets()
+        }
 
         if (!AnnotationInformation.instance!!.showMarker) return
 
         //Change visualisation maybe durch interface abstrahieren
-        visualiser.updateAnnotationVisualisation(event)
+        runBlocking {
+            visualiser.updateAnnotationVisualisation(snippets)
+        }
     }
 
     /**
@@ -58,11 +73,18 @@ class AnnotationDocumentHandler {
     }
 
     fun turnVisualisationOn() {
-        visualiser.turnVisualisationOn()
+        runBlocking {
+            var snippets = highlightAnnotationFile.computeSnippets();
+            visualiser.turnVisualisationOn(snippets)
+        }
     }
 
     fun turnVisualisationOff() {
         visualiser.turnVisualisationOff()
+    }
+
+    fun getSnippets(): MutableList<HighlightAnnotationSnippet> {
+        return highlightAnnotationFile.snippets;
     }
 
 }

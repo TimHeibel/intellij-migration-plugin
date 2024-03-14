@@ -17,6 +17,7 @@ class HighlightAnnotationFile: AnnotationFile {
     }
 
     suspend fun computeSnippets(): MutableList<HighlightAnnotationSnippet> {
+        snippets = mutableListOf();
         val splits = fileName.split(".")
         val fileType = "."+splits.last()
         annotations = AnnotationDetection.detectAnnotationInFile(document, fileType, 0, document.lineCount)
@@ -28,10 +29,13 @@ class HighlightAnnotationFile: AnnotationFile {
             if (currentAnnotation.second == "end") continue
 
             if (i == annotations.count()-1) {
-                snippet = HighlightAnnotationSnippet(currentAnnotation.first, document.lineCount, currentAnnotation.second)
+                snippet = HighlightAnnotationSnippet(currentAnnotation.first, document.lineCount, currentAnnotation.second, false)
             } else {
                 val nextAnnotation = annotations[i + 1]
-                snippet = HighlightAnnotationSnippet(currentAnnotation.first, nextAnnotation.first, currentAnnotation.second)
+                val hasEnd = nextAnnotation.second == "end";
+                val hasEndAddition = if (hasEnd) 1 else 0
+                snippet = HighlightAnnotationSnippet(currentAnnotation.first,
+                        nextAnnotation.first + hasEndAddition, currentAnnotation.second, hasEnd)
             }
             snippets.add(snippet)
             yield()

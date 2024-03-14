@@ -19,6 +19,9 @@ class AnnotationInformation private constructor() {
             }
     }
 
+    lateinit var documentManager: OpenDocumentManager
+    var lastCursorLine: Int? = null
+
     private val settings: MigrationSettingsState
         get() {
             return ApplicationManager.getApplication().getService(MigrationSettingsState::class.java)
@@ -79,8 +82,6 @@ class AnnotationInformation private constructor() {
             return typeHashMap
         }
 
-
-    lateinit var documentManager: OpenDocumentManager
     var showMarker: Boolean = true
         set(value) {
             field = value
