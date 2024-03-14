@@ -1,4 +1,4 @@
-package intellijmigrationplugin.ui.editor.markervisualisation
+package intellijmigrationplugin.ui.editor.annotationVisualisation
 
 import AnnotationVisualiser
 import com.intellij.openapi.editor.event.DocumentEvent
@@ -7,9 +7,9 @@ import com.intellij.openapi.editor.markup.MarkupModel
 import com.intellij.openapi.editor.markup.RangeHighlighter
 import com.intellij.openapi.editor.markup.TextAttributes
 import intellijmigrationplugin.annotationModel.*
-import intellijmigrationplugin.annotationModel.`markervisualisation+`.HighlightAnnotationFile
-import intellijmigrationplugin.annotationModel.`markervisualisation+`.HighlightAnnotationSnippet
-import intellijmigrationplugin.annotationModel.`markervisualisation+`.RangeHighlightUpdate
+import intellijmigrationplugin.annotationModel.markervisualisation.HighlightAnnotationFile
+import intellijmigrationplugin.annotationModel.markervisualisation.HighlightAnnotationSnippet
+import intellijmigrationplugin.annotationModel.markervisualisation.RangeHighlightUpdate
 import kotlinx.coroutines.runBlocking
 import java.util.*
 import kotlin.collections.HashMap
@@ -29,21 +29,21 @@ class ComplexAnnotationVisualiser: AnnotationVisualiser {
     }
 
 
-    override fun updateAnnotationVisualisation(event: DocumentEvent) {
-        val lineRange = annotationFile.handleEvent(event)
-        updateEditorHighlighting(lineRange)
+    override fun updateAnnotationVisualisation(snippets: MutableList<HighlightAnnotationSnippet>) {
+        //val lineRange = annotationFile.handleEvent(event)
+        //updateEditorHighlighting(lineRange)
     }
 
 
-    override fun visualiseAnnotation() {
+    override fun visualiseAnnotation(snippets: MutableList<HighlightAnnotationSnippet>) {
         runBlocking {
             val snippets = annotationFile.computeSnippets()
             highlightEditor(snippets)
         }
     }
 
-    override fun turnVisualisationOn() {
-        visualiseAnnotation()
+    override fun turnVisualisationOn(snippets: MutableList<HighlightAnnotationSnippet>) {
+        //visualiseAnnotation()
     }
 
     override fun turnVisualisationOff() {

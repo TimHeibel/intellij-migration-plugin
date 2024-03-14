@@ -4,8 +4,9 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.command.WriteCommandAction
+import intellijmigrationplugin.annotationModel.util.AnnotationDetection
 import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.removeAnnotation
-import intellijmigrationplugin.annotationModel.AnnotationDetection
+
 
 /**
  * An action that removes annotations within the selected text range in the editor.
