@@ -12,7 +12,7 @@ class CountLinesTest {
 
     @Test
     fun detectComments(){
-        val pathname = "/home/finnika/Documents/Uni/5 Semester/SE Projekt/intellij-migration-plugin/src/test/resources/Main.java"
+        val pathname = "./src/test/resources/Main.java"
         var result = -1
         try {
             BufferedReader(FileReader(pathname)).use { br ->
@@ -38,8 +38,7 @@ class CountLinesTest {
 
     @Test
     fun lineEqualsCheck(){
-        val pathname = "/home/finnika/Documents/Uni/5 Semester/SE Projekt/intellij-migration-plugin/src/test/resources/Main.java"
-        val segment = "//Migrated SE project 2023/24 "
+        val pathname = "./src/test/resources/Main.java"
         val keyword = "//MIGRATED"
         val fileInformation = arrayOf("import", "//", "\\/\\/", "/*", "*/")
         var detectedKeywords = 0
@@ -47,7 +46,7 @@ class CountLinesTest {
         try {
             BufferedReader(FileReader(pathname)).use { br ->
                 var line: String?
-                val segment = StringBuilder()
+
 
 
                 while (br.readLine().also { line = it } != null){

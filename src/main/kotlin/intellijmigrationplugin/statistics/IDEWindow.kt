@@ -99,7 +99,7 @@ class IDEWindow : ToolWindowFactory {
                                     val keywords = annotationInformation?.keywords
                                     val csvPath = csvEditor.createCSVFile(keywords!!, legacyFolderPath!!)
                                     processFileOrDirectory(executionPossible()!!, contentList, true, csvPath)
-                                    updateStatistics(csvPath)
+                                    csvFileCompoment.addLink(csvPath)
                                 }
 
                                 println("Processing complete.")
