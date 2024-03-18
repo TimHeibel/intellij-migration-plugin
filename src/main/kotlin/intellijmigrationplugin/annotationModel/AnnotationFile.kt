@@ -9,7 +9,6 @@ import kotlin.collections.HashMap
 
 open class AnnotationFile {
 
-
     var fileName: String
     var endLine: Int
     private var snippets: MutableList<AnnotationSnippet>
@@ -21,15 +20,5 @@ open class AnnotationFile {
         this.endLine = -1
         this.document = document
     }
-
-    fun computeRangePerAnnotationType(type: AnnotationType): Int {
-        return 0;
-    }
-
-    fun computeAnnotationRanges(): HashMap<AnnotationType, Int> {
-        val annotationRanges = HashMap<AnnotationType, Int>()
-        return annotationRanges
-    }
-
 
 }

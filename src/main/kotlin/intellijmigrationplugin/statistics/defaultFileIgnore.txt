@@ -1,0 +1,11 @@
+#
+#ignores all files with this ending
+.txt
+.csv
+.git
+
+#!name includes specific files
+!example.txt
+
+
+

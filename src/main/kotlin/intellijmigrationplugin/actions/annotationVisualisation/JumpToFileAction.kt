@@ -1,4 +1,4 @@
-package intellijmigrationplugin.actions.markervisualisation
+package intellijmigrationplugin.actions.annotationVisualisation
 
 import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.AnAction
@@ -12,7 +12,7 @@ import intellijmigrationplugin.annotationModel.AnnotationInformation
 import java.io.File
 
 
-class MigratedFileOpener: AnAction() {
+class JumpToFileAction: AnAction() {
 
 
     override fun actionPerformed(e: AnActionEvent) {
