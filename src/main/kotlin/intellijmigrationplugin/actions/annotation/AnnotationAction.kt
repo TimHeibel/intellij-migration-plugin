@@ -228,7 +228,12 @@ abstract class AnnotationAction(private val annotationType : String, private val
                 document.removeLine(collision.first.end)
             }
         } else {
-            document.insertString(document.getLineEndOffset(endLine), "\n${collisionStartLine}")
+
+            if(document.lineCount <= endLine + 1) {
+                return
+            }
+
+            document.insertString(document.getLineStartOffset(endLine + 1), "${collisionStartLine}\n")
         }
     }
 
