@@ -46,7 +46,7 @@ class IDEWindow : ToolWindowFactory {
         private val fileAndFolderChooserComponent = FileAndFolderChooserComponent(project)
         private val includeFileAndFolderChooserComponent = FileAndFolderChooserComponent(project)
         private val fileChooserComponent = FileChooserComponent(project)
-        private val runStatisticComponent = RunStatisticComponent()
+        private val runStatisticComponent = RunStatisticComponent(fileChooserComponent)
 
         private val csvEditor = CSVEditor()
         private val csvFileCompoment = CSVFileCompoment()

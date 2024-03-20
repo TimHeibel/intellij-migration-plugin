@@ -11,9 +11,9 @@ import javax.swing.JComponent
 
 class FileChooserComponent(private val project: Project) {
     private val fileChooserTextField = TextFieldWithBrowseButton()
-    private val descriptor = FileChooserDescriptorFactory.createSingleFileDescriptor()
+    private val descriptor = FileChooserDescriptorFactory.createSingleFileDescriptor("txt")
 
-    var legacyFolderPath: String
+    var fileIgnorePath: String
         get() = fileChooserTextField.text
         set(value) {
             fileChooserTextField.text = value
@@ -33,7 +33,7 @@ class FileChooserComponent(private val project: Project) {
     private fun handleFolderSelection() {
         val chosenFiles = FileChooser.chooseFiles(descriptor, project, null)
         if (chosenFiles.isNotEmpty()) {
-            legacyFolderPath = chosenFiles.first().path
+            fileIgnorePath = chosenFiles.first().path
         }
     }
 }

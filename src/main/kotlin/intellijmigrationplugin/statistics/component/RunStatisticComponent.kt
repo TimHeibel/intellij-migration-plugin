@@ -2,7 +2,7 @@ package intellijmigrationplugin.statistics.component
 
 import javax.swing.JButton
 
-class RunStatisticComponent {
+class RunStatisticComponent(private val fileChooserComponent: FileChooserComponent) {
 
     fun runStatisticButton(): JButton{
         val statisticButton = JButton("run Statistic").apply {
@@ -14,4 +14,6 @@ class RunStatisticComponent {
         }
         return statisticButton
     }
+
+
 }
