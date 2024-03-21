@@ -21,15 +21,18 @@ class CSVFileCompoment {
 
     }
 
+    /**
+     * Adds Link to StatisticWindow and a csv File
+     */
     fun addLink(csvPath: String): JPanel{
         //TODO: show statistic files that are already there #38
         csvEditor.endLine(csvPath)
 
         cvsList.add(csvPath)
 
-        contentPanel.removeAll();
-        contentPanel.revalidate();
-        contentPanel.repaint();
+        contentPanel.removeAll()
+        contentPanel.revalidate()
+        contentPanel.repaint()
 
         contentPanel.layout = GridLayout(cvsList.size, 1) // Set GridLayout to arrange labels vertically
 

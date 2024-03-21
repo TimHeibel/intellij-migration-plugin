@@ -1,11 +1,24 @@
-#
+# very file that is not excluded will be analysed
+
+#exclude
+# to include every file type .*
 #ignores all files with this ending
-.txt
-.csv
-.git
+.example
 
-#!name includes specific files
+#ignore Folders
+example
+
+#ignore files
+example.txt
+
+#include
+
+#!.example include ending
+!.example
+
+#include folders
+!example
+
+#include revokes an exclude
+#!name includes specific files that would otherwise be excluded
 !example.txt
-
-
-

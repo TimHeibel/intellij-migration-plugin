@@ -16,7 +16,6 @@ import intellijmigrationplugin.statistics.component.RunStatisticComponent
 import java.io.File
 import java.io.FileNotFoundException
 import javax.swing.JButton
-import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JTextField
 
@@ -25,7 +24,7 @@ import javax.swing.JTextField
 class IDEWindow : ToolWindowFactory {
 
     override fun createToolWindowContent(project: Project, statisticsWindow: ToolWindow) {
-        val myStatisticsWindow = MyStatisticsWindow(statisticsWindow)
+        val myStatisticsWindow = MyStatisticsWindow()
         val content = ContentFactory.getInstance().createContent(myStatisticsWindow.getContent(), "", false)
         statisticsWindow.contentManager.addContent(content)
     }
@@ -34,7 +33,7 @@ class IDEWindow : ToolWindowFactory {
 
     ///This class manages the content for myStatisticsWindow
     ///structure:
-    class MyStatisticsWindow(private val statisticsWindow: ToolWindow) {
+    class MyStatisticsWindow() {
 
         private val lineAnalyser = LineAnalyser()
         private var annotationInformation = AnnotationInformation.instance
@@ -46,22 +45,22 @@ class IDEWindow : ToolWindowFactory {
         private val fileAndFolderChooserComponent = FileAndFolderChooserComponent(project)
         private val includeFileAndFolderChooserComponent = FileAndFolderChooserComponent(project)
         private val fileChooserComponent = FileChooserComponent(project)
-        private val runStatisticComponent = RunStatisticComponent(fileChooserComponent)
+        private val runStatisticComponent = RunStatisticComponent(fileChooserComponent, annotationInformation!!)
 
         private val csvEditor = CSVEditor()
-        private val csvFileCompoment = CSVFileCompoment()
+        private val csvFileComponent = CSVFileCompoment()
 
 
         data class DataModel(
             var fileEnding: String = "",
         )
-        val data = DataModel()
+        private val data = DataModel()
         fun getContent(): JPanel {
 
-            var contentPane: JPanel = panel {
+            val contentPane: JPanel = panel {
 
-                group (".file-ignore"){
-                    //TODO: write and anylise a file ignore #37
+                group ("FileIgnore"){
+                    //TODO: write and analise a file ignore #37
                     row {
                         cell(fileChooserComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
                             .comment("Select the ignore File")
@@ -99,7 +98,7 @@ class IDEWindow : ToolWindowFactory {
                                     val keywords = annotationInformation?.keywords
                                     val csvPath = csvEditor.createCSVFile(keywords!!, legacyFolderPath!!)
                                     processFileOrDirectory(executionPossible()!!, contentList, true, csvPath)
-                                    csvFileCompoment.addLink(csvPath)
+                                    csvFileComponent.addLink(csvPath)
                                 }
 
                                 println("Processing complete.")
@@ -138,7 +137,7 @@ class IDEWindow : ToolWindowFactory {
                                     val keywords = annotationInformation?.keywords
                                     val csvPath = csvEditor.createCSVFile(keywords!!, legacyFolderPath!!)
                                     processFileOrDirectory(legacyPath, contentList, false, csvPath)
-                                    csvFileCompoment.addLink(csvPath)
+                                    csvFileComponent.addLink(csvPath)
                                 }
                                 println("Processing complete.")
                             }
@@ -148,7 +147,7 @@ class IDEWindow : ToolWindowFactory {
                 }
                 group("Statistic"){
                     row{
-                        scrollCell(csvFileCompoment.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+                        scrollCell(csvFileComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
                             .comment("Statistic files will be shown here")
                     }
                 }
@@ -194,21 +193,6 @@ class IDEWindow : ToolWindowFactory {
                 println("Error processing file or directory: ${e.message}")
             }
 
-        }
-
-        private val statisticLabel = JLabel("")
-        private fun updateStatistics(csvPath: String) {
-            // Todo: #38
-            val file = File(csvPath)
-            val str = StringBuilder()
-            file.bufferedReader().use { br ->
-                var line: String
-                while (br.readLine().also { line = it } != null) {
-                    str.append(line)
-                }
-                println(str.toString())
-            }
-            statisticLabel.text = str.toString()
         }
 
         private fun processFileOrDirectory(file: File, excludedFolderFileList: CollectionListModel<String>, excluded: Boolean, csvPath: String) {
