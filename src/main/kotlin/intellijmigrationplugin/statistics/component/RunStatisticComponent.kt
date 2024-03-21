@@ -30,47 +30,44 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
      */
     private fun getFileConstrains(fileConstrains: FileConstrains){
         val fileIgnoreList = File(fileChooserComponent.fileIgnorePath).readLines()
-
-
         for (line in fileIgnoreList) {
             if (line.startsWith("#") || line.isBlank()) continue // Ignore comments
-
             if (line.startsWith("!")) {
 
                 val substring = line.substring(1)
-                //folder
-                if(!substring.contains(".")){
-                    fileConstrains.includedFoldersList.add(substring)
-                    continue
-                }
-                //Endings
-                if(substring.startsWith(".")){
-                    fileConstrains.includedEndingsList.add(substring)
-                    continue
-                }
-                //Files
-                fileConstrains.includedFileList.add(substring)
-                continue
 
+                when {
+                    //folder
+                    !substring.contains(".") -> {
+                        fileConstrains.includedFoldersList.add(substring)
+                        continue
+                    }
+                    //Endings
+                    substring.startsWith(".") -> {
+                        fileConstrains.includedEndingsList.add(substring)
+                        continue
+                    }
+                    //Files
+                    else -> {
+                        fileConstrains.includedFileList.add(substring)
+                        continue
+                    }
+                }
             }
-            //ending
-            if(line.startsWith(".")){
-                fileConstrains.excludedEndings.add(line)
-                continue
-            }
-            //file
-            if(line.contains(".")){
-                fileConstrains.excludedFilesList.add(line)
-                continue
-            }
-            //folder
-           fileConstrains.excludedFolderNamesList.add(line)
 
+            when {
+                //ending
+                line.startsWith(".") -> {
+                    fileConstrains.excludedEndings.add(line)
+                    continue
+                } //file
+                line.contains(".") -> {
+                    fileConstrains.excludedFilesList.add(line)
+                    continue
+                } //folder
+                else -> fileConstrains.excludedFolderNamesList.add(line)
+            }         
         }
-
-
-
-
     }
 
     fun walkThoughFileTree(includeFiles: MutableList<String>, file: File){

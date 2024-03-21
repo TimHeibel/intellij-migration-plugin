@@ -60,12 +60,13 @@ class IDEWindow : ToolWindowFactory {
             val contentPane: JPanel = panel {
 
                 group ("FileIgnore"){
-                    //TODO: write and analise a file ignore #37
+
                     row {
                         cell(fileChooserComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
                             .comment("Select the ignore File")
                     }
                     row {
+                        //TODO: analise a file ignore #37
                         cell(runStatisticComponent.runStatisticButton())
                     }
 
