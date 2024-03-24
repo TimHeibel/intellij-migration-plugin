@@ -7,6 +7,7 @@ import com.intellij.openapi.editor.Document
 import com.intellij.openapi.util.TextRange
 import intellijmigrationplugin.annotationModel.AnnotationInformation
 import intellijmigrationplugin.annotationModel.AnnotationSnippet
+import intellijmigrationplugin.statistics.LineAnalyser
 
 /**
  * Utility class for performing actions related to annotations within a document or editor.
@@ -162,9 +163,58 @@ class AnnotationActionUtils {
             }
         }
 
-        internal fun Document.canMerge(first: AnnotationSnippet, second: AnnotationSnippet) : Boolean {
-            return true
-            TODO("Placeholder")
+        internal fun Document.canMerge(first: AnnotationSnippet, second: AnnotationSnippet, filePath: String) : Boolean {
+            if(!first.isSimilar(second)) {
+                return false
+            }
+
+            var startAnnotation = first
+            var endAnnotation = second
+
+            if(first.start > second.start) {
+                startAnnotation = second
+                endAnnotation = first
+            }
+
+            val startLine = startAnnotation.end + 1
+            val endLine = endAnnotation.start - 1
+
+            return !containsCode(startLine, endLine, filePath)
+        }
+
+        internal fun Document.containsCode(startLine: Int, endLine: Int, filePath: String) : Boolean {
+
+            val fileInformation = LineAnalyser().getFileInformation(filePath, AnnotationInformation.instance?.importMapping, AnnotationInformation.instance?.singleCommentMapping, AnnotationInformation.instance?.multiCommentMapping)
+
+            var multiLineCommentActive = false
+
+            for (lineNumber in startLine .. endLine) {
+                val line = getLine(lineNumber)
+
+                if(multiLineCommentActive) {
+                    if(line.startsWith(fileInformation[4])) {
+                        multiLineCommentActive = false
+                    }
+                    continue
+                }
+
+                if(line.isBlank()) {
+                    continue
+                }
+
+                if(line.startsWith(fileInformation[0]) ||
+                    line.startsWith(fileInformation[1])) {
+                    continue
+                }
+
+                if(line.startsWith(fileInformation[3])) {
+                    multiLineCommentActive = true
+                    continue
+                }
+
+                return true
+            }
+            return false;
         }
     }
 }

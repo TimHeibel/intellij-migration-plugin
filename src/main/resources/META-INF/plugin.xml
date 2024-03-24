@@ -70,6 +70,14 @@
                     keymap="$default"
                     first-keystroke="control alt E"/>
         </action>
+        <action
+                id = "intellijmigrationplugin.actions.annotation.CleanupAction"
+                class = "intellijmigrationplugin.actions.annotation.CleanupAction"
+                text = "Cleanup Annotations"
+                description = "Concatenates similar and consecutive Annotations, if there
+                is no executable code between them">
+            <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group"/>
+        </action>
 
         <action
                 id = "intellijmigrationplugin.actions.annotationVisualisation.Jump.JumpToAnnotationTopAction"
