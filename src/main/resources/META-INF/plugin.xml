@@ -16,6 +16,14 @@
                     anchor= "last"/>
         </group>
         <group
+                id = "intellijmigrationplugin.AnnotationAction.Place"
+                text = "Place"
+                popup = "true">
+            <add-to-group
+                    group-id="intellijmigrationplugin.AnnotationAction.Group"
+                    anchor= "first"/>
+        </group>
+        <group
                 id = "intellijmigrationplugin.AnnotationAction.Group.Jump"
                 text = "Jump"
                 popup = "true">
