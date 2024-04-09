@@ -15,7 +15,9 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
                 val legacyFile = File(annotationInformation.legacyFolderPath)
                 val fileConstrains = FileConstrains()
                 getFileConstrains(fileConstrains)
-                walkThoughFileTree(fileConstrains, legacyFile)
+                if(!checkSpecialCases(fileConstrains,legacyFile)){
+                    walkThoughFileTree(fileConstrains, legacyFile)
+                }
                 //TODO: conformation Pop-up
                 //TODO: analyse Lines with includeFilesList
                 includeFilesList.clear()
@@ -73,6 +75,18 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
         return fileConstrains
     }
 
+    fun checkSpecialCases(fileConstrains: FileConstrains, legacyFile: File): Boolean{
+        if(fileConstrains.includedEndingsList.contains("*") || fileConstrains.includedFileList.contains("*.") || fileConstrains.includedFoldersList.contains("*")){
+            processIncludedFolder(fileConstrains, legacyFile)
+            return true
+        }
+        if(fileConstrains.excludedFolderNamesList.contains("*") || fileConstrains.excludedFilesList.contains("*.") || fileConstrains.excludedEndings.contains("*")){
+            processExcludedDirectory(fileConstrains, legacyFile)
+            return true
+        }
+        return false
+    }
+
     /**
      * walks through FileTree and adds every file that should be analysed into the @includeFilesListList
      */
@@ -99,7 +113,8 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
         if (file.isFile){
             val ending = dirName.substringAfterLast(".")
             //check is file is excluded via path, Name or ending
-            if(fileConstrains.excludedFolderList.contains(file.path) || fileConstrains.excludedFilesList.any{it.equals(dirName, ignoreCase = true)} || fileConstrains.excludedEndings.contains(".$ending")){
+            if(fileConstrains.includedEndingsList.contains(dirName))
+            if(fileConstrains.excludedFilesList.any{it.equals(dirName, ignoreCase = true)} || fileConstrains.excludedEndings.contains(ending)){
                 return
             }
             includeFilesList.add(file.path)
@@ -137,13 +152,15 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
 
         if (fileConstrains.excludedFolderList.contains(directory.path))  return
 
+        if(directory.isFile){
+            includeFilesList.add(directory.path)
+            return
+        }
         if(directory.isDirectory){
             directory.listFiles()?.forEach{subFile ->
                 processIncludedFolder(fileConstrains, subFile)
             }
         }
-        if(directory.isFile)
-            includeFilesList.add(directory.path)
 
     }
 
