@@ -4,12 +4,9 @@ import intellijmigrationplugin.annotationModel.AnnotationInformation
 import java.io.File
 import javax.swing.JButton
 
-class RunStatisticComponent(private val fileChooserComponent: FileChooserComponent, val annotationInformation: AnnotationInformation) {
+class RunStatisticComponent(private val fileChooserComponent: FileChooserComponent, private val annotationInformation: AnnotationInformation) {
 
-    companion object{
-        val includeFilesList = mutableListOf<String>()
-
-    }
+    private val includeFilesList = mutableListOf<String>()
 
     fun runStatisticButton(): JButton{
         val statisticButton = JButton("run Statistic").apply {
@@ -20,6 +17,8 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
                 getFileConstrains(fileConstrains)
                 walkThoughFileTree(fileConstrains, legacyFile)
                 //TODO: conformation Pop-up
+                //TODO: analyse Lines with includeFilesList
+                includeFilesList.clear()
                 println("Processing complete.")
             }
         }
@@ -47,7 +46,7 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
                     }
                     //Endings
                     substring.startsWith(".") -> {
-                        fileConstrains.includedEndingsList.add(substring)
+                        fileConstrains.includedEndingsList.add(substring.substring(1))
                         continue
                     }
                     //Files
@@ -61,7 +60,7 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
             when {
                 //ending
                 line.startsWith(".") -> {
-                    fileConstrains.excludedEndings.add(line)
+                    fileConstrains.excludedEndings.add(line.substring(1))
                     continue
                 } //file
                 line.contains(".") -> {
@@ -71,26 +70,30 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
                 else -> fileConstrains.excludedFolderNamesList.add(line)
             }
         }
-        return FileConstrains()
+        return fileConstrains
     }
 
     /**
-     * walks through FileTree and adds every file that should be analiesed into the @includeFilesListList
+     * walks through FileTree and adds every file that should be analysed into the @includeFilesListList
      */
-    fun walkThoughFileTree(fileConstrains: FileConstrains, file: File){ 
-        
+    //TODO: add .*
+    private fun walkThoughFileTree(fileConstrains: FileConstrains, file: File){
+
+        if (fileConstrains.excludedFolderList.contains(file.path))  return
+
         val dirName = file.path.substringAfterLast("/")
         
        if(file.isDirectory){
-           
-           if(fileConstrains.excludedFolderList.contains(file.path) || fileConstrains.excludedFolderNamesList.any { it.equals(dirName, ignoreCase = true) }){
+           if( fileConstrains.excludedFolderNamesList.any { it.equals(dirName, ignoreCase = true) }){
                processExcludedDirectory(fileConstrains, file)
+               return
            }
            if(fileConstrains.includedFoldersList.contains(dirName)){
                processIncludedFolder(fileConstrains, file)
+               return
            }
-           file.listFiles()?.forEach { subfile ->
-               walkThoughFileTree(fileConstrains, subfile)
+           file.listFiles()?.forEach { subFile ->
+               walkThoughFileTree(fileConstrains, subFile)
            }
        }
         if (file.isFile){
@@ -102,23 +105,16 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
             includeFilesList.add(file.path)
         }
     }
-    
-    fun processIncludedFolder(file: File){
-      if(file.isFile){
-            includeFilesList.add(file.path)
-            return
-        }
-        file.listFiles()?.forEach { subfile ->
-            includeFilesList.add(file.path)
-        }
-    }
 
-    fun processExcludedDirectory(fileConstrains: FileConstrains, directory: File){
+    private fun processExcludedDirectory(fileConstrains: FileConstrains, directory: File){
+
+        if (fileConstrains.excludedFolderList.contains(directory.path))  return
 
         val substring = directory.path.substringAfterLast("/")
         if(directory.isDirectory){
             if(fileConstrains.includedFoldersList.contains(substring)){
                 processIncludedFolder(fileConstrains, directory)
+                return
             }
             directory.listFiles()?.forEach{subFile ->
                 processExcludedDirectory(fileConstrains, subFile)
@@ -138,6 +134,8 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
     }
 
     private fun processIncludedFolder(fileConstrains: FileConstrains, directory: File){
+
+        if (fileConstrains.excludedFolderList.contains(directory.path))  return
 
         if(directory.isDirectory){
             directory.listFiles()?.forEach{subFile ->

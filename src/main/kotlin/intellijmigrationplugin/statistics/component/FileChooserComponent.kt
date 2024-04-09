@@ -13,6 +13,7 @@ class FileChooserComponent(private val project: Project) {
     private val fileChooserTextField = TextFieldWithBrowseButton()
     private val descriptor = FileChooserDescriptorFactory.createSingleFileDescriptor("txt")
 
+    //TODO: add default file-ignore
     var fileIgnorePath: String
         get() = fileChooserTextField.text
         set(value) {
