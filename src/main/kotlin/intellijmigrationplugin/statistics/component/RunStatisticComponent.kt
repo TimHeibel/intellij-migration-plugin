@@ -1,11 +1,15 @@
 package intellijmigrationplugin.statistics.component
 
 import intellijmigrationplugin.annotationModel.AnnotationInformation
+import intellijmigrationplugin.statistics.CSVEditor
+import intellijmigrationplugin.statistics.LineAnalyser
 import java.io.File
 import javax.swing.JButton
 
-class RunStatisticComponent(private val fileChooserComponent: FileChooserComponent, private val annotationInformation: AnnotationInformation) {
+class RunStatisticComponent(private val fileChooserComponent: FileChooserComponent, private val annotationInformation: AnnotationInformation, private val csvFileComponent: CSVFileComponent) {
 
+    private val csvEditor = CSVEditor()
+    private val lineAnalyser = LineAnalyser()
     private val includeFilesList = mutableListOf<String>()
 
     fun runStatisticButton(): JButton{
@@ -20,6 +24,14 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
                 }
                 //TODO: conformation Pop-up
                 //TODO: analyse Lines with includeFilesList
+
+                val keywords = annotationInformation.keywords
+                val csvPath = csvEditor.createCSVFile(keywords, annotationInformation.legacyFolderPath)
+                for (filePath in includeFilesList){
+                    lineAnalyser.getFileStatistic(filePath, csvPath)
+                }
+                csvFileComponent.addLink(csvPath)
+
                 includeFilesList.clear()
                 println("Processing complete.")
             }
@@ -75,7 +87,7 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
         return fileConstrains
     }
 
-    fun checkSpecialCases(fileConstrains: FileConstrains, legacyFile: File): Boolean{
+    private fun checkSpecialCases(fileConstrains: FileConstrains, legacyFile: File): Boolean{
         if(fileConstrains.includedEndingsList.contains("*") || fileConstrains.includedFileList.contains("*.") || fileConstrains.includedFoldersList.contains("*")){
             processIncludedFolder(fileConstrains, legacyFile)
             return true
@@ -167,7 +179,7 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
     /**
      * Safes all Constrains form the fileIgnore in different List, as well as the excludedFolderList from the settings
      */
-    class FileConstrains(){
+    class FileConstrains{
         var excludedFolderList: List<String> = mutableListOf()
         val excludedFolderNamesList: MutableList<String> = mutableListOf()
         val excludedFilesList: MutableList<String> = mutableListOf()

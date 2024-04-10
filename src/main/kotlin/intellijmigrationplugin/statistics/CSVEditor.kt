@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class CSVEditor {
-    // filename, keyword1, keyword..., keywordn, sum
+    // filename, keyword1, keyword..., keyword, sum
     // name, 0, 6,4
 
     fun createCSVFile( keywords: List<String>, legacyPath: String): String{
@@ -35,7 +35,7 @@ class CSVEditor {
 
     fun addLine(values: MutableMap<String, Int>, csvPath: String, fileName: String): String {
 
-        var line = StringBuilder("$fileName,")
+        val line = StringBuilder("$fileName,")
         var sum = 0
         for ((keyword, value) in values) {
             sum += value

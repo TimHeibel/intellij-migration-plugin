@@ -39,7 +39,7 @@ class LineAnalyser {
         multiCommentMapping: HashMap<String, String>?): Array<String> {
 
         //initialise Array
-        val fileInformationArray: Array<String> = Array<String>(5){" "}
+        val fileInformationArray: Array<String> = Array(5){" "}
         //get String ending
         val fileExtension = "." + filePath.substringAfterLast('.', "")
         //0 = import
@@ -48,7 +48,7 @@ class LineAnalyser {
 
         //1 = single
         fileInformationArray[1] = singleCommentMapping?.getOrDefault(fileExtension, "//")!!
-        //is useble in strings
+        //is usable in strings
         fileInformationArray[2] = fileInformationArray[1].map { "\\$it" }.joinToString("")
 
 
@@ -64,7 +64,7 @@ class LineAnalyser {
         return fileInformationArray
     }
 
-    fun editKeywordsList(keywordList: List<String>, fileInformation: Array<String>): MutableList<String>{
+    private fun editKeywordsList(keywordList: List<String>, fileInformation: Array<String>): MutableList<String>{
         val commentedKeywords = mutableListOf<String>()
         keywordList.forEach { keyword ->
             commentedKeywords.add(fileInformation[1] + keyword)
@@ -156,9 +156,9 @@ class LineAnalyser {
                         currentSegment.append(line).append("\n")
                         continue
                     }
-                    // //End detected and countline in Segment
+                    // //End detected and count line in Segment
                     if (line!!.contains(endKeyword, ignoreCase = true) && isValidKeyword(endKeyword, line!!, fileInformation)){
-                        val currentKeyword = currentSegmentKey!!.removePrefix(fileInformation[1])
+                        val currentKeyword = currentSegmentKey.removePrefix(fileInformation[1])
                         currentSegmentKey = null
                         val segmentContent = currentSegment.toString()
                         val segmentLoC = countLinesInSegment(segmentContent, regex, fileInformation)

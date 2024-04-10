@@ -9,11 +9,11 @@ import javax.swing.JComponent
 import javax.swing.JPanel
 
 
-class CSVFileCompoment {
+class CSVFileComponent {
 
-    val cvsList = mutableListOf<String>()
-    val contentPanel = JPanel()
-    val csvEditor = CSVEditor()
+    private val cvsList = mutableListOf<String>()
+    private val contentPanel = JPanel()
+    private val csvEditor = CSVEditor()
 
     fun getComponent(): JComponent {
 

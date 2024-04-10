@@ -8,7 +8,7 @@ import com.intellij.ui.content.ContentFactory
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.ui.dsl.gridLayout.HorizontalAlign
 import intellijmigrationplugin.annotationModel.AnnotationInformation
-import intellijmigrationplugin.statistics.component.CSVFileCompoment
+import intellijmigrationplugin.statistics.component.CSVFileComponent
 import intellijmigrationplugin.statistics.component.FileChooserComponent
 import intellijmigrationplugin.statistics.component.RunStatisticComponent
 import javax.swing.JPanel
@@ -29,17 +29,14 @@ class IDEWindow : ToolWindowFactory {
     ///structure:
     class MyStatisticsWindow() {
 
-        private val lineAnalyser = LineAnalyser()
-        private var annotationInformation = AnnotationInformation.instance
-        private val legacyFolderPath = annotationInformation?.legacyFolderPath
-
         private val project = ProjectManager.getInstance().openProjects[0]
 
+        private var annotationInformation = AnnotationInformation.instance
+        private val csvFileComponent = CSVFileComponent()
         private val fileChooserComponent = FileChooserComponent(project)
-        private val runStatisticComponent = RunStatisticComponent(fileChooserComponent, annotationInformation!!)
+        private val runStatisticComponent = RunStatisticComponent(fileChooserComponent, annotationInformation!!,csvFileComponent)
 
-        private val csvEditor = CSVEditor()
-        private val csvFileComponent = CSVFileCompoment()
+
 
         fun getContent(): JPanel {
 
@@ -66,7 +63,7 @@ class IDEWindow : ToolWindowFactory {
             return contentPane
         }
 
-    
+
     }
 }
 
