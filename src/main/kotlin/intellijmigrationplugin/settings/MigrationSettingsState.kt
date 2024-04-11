@@ -34,6 +34,11 @@ internal class MigrationSettingsState : PersistentStateComponent<MigrationSettin
         Pair("LATER", "#22ffa500"),
         Pair("UNUSED", "#22808080")
     )
+    @OptionTag(converter = PairListConverter::class)
+    var keywordShortcutMapping: MutableList<Pair<String, String>> = keywordColorMapping.map { (keyword, _) ->
+        Pair(keyword, "") // TODO(David): hier bei shortcut einen sensible default hinterlegen,
+        // der dir nicht das dynamische erstellen zerschiesst
+    }.toMutableList()
 
     override fun getState(): MigrationSettingsState {
         return this

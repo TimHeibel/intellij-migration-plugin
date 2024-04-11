@@ -46,6 +46,7 @@ internal class MigrationsSettingsConfigurable : Configurable {
             convertTableModelToList(settingsComponent?.keywordColorMappingComponent?.tableModel!!)
         settings.fileTypeCommentMapping =
             convertTableModelToFileTypeMappingList(settingsComponent?.filetypeCommentMappingComponent?.tableModel!!)
+        synchronizeKeywordMappings()
     }
 
     override fun reset() {
@@ -88,11 +89,27 @@ internal class MigrationsSettingsConfigurable : Configurable {
             if (filetype.isNotEmpty()) {
                 val fileTypeMapping = FileTypeMapping(filetype, singleLineComment, multiLineComment, importStatement)
                 list.add(fileTypeMapping)
-                }
             }
-
-            return list
         }
 
-
+        return list
     }
+
+    private fun synchronizeKeywordMappings() {
+
+        val settings: MigrationSettingsState = MigrationSettingsState.instance
+        val keywordColorMapping = settings.keywordColorMapping
+        val keywordShortcutMapping = settings.keywordShortcutMapping
+
+        // Remove shortcuts for deleted keywords
+        val existingKeywords = keywordColorMapping.map { it.first }
+        keywordShortcutMapping.removeIf { it.first !in existingKeywords }
+
+        // Add shortcuts for new keywords
+        keywordColorMapping.forEach { (keyword, _) ->
+            if (!keywordShortcutMapping.any { it.first == keyword }) {
+                keywordShortcutMapping.add(Pair(keyword, ""))
+            }
+        }
+    }
+}
