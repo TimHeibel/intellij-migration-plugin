@@ -23,7 +23,7 @@ import intellijmigrationplugin.ui.dialogs.CollisionDialog
  * @property annotationType declares the type of Annotation to be set.
  * @property actionPerformed placement of Annotations
  */
-open class AnnotationAction(private val annotationType : String, private val addInfo: String = "") : AnAction() {
+open class AnnotationAction(private val annotationType : String, private val addInfo: String = "") : AnAction(annotationType) {
 
     override fun update(event: AnActionEvent) {
 

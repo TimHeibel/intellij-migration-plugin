@@ -1,6 +1,7 @@
 package intellijmigrationplugin.settings
 
 import com.intellij.openapi.options.Configurable
+import intellijmigrationplugin.actions.annotation.DynamicAction
 import intellijmigrationplugin.settings.components.FileTypeMapping
 import org.jetbrains.annotations.Nls
 import javax.swing.JComponent
@@ -47,6 +48,7 @@ internal class MigrationsSettingsConfigurable : Configurable {
         settings.fileTypeCommentMapping =
             convertTableModelToFileTypeMappingList(settingsComponent?.filetypeCommentMappingComponent?.tableModel!!)
         synchronizeKeywordMappings()
+        DynamicAction.resetCustomAnnotation()
     }
 
     override fun reset() {
