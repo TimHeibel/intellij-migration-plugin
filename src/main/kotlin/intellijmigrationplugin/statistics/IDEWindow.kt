@@ -8,6 +8,7 @@ import com.intellij.ui.content.ContentFactory
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.ui.dsl.gridLayout.HorizontalAlign
 import intellijmigrationplugin.annotationModel.AnnotationInformation
+import intellijmigrationplugin.statistics.component.CSVChooserComponent
 import intellijmigrationplugin.statistics.component.CSVFileComponent
 import intellijmigrationplugin.statistics.component.FileChooserComponent
 import intellijmigrationplugin.statistics.component.RunStatisticComponent
@@ -27,16 +28,15 @@ class IDEWindow : ToolWindowFactory {
 
     ///This class manages the content for myStatisticsWindow
     ///structure:
-    class MyStatisticsWindow() {
+    class MyStatisticsWindow {
 
         private val project = ProjectManager.getInstance().openProjects[0]
 
         private var annotationInformation = AnnotationInformation.instance
         private val csvFileComponent = CSVFileComponent()
         private val fileChooserComponent = FileChooserComponent(project)
-        private val runStatisticComponent = RunStatisticComponent(fileChooserComponent, annotationInformation!!,csvFileComponent)
-
-
+        private val csvChooserComponent = CSVChooserComponent(project)
+        private val runStatisticComponent = RunStatisticComponent(fileChooserComponent, annotationInformation!!,csvFileComponent, csvChooserComponent)
 
         fun getContent(): JPanel {
 
@@ -51,6 +51,16 @@ class IDEWindow : ToolWindowFactory {
                     row {
                         //TODO: analise a file ignore #37
                         cell(runStatisticComponent.runStatisticButton())
+                    }
+                }
+                group("CSV Name"){
+                    row {
+                        //TODO: choose csv name (input field)
+                    }
+                }
+                group("CSV Path"){
+                    row {
+                        cell(csvChooserComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
                     }
                 }
                 group("Statistic"){
