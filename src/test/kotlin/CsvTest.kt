@@ -3,13 +3,13 @@ import intellijmigrationplugin.statistics.CSVEditor
 import org.junit.jupiter.api.Test
 
 class CsvTest {
-    val csvEditor = CSVEditor()
+    private val csvEditor = CSVEditor()
     @Test
     fun createCSV(){
 
         val keywords = mutableListOf("MIGRATED", "LATER")
 
-        val filePath = csvEditor.createCSVFile( keywords, "./")
+        val filePath = csvEditor.createCSVFile( keywords, "testName.csv", "./")
         
         val linesPerKeyword: MutableMap<String, Int> = mutableMapOf()
         linesPerKeyword["MIGRATED"] = 3

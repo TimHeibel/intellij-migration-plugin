@@ -57,10 +57,9 @@ class CSVEditor {
     fun endLine(csvPath: String){
 
         val inputFile = File(csvPath)
-        var line: String
         var sumRow = "Total,"
 
-        inputFile.bufferedReader().use { br ->
+        inputFile.bufferedReader().use {
             val lines = inputFile.readLines()
 
             val columnSums = MutableList(lines[0].split(",").size) { 0 }

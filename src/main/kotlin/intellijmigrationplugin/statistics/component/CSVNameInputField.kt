@@ -7,7 +7,7 @@ import javax.swing.JComponent
 
 class CSVNameInputField {
 
-    var inputField = JBTextField()
+    private var inputField = JBTextField()
     var csvName: String
         get() = inputField.text
         set(value) {

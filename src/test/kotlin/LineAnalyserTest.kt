@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test
 import java.util.regex.Pattern
 
 class LineAnalyserTest {
-    var lineAnalyser = LineAnalyser()
+    private var lineAnalyser = LineAnalyser()
 
 
     //test analiseLines()
@@ -60,7 +60,7 @@ class LineAnalyserTest {
         //val expected = Pattern.compile("^(?!\\s*import)(?!\\s*\\#).*[^\\s]\$", 8)
         val expected = "^(?!\\s*import)(?!\\s*\\#).*[^\\s]\$"
 
-        val resultBool = result.equals(expected)
+        val resultBool = result == expected
         Assertions.assertEquals(true, resultBool)
     }
 

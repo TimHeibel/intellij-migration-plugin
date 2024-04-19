@@ -68,9 +68,6 @@ class IDEWindow : ToolWindowFactory {
             }
             return contentPane
         }
-
-
     }
-    data class Settings(var csvName: String = "")
 }
 

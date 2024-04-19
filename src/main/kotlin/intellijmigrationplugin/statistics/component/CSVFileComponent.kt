@@ -9,6 +9,7 @@ import javax.swing.JComponent
 import javax.swing.JPanel
 
 
+@Suppress("ReplaceRangeToWithRangeUntil")
 class CSVFileComponent {
 
     private val cvsList = mutableListOf<String>()

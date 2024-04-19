@@ -128,7 +128,7 @@ class LineAnalyser {
                         }
                         continue
                     }
-                    if(!isComment && line!!.contains(fileInformation[3])){
+                    if(line!!.contains(fileInformation[3])){
                         isComment = true
                         continue
                     }

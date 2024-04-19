@@ -17,8 +17,8 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
             addActionListener {
 
                 val legacyFile = File(annotationInformation.legacyFolderPath)
-                val fileConstraints = fileConstraints()
-                getfileConstraints(fileConstraints)
+                val fileConstraints = FileConstraints()
+                getFileConstraints(fileConstraints)
                 if(!checkSpecialCases(fileConstraints,legacyFile)){
                     walkThoughFileTree(fileConstraints, legacyFile)
                 }
@@ -42,7 +42,7 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
      * This Methode reads the fileIgnore and safes all Constrains in the fileConstraints class
      * As well as the excludedFolderList from the settings.
      */
-    private fun getfileConstraints(fileConstraints: fileConstraints): fileConstraints{
+    private fun getFileConstraints(fileConstraints: FileConstraints): FileConstraints{
         val fileIgnoreList = File(fileChooserComponent.fileIgnorePath).readLines()
         fileConstraints.excludedFolderList = annotationInformation.excludedFolderList
         for (line in fileIgnoreList) {
@@ -86,7 +86,7 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
         return fileConstraints
     }
 
-    private fun checkSpecialCases(fileConstraints: fileConstraints, legacyFile: File): Boolean{
+    private fun checkSpecialCases(fileConstraints: FileConstraints, legacyFile: File): Boolean{
         if(fileConstraints.includedEndingsList.contains("*") || fileConstraints.includedFileList.contains("*.") || fileConstraints.includedFoldersList.contains("*")){
             processIncludedFolder(fileConstraints, legacyFile)
             return true
@@ -102,7 +102,7 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
      * walks through FileTree and adds every file that should be analysed into the @includeFilesListList
      */
     //TODO: add .*
-    private fun walkThoughFileTree(fileConstraints: fileConstraints, file: File){
+    private fun walkThoughFileTree(fileConstraints: FileConstraints, file: File){
 
         if (fileConstraints.excludedFolderList.contains(file.path))  return
 
@@ -132,7 +132,7 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
         }
     }
 
-    private fun processExcludedDirectory(fileConstraints: fileConstraints, directory: File){
+    private fun processExcludedDirectory(fileConstraints: FileConstraints, directory: File){
 
         if (fileConstraints.excludedFolderList.contains(directory.path))  return
 
@@ -159,7 +159,7 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
 
     }
 
-    private fun processIncludedFolder(fileConstraints: fileConstraints, directory: File){
+    private fun processIncludedFolder(fileConstraints: FileConstraints, directory: File){
 
         if (fileConstraints.excludedFolderList.contains(directory.path))  return
 
@@ -178,7 +178,7 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
     /**
      * Safes all Constrains form the fileIgnore in different List, as well as the excludedFolderList from the settings
      */
-    class fileConstraints{
+    class FileConstraints{
         var excludedFolderList: List<String> = mutableListOf()
         val excludedFolderNamesList: MutableList<String> = mutableListOf()
         val excludedFilesList: MutableList<String> = mutableListOf()
