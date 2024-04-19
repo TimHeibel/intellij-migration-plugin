@@ -27,7 +27,7 @@ class FileChooserComponent(private val project: Project) {
     }
 
     private fun configureLegacyFolderTextField() {
-        fileChooserTextField.emptyText.setText("Optional")
+        fileChooserTextField.emptyText.setText("Enter .txt file")
         fileChooserTextField.addActionListener { handleFolderSelection() }
     }
 

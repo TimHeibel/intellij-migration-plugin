@@ -47,6 +47,5 @@ class CSVFileComponent {
             contentPanel.add(externalLink)
         }
         return contentPanel
-
     }
 }

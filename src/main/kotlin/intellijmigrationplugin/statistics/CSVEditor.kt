@@ -4,20 +4,15 @@ import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class CSVEditor {
     // filename, keyword1, keyword..., keyword, sum
     // name, 0, 6,4
 
-    fun createCSVFile( keywords: List<String>, legacyPath: String): String{
-        //create fileName
-        val currentDateTime = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd|HH:mm:ss")
-        val currentDateAndTime = currentDateTime.format(formatter)
-        val filePath = "$legacyPath/newStatistics$currentDateAndTime.csv"
 
+    fun createCSVFile( keywords: List<String>, csvName: String, csvPath: String ): String{
+
+        val filePath = "$csvPath/$csvName.csv"
         val file = File(filePath)
         val headers = mutableListOf("filename")
 
@@ -63,7 +58,7 @@ class CSVEditor {
 
         val inputFile = File(csvPath)
         var line: String
-        var sumRow: String = "Total,"
+        var sumRow = "Total,"
 
         inputFile.bufferedReader().use { br ->
             val lines = inputFile.readLines()

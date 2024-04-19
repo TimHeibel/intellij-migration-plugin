@@ -4,7 +4,6 @@ import com.intellij.openapi.fileChooser.FileChooser
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
-import com.intellij.openapi.ui.emptyText
 import com.intellij.ui.components.JBLabel
 import com.intellij.util.ui.FormBuilder
 import javax.swing.JComponent
@@ -27,7 +26,6 @@ class CSVChooserComponent(private val project: Project) {
     }
 
     private fun configureLegacyFolderTextField() {
-        fileChooserTextField.emptyText.setText("Optional")
         fileChooserTextField.addActionListener { handleFolderSelection() }
     }
 
@@ -37,4 +35,5 @@ class CSVChooserComponent(private val project: Project) {
             fileIgnorePath = chosenFiles.first().path
         }
     }
+
 }
