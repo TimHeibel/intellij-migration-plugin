@@ -39,7 +39,16 @@ class IDEWindow : ToolWindowFactory {
         fun getContent(): JPanel {
 
             val contentPane: JPanel = panel {
+                //TODO: put into Dialog #59
+                group("CSV-Info"){
+                    row {
+                        cell(csvChooserComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+                    }
+                    row {
 
+                        cell(csvNameComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+                    }
+                }
                 group ("FileIgnore"){
 
                     row {
@@ -48,15 +57,6 @@ class IDEWindow : ToolWindowFactory {
                     }
                     row {
                         cell(runStatisticComponent.runStatisticButton())
-                    }
-                }
-                group("CSV-Info"){
-                    row {
-                        cell(csvChooserComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
-                    }
-                    row {
-
-                        cell(csvNameComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
                     }
                 }
                 group("Statistic"){

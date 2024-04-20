@@ -3,6 +3,7 @@ package intellijmigrationplugin.statistics.component
 import intellijmigrationplugin.annotationModel.AnnotationInformation
 import intellijmigrationplugin.statistics.CSVEditor
 import intellijmigrationplugin.statistics.LineAnalyser
+import intellijmigrationplugin.ui.popup.ErrorPopUp
 import java.io.File
 import javax.swing.JButton
 
@@ -11,10 +12,16 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
     private val csvEditor = CSVEditor()
     private val lineAnalyser = LineAnalyser()
     private val includeFilesList = mutableListOf<String>()
+    private val errorPopUp = ErrorPopUp()
 
     fun runStatisticButton(): JButton{
         val statisticButton = JButton("run Statistic").apply {
             addActionListener {
+
+                if (annotationInformation.legacyFolderPath == "") {
+                    errorPopUp.showErrorPopUp("No legacy Path \n Please add the path to the legacy project in the settings")
+                    return@addActionListener
+                }
 
                 val legacyFile = File(annotationInformation.legacyFolderPath)
                 val fileConstraints = FileConstraints()
