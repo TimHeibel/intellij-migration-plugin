@@ -1,8 +1,10 @@
 package intellijmigrationplugin.statistics.component
 
+import com.intellij.openapi.ui.DialogWrapper
 import intellijmigrationplugin.annotationModel.AnnotationInformation
 import intellijmigrationplugin.statistics.CSVEditor
 import intellijmigrationplugin.statistics.LineAnalyser
+import intellijmigrationplugin.ui.dialogs.CsvInfoDialog
 import intellijmigrationplugin.ui.popup.ErrorPopUp
 import java.io.File
 import javax.swing.JButton
@@ -14,6 +16,7 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
     private val includeFilesList = mutableListOf<String>()
     private val errorPopUp = ErrorPopUp()
 
+
     fun runStatisticButton(): JButton{
         val statisticButton = JButton("run Statistic").apply {
             addActionListener {
@@ -22,6 +25,18 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
                     errorPopUp.showErrorPopUp("No legacy Path",  "Please add the path to the legacy project in the settings")
                     return@addActionListener
                 }
+                val csvInfoDialog = CsvInfoDialog()
+                csvInfoDialog.shouldCloseOnCross()
+                csvInfoDialog.show()
+
+
+                if(csvInfoDialog.exitCode == DialogWrapper.OK_EXIT_CODE){
+                    //csvInfoDialog.show()
+                    errorPopUp.showErrorPopUp("Incorrect Input", "choose a csvPath and enter a csv name which should only consist of letters")
+
+                }
+
+
 
                 val legacyFile = File(annotationInformation.legacyFolderPath)
                 val fileConstraints = FileConstraints()
