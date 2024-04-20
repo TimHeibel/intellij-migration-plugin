@@ -19,7 +19,7 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
             addActionListener {
 
                 if (annotationInformation.legacyFolderPath == "") {
-                    errorPopUp.showErrorPopUp("No legacy Path \n Please add the path to the legacy project in the settings")
+                    errorPopUp.showErrorPopUp("No legacy Path",  "Please add the path to the legacy project in the settings")
                     return@addActionListener
                 }
 
