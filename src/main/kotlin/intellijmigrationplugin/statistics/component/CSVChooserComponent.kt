@@ -12,7 +12,6 @@ class CSVChooserComponent(private val project: Project) {
     private val fileChooserTextField = TextFieldWithBrowseButton()
     private val descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
 
-    //TODO: add default file-ignore
     var fileIgnorePath: String
         get() = fileChooserTextField.text
         set(value) {
@@ -22,7 +21,7 @@ class CSVChooserComponent(private val project: Project) {
     fun getComponent(): JComponent {
         configureLegacyFolderTextField()
         return FormBuilder.createFormBuilder()
-            .addLabeledComponent(JBLabel("Path to .file-ignore: "), fileChooserTextField, 1, false).panel
+            .addLabeledComponent(JBLabel("Path for csv: "), fileChooserTextField, 1, false).panel
     }
 
     private fun configureLegacyFolderTextField() {

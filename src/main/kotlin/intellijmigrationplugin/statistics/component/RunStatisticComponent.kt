@@ -9,7 +9,7 @@ import intellijmigrationplugin.ui.popup.ErrorPopUp
 import java.io.File
 import javax.swing.JButton
 
-class RunStatisticComponent(private val fileChooserComponent: FileChooserComponent, private val annotationInformation: AnnotationInformation, private val csvFileComponent: CSVFileComponent, private val csvChooserComponent: CSVChooserComponent, private val csvNameInputField: CSVNameInputField) {
+class RunStatisticComponent(private val fileChooserComponent: FileChooserComponent, private val annotationInformation: AnnotationInformation, private val csvFileComponent: CSVFileComponent) {
 
     private val csvEditor = CSVEditor()
     private val lineAnalyser = LineAnalyser()
@@ -25,18 +25,23 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
                     errorPopUp.showErrorPopUp("No legacy Path",  "Please add the path to the legacy project in the settings")
                     return@addActionListener
                 }
+                if(fileChooserComponent.fileIgnorePath == ""){
+                    errorPopUp.showErrorPopUp("No .file-ignore Path", "please enter a Path into the into the input field")
+                    return@addActionListener
+                }
+                //Dialog
                 val csvInfoDialog = CsvInfoDialog()
                 csvInfoDialog.shouldCloseOnCross()
                 csvInfoDialog.show()
-
+                var csvPath = ""
 
                 if(csvInfoDialog.exitCode == DialogWrapper.OK_EXIT_CODE){
-                    //csvInfoDialog.show()
-                    errorPopUp.showErrorPopUp("Incorrect Input", "choose a csvPath and enter a csv name which should only consist of letters")
-
+                    if(csvInfoDialog.nameComponent == "" || csvInfoDialog.csvChooserComponent.fileIgnorePath == ""){
+                        errorPopUp.showErrorPopUp("Incorrect Input", "choose a csvPath and enter a csv name which should only consist of letters")
+                        return@addActionListener
+                    }
+                    csvPath = "${csvInfoDialog.csvChooserComponent.fileIgnorePath}/${csvInfoDialog.nameComponent}"
                 }
-
-
 
                 val legacyFile = File(annotationInformation.legacyFolderPath)
                 val fileConstraints = FileConstraints()
@@ -44,10 +49,8 @@ class RunStatisticComponent(private val fileChooserComponent: FileChooserCompone
                 if(!checkSpecialCases(fileConstraints,legacyFile)){
                     walkThoughFileTree(fileConstraints, legacyFile)
                 }
-                //TODO: conformation Pop-up, determent fileName and path for saving
-                //TODO: create pop-up
                 val keywords = annotationInformation.keywords
-                val csvPath = csvEditor.createCSVFile(keywords, csvNameInputField.csvName, csvChooserComponent.fileIgnorePath)
+                csvPath = csvEditor.createCSVFile(keywords, csvPath)
                 for (filePath in includeFilesList){
                     lineAnalyser.getFileStatistic(filePath, csvPath)
                 }

@@ -9,7 +9,7 @@ class CsvTest {
 
         val keywords = mutableListOf("MIGRATED", "LATER")
 
-        val filePath = csvEditor.createCSVFile( keywords, "testName.csv", "./")
+        val filePath = csvEditor.createCSVFile( keywords, "./testName.csv")
         
         val linesPerKeyword: MutableMap<String, Int> = mutableMapOf()
         linesPerKeyword["MIGRATED"] = 3

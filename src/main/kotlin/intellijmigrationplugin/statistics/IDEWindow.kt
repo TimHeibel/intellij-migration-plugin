@@ -8,7 +8,9 @@ import com.intellij.ui.content.ContentFactory
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.ui.dsl.gridLayout.HorizontalAlign
 import intellijmigrationplugin.annotationModel.AnnotationInformation
-import intellijmigrationplugin.statistics.component.*
+import intellijmigrationplugin.statistics.component.CSVFileComponent
+import intellijmigrationplugin.statistics.component.FileChooserComponent
+import intellijmigrationplugin.statistics.component.RunStatisticComponent
 import javax.swing.JPanel
 
 
@@ -31,24 +33,24 @@ class IDEWindow : ToolWindowFactory {
 
         private var annotationInformation = AnnotationInformation.instance
         private val csvFileComponent = CSVFileComponent()
-        private val csvNameComponent = CSVNameInputField()
+        //private val csvNameComponent = CSVNameInputField()
         private val fileChooserComponent = FileChooserComponent(project)
-        private val csvChooserComponent = CSVChooserComponent(project)
-        private val runStatisticComponent = RunStatisticComponent(fileChooserComponent, annotationInformation!!,csvFileComponent, csvChooserComponent, csvNameComponent)
+        //private val csvChooserComponent = CSVChooserComponent(project)
+        private val runStatisticComponent = RunStatisticComponent(fileChooserComponent, annotationInformation!!,csvFileComponent)
 
         fun getContent(): JPanel {
 
             val contentPane: JPanel = panel {
-                //TODO: put into Dialog #59
-                group("CSV-Info"){
-                    row {
-                        cell(csvChooserComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
-                    }
-                    row {
-
-                        cell(csvNameComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
-                    }
-                }
+//
+//                group("CSV-Info"){
+//                    row {
+//                        cell(csvChooserComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+//                    }
+//                    row {
+//
+//                        cell(csvNameComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
+//                    }
+//                }
                 group ("FileIgnore"){
 
                     row {

@@ -10,10 +10,9 @@ class CSVEditor {
     // name, 0, 6,4
 
 
-    fun createCSVFile( keywords: List<String>, csvName: String, csvPath: String ): String{
+    fun createCSVFile( keywords: List<String>, csvPath: String ): String{
 
-        val filePath = "$csvPath/$csvName.csv"
-        val file = File(filePath)
+        val file = File("$csvPath.csv")
         val headers = mutableListOf("filename")
 
         keywords.forEach { keyword ->
@@ -25,7 +24,7 @@ class CSVEditor {
         file.bufferedWriter().use { writer ->
             writer.write(headers.joinToString(","))
         }
-        return filePath
+        return "$csvPath.csv"
     }
 
     fun addLine(values: MutableMap<String, Int>, csvPath: String, fileName: String): String {
