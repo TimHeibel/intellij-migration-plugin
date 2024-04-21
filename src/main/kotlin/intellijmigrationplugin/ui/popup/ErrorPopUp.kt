@@ -9,7 +9,7 @@ import javax.swing.JPanel
 
 class ErrorPopUp {
 
-    fun createErrorPopUp(message: String, adText: String): JBPopup {
+    private fun createErrorPopUp(message: String, adText: String): JBPopup {
 
         val panel2: JPanel = panel {
                 row {

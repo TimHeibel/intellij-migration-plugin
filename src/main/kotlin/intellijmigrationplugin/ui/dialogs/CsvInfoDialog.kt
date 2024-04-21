@@ -18,7 +18,6 @@ class CsvInfoDialog: DialogWrapper(true) {
     val nameComponent : String
         get() = data.nameComponent
 
-
     init {
         title = "CSV Information"
         init()
@@ -35,7 +34,7 @@ class CsvInfoDialog: DialogWrapper(true) {
                 row {
                     cell(csvChooserComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
                 }
-                row("Enter Annotation-Comment:") {
+                row("Enter csv Name:") {
                     textField().bindText(data :: nameComponent)
                 }
             }
@@ -45,6 +44,4 @@ class CsvInfoDialog: DialogWrapper(true) {
 data class CSVModel(
     var nameComponent: String = ""
 )
-
-
 

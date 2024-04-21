@@ -7,7 +7,7 @@ import javax.swing.JComponent
 
 class ConformationPopUp {
 
-    fun createConformationPopup(): JBPopup {
+    private fun createConformationPopup(): JBPopup {
         val title = "Confirmation"
 
         val dialog = object : DialogWrapper(true) {
