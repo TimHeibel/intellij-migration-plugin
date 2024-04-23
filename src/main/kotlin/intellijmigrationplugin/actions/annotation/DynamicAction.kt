@@ -2,10 +2,8 @@ package intellijmigrationplugin.actions.annotation
 
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.DefaultActionGroup
-import com.intellij.openapi.actionSystem.KeyboardShortcut
 import com.intellij.openapi.diagnostic.thisLogger
 import intellijmigrationplugin.settings.MigrationSettingsState
-import com.intellij.openapi.keymap.KeymapManager
 
 /**
  * This class allows to dynamically registering and unregistering custom annotation actions
@@ -64,27 +62,6 @@ class DynamicAction {
             actionGroup.addAction(dynamicAction)
 
             actionManager.registerAction(actionId, dynamicAction)
-            registerKeyMapping(annotationType, actionId)
-
-        }
-
-        /**
-         * Registers key mappings for the provided annotation type and action ID.
-         * @param annotationType The annotation type for which a key mapping should be registered.
-         * @param actionId The ID of the action for which the key mapping should be registered.
-         */
-        private fun registerKeyMapping(annotationType: String, actionId: String) {
-
-            val keyMapping = MigrationSettingsState.instance.keywordShortcutMapping.find {it.first == annotationType }
-
-            if(keyMapping == null || keyMapping.second == "") {
-                return
-            }
-
-            val keyboardShortcut = KeyboardShortcut.fromString(keyMapping.second)
-
-            val keymapManager = KeymapManager.getInstance()
-            keymapManager.activeKeymap.addShortcut(actionId, keyboardShortcut)
         }
 
         /**
