@@ -5,9 +5,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.command.WriteCommandAction
-import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils
 import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.canMerge
 import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.mergeAnnotations
+import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.removeAnnotation
 import intellijmigrationplugin.annotationModel.util.AnnotationDetection.Companion.detectAnnotationInFile
 
 class CleanupAction : AnAction() {
@@ -32,16 +32,25 @@ class CleanupAction : AnAction() {
         val document = editor.document
         val virtualFile = event.getRequiredData(PlatformDataKeys.VIRTUAL_FILE)
 
-        val commentStart : String = AnnotationActionUtils.getCommentTypeByEvent(event)
-
         WriteCommandAction.runWriteCommandAction(project) {
 
             val annotations = detectAnnotationInFile(document, virtualFile.extension).reversed()
 
             for(i in 0..annotations.size - 2) {
+                //Remove lose end's
+                if(annotations[i].type == "END") {
+                    document.removeAnnotation(annotations[i])
+                    continue
+                }
+
                 if(document.canMerge(annotations[i], annotations[i + 1], virtualFile.path)) {
                     document.mergeAnnotations(annotations[i], annotations[i + 1])
                 }
+            }
+
+            //Remove lose end's
+            if(annotations.last().type == "END") {
+                document.removeAnnotation(annotations.last())
             }
         }
     }
