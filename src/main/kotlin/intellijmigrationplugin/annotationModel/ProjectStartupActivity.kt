@@ -5,6 +5,7 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.StartupActivity
 import com.intellij.psi.PsiDocumentManager
+import intellijmigrationplugin.actions.annotation.DynamicAction
 import intellijmigrationplugin.annotationModel.documents.AnnotationDocumentHandler
 import intellijmigrationplugin.annotationModel.documents.OpenDocumentManager
 
@@ -33,6 +34,7 @@ class ProjectStartupActivity: StartupActivity {
 
         AnnotationInformation.instance!!.documentManager = documentManager
 
+        DynamicAction.resetCustomAnnotation()
     }
 
 }

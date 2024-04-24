@@ -28,7 +28,7 @@ open class AnnotationSnippet(var start: Int, var end: Int, var hasEnd: Boolean, 
          */
         internal fun fromStartLine(line : String, commentStart: String, start: Int = 0, end: Int = 0, hasEnd: Boolean = false) : AnnotationSnippet? {
 
-            val regex = Regex("^\\h*${Regex.escape(commentStart)}" +
+            val regex = Regex("^\\h*${Regex.escape(commentStart)}\\h*" +
                     "(?<annotationType>(\\S+))\\h*(?<addInfo>((\\S|\\h+\\S)+)|$)(\$|(\\s+\$))", RegexOption.IGNORE_CASE)
 
             val match = regex.matchEntire(line) ?: return null
