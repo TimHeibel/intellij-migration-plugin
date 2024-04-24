@@ -1,12 +1,13 @@
 package intellijmigrationplugin.actions.annotation
 
-import intellijmigrationplugin.annotationModel.AnnotationInformation
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.ui.DialogWrapper
+import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.getCommentTypeByEvent
+import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.getFileTypeByEvent
 import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.placeAnnotation
 import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.placeOneLineAnnotation
 import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.removeAnnotation
@@ -234,38 +235,6 @@ abstract class AnnotationAction(private val annotationType : String, private val
 
             document.insertString(document.getLineStartOffset(endLine + 1), "${collisionStartLine}\n")
         }
-    }
-
-    private fun getCommentTypeByEvent(event: AnActionEvent) : String {
-
-        val default = "//"
-
-        val fType = getFileTypeByEvent(event)
-                ?: return default
-
-        val annotationInformation = AnnotationInformation.instance
-            ?: return default
-
-        annotationInformation.singleCommentMapping[".$fType"]?.let {
-            return it
-        }
-
-        return default
-    }
-
-    /**
-     * Retrieves the comment syntax based on the event.
-     *
-     * @param event The action event triggered by the user.
-     * @return The comment syntax used in the document, or the default if not found.
-     */
-    private fun getFileTypeByEvent(event: AnActionEvent) : String? {
-
-        val vFile = event.getData(PlatformCoreDataKeys.VIRTUAL_FILE)
-                ?: return null
-
-        return vFile.extension
-
     }
 
     /**

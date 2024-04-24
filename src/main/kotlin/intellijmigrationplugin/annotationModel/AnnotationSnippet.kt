@@ -101,6 +101,19 @@ open class AnnotationSnippet(var start: Int, var end: Int, var hasEnd: Boolean, 
     override fun toString(): String {
         return "Startline: $start, Endline: $end, Type: $type"
     }
+
+
+    /**
+     * Checks if the given [annotation] is similar to the current [AnnotationSnippet].
+     * Two annotations are considered similar if they have the same type and additional information.
+     *
+     * @param annotation The annotation snippet to compare.
+     * @return `true` if the annotations are similar, `false` otherwise.
+     */
+    internal fun isSimilar(annotation: AnnotationSnippet) : Boolean {
+        return this.type == annotation.type && this.addInfo == annotation.addInfo
+    }
+
 }
 
 
