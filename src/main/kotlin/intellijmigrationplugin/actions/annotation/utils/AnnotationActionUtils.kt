@@ -213,7 +213,7 @@ class AnnotationActionUtils {
 
                 return true
             }
-            return false;
+            return false
         }
     }
 }
