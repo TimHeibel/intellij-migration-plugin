@@ -23,12 +23,11 @@ class AnnotationActionUtils {
          */
         internal fun getCommentTypeByEvent(event: AnActionEvent) : String {
 
-            val default = "//"
+            val annotationInformation = AnnotationInformation.instance!!
+
+            val default = annotationInformation.defaultSingleComment
 
             val fType = getFileTypeByEvent(event)
-                    ?: return default
-
-            val annotationInformation = AnnotationInformation.instance
                     ?: return default
 
             annotationInformation.singleCommentMapping[".$fType"]?.let {

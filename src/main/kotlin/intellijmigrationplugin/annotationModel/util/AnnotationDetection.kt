@@ -23,7 +23,8 @@ class AnnotationDetection {
          */
         fun detectAnnotationInFile(document: Document, fileType: String?): ArrayList<AnnotationSnippet> {
             val annotationSnippets = ArrayList<AnnotationSnippet>()
-            val commentType = AnnotationInformation.instance?.singleCommentMapping?.get(".$fileType") ?: "//"
+            val commentType = AnnotationInformation.instance?.singleCommentMapping?.get(".$fileType")
+                ?: AnnotationInformation.instance!!.defaultSingleComment
             val annotationMarkers = AnnotationInformation.instance?.markerColorMapping?.keys ?: emptySet()
 
             // Create a mapping of annotation markers to their corresponding regex patterns
@@ -95,7 +96,7 @@ class AnnotationDetection {
         suspend fun detectAnnotationInFile(document: Document, fileType: String?, lineStart: Int, lineEnd: Int): MutableList<Pair<Int, String>> {
             val outputList = mutableListOf<Pair<Int, String>>()
             val commentType = AnnotationInformation.instance!!.singleCommentMapping[fileType]
-                    ?: "//"
+                    ?: AnnotationInformation.instance!!.defaultSingleComment
             val keywords = AnnotationInformation.instance!!.keywords
             val regexes = keywords.map { x ->  getAnnotationRegex(commentType, x) }
             val regexEnd = getAnnotationRegex(commentType, "end")
