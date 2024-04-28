@@ -1,6 +1,7 @@
 package intellijmigrationplugin.settings
 
 import com.intellij.openapi.options.Configurable
+import intellijmigrationplugin.annotationModel.AnnotationInformation
 import intellijmigrationplugin.settings.components.FileTypeMapping
 import org.jetbrains.annotations.Nls
 import javax.swing.JComponent
@@ -46,6 +47,7 @@ internal class MigrationsSettingsConfigurable : Configurable {
             convertTableModelToList(settingsComponent?.keywordColorMappingComponent?.tableModel!!)
         settings.fileTypeCommentMapping =
             convertTableModelToFileTypeMappingList(settingsComponent?.filetypeCommentMappingComponent?.tableModel!!)
+        AnnotationInformation.instance!!.documentManager.updateDocumentVisualisation()
     }
 
     override fun reset() {

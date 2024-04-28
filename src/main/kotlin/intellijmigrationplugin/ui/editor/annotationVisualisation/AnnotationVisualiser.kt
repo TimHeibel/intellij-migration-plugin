@@ -1,13 +1,11 @@
-import com.intellij.openapi.editor.event.*
-import intellijmigrationplugin.annotationModel.markervisualisation.HighlightAnnotationSnippet
+import intellijmigrationplugin.annotationModel.AnnotationSnippet
 
 
 interface AnnotationVisualiser {
 
-    fun visualiseAnnotation(snippets: MutableList<HighlightAnnotationSnippet>) {}
-    fun updateAnnotationVisualisation(snippets: MutableList<HighlightAnnotationSnippet>) {}
-
+    fun visualiseAnnotation(snippets: MutableList<AnnotationSnippet>) {}
+    fun updateAnnotationVisualisation(snippets: MutableList<AnnotationSnippet>) {}
     fun turnVisualisationOff()
-    fun turnVisualisationOn(snippets: MutableList<HighlightAnnotationSnippet>)
+    fun turnVisualisationOn(snippets: MutableList<AnnotationSnippet>)
 
 }

@@ -15,10 +15,7 @@ import intellijmigrationplugin.annotationModel.AnnotationInformation
  */
 class ShowAnnotationTypeAction: AnAction() {
 
-
-
     override fun actionPerformed(e: AnActionEvent) {
-
         val information = AnnotationInformation.instance!!
 
         val editor = e.getData(CommonDataKeys.EDITOR)!!
@@ -33,6 +30,6 @@ class ShowAnnotationTypeAction: AnAction() {
         if (snippet == null) return
 
         HintManager.getInstance().showInformationHint(editor, snippet.type)
-
     }
+
 }

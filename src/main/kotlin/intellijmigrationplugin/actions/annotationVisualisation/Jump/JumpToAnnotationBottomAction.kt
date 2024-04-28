@@ -3,7 +3,7 @@ package intellijmigrationplugin.actions.annotationVisualisation.Jump
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
-import intellijmigrationplugin.actions.annotationVisualisation.JumpToAnnotationUtil
+import intellijmigrationplugin.annotationModel.util.JumpToAnnotationUtil
 import intellijmigrationplugin.annotationModel.AnnotationInformation
 
 /**

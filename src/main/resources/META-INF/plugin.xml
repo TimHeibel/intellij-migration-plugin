@@ -36,15 +36,16 @@
         </action>
 
 
-       <!-- <action
+       <action
                 id = "intellijmigrationplugin.actions.annotationVisualisation.JumpToFileAction"
                 class = "intellijmigrationplugin.actions.annotationVisualisation.JumpToFileAction"
                 text = "Open Migration Target File"
                 description = "Opens the specified target file from the migration annotation">
-                <add-to-group
-                    group-id="EditorPopupMenu"
-                    anchor= "last"/>
-        </action> -->
+           <add-to-group
+                   group-id="intellijmigrationplugin.AnnotationAction.Group"
+                   anchor= "last"/>
+        </action>
+
         <action
                 id = "intellijmigrationplugin.actions.annotationVisualisation.ShowAnnotationVisualisationAction"
                 class = "intellijmigrationplugin.actions.annotationVisualisation.ShowAnnotationVisualisationAction"
@@ -107,8 +108,8 @@
         <action
                 id = "intellijmigrationplugin.actions.annotationVisualisation.ShowAnnotationTypeAction"
                 class = "intellijmigrationplugin.actions.annotationVisualisation.ShowAnnotationTypeAction"
-                text = "Show Annotation"
-                description = "Shows the current annotation type">
+                text = "Show Annotation Type"
+                description = "Shows the current annotation type at the cursor position.">
             <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group"/>
             <keyboard-shortcut
                     keymap="$default"
