@@ -13,13 +13,10 @@ class LineAnalyser {
 
         val csvEditor = CSVEditor()
         //get file specific information
-        val annotationInformation = AnnotationInformation.instance
-        val importMapping = annotationInformation!!.importMapping
-        val singleCommentMapping = annotationInformation.singleCommentMapping
-        val multiCommentMapping = annotationInformation.multiCommentMapping
+        val annotationInformation = AnnotationInformation.instance!!
         val keywords = annotationInformation.keywords
 
-        val fileInformation = getFileInformation(filePath, importMapping, singleCommentMapping, multiCommentMapping)
+        val fileInformation = getFileInformation(filePath, annotationInformation)
 
         val regex = setRegex(fileInformation)
         val statisticMap = analiseLines(filePath, regex, fileInformation, keywords)
@@ -30,27 +27,25 @@ class LineAnalyser {
 
     fun getFileInformation(
         filePath: String,
-        importMapping: HashMap<String, String>?,
-        singleCommentMapping: HashMap<String, String>?,
-        multiCommentMapping: HashMap<String, String>?): Array<String> {
+        annotationInformation: AnnotationInformation): Array<String> {
 
-        //initialise Array
         val fileInformationArray: Array<String> = Array(5){" "}
         //get String ending
         val fileExtension = "." + filePath.substringAfterLast('.', "")
         //0 = import
-         fileInformationArray[0] = importMapping?.get(fileExtension) ?:"import"
+         fileInformationArray[0] = annotationInformation.importMapping[fileExtension] ?:annotationInformation.defaultImport
 
 
         //1 = single
-        fileInformationArray[1] = singleCommentMapping?.getOrDefault(fileExtension, "//")!!
+        fileInformationArray[1] =
+            annotationInformation.singleCommentMapping.getOrDefault(fileExtension, annotationInformation.defaultSingleComment)
         //is usable in strings
         fileInformationArray[2] = fileInformationArray[1].map { "\\$it" }.joinToString("")
 
 
         //2,3 multilineComments start and end
-        val multiComments = multiCommentMapping?.getOrDefault(fileExtension, "/* */")
-        multiComments?.split(" ")?.let { parts ->
+        val multiComments = annotationInformation.multiCommentMapping.getOrDefault(fileExtension, annotationInformation.defaultMultiComment)
+        multiComments.split(" ").let { parts ->
             if (parts.size == 2) {
                 fileInformationArray[3] = parts[0]
                 fileInformationArray[4] = parts[1]
