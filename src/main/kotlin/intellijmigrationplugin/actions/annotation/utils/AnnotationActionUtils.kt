@@ -183,7 +183,8 @@ class AnnotationActionUtils {
 
         internal fun Document.containsCode(startLine: Int, endLine: Int, filePath: String) : Boolean {
 
-            val fileInformation = LineAnalyser().getFileInformation(filePath, AnnotationInformation.instance?.importMapping, AnnotationInformation.instance?.singleCommentMapping, AnnotationInformation.instance?.multiCommentMapping)
+            val annotationInformation = AnnotationInformation.instance!!
+            val fileInformation = LineAnalyser().getFileInformation(filePath, annotationInformation)
 
             var multiLineCommentActive = false
 

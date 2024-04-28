@@ -3,7 +3,6 @@
   <component name="FacetManager">
     <facet external-system-id="GRADLE" type="kotlin-language" name="Kotlin">
       <configuration version="5" platform="JVM 17" allPlatforms="JVM [17]" useProjectSettings="false">
-        <compilerSettings />
         <compilerArguments>
           <flagArguments>
             <flagArg name="allowNoSourceFiles" arg="true" />
@@ -20,11 +19,11 @@
           <arrayArguments>
             <arrayArg name="pluginClasspaths">
               <args>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-jvm/1.9.22/79c7960eb58c43865829cb2f420cf8806f59f8b1/kotlin-scripting-jvm-1.9.22.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-common/1.9.22/afe984c6e35d6ac356dbdeb79926474ea68ca7d1/kotlin-scripting-common-1.9.22.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.9.22/d6c44cd08d8f3f9bece8101216dbe6553365c6e3/kotlin-stdlib-1.9.22.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-jvm/1.9.23/12296ecbca7fc45d259e04cf8080bae89ca18a45/kotlin-scripting-jvm-1.9.23.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-common/1.9.23/962df7abf28182fc9af5cddfa721766d9c3fe828/kotlin-scripting-common-1.9.23.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.9.23/dbaadea1f5e68f790d242a91a38355a83ec38747/kotlin-stdlib-1.9.23.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/1.9.22/f8139a46fc677ec9badc49ae954392f4f5e7e7c7/kotlin-script-runtime-1.9.22.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/1.9.23/1375a7343d05891119fac57f8b50a7578420ac27/kotlin-script-runtime-1.9.23.jar</arg>
               </args>
             </arrayArg>
             <arrayArg name="pluginOptions" />
@@ -44,44 +43,67 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains:annotations:24.0.1" level="project" />
     <orderEntry type="module-library" scope="PROVIDED">
-      <library name="Gradle: com.jetbrains:ideaIC:2022.3.3">
+      <library name="Gradle: com.jetbrains:ideaIC:2022.2.2">
         <ANNOTATIONS>
           <root url="jar://$MAVEN_REPOSITORY$/com/jetbrains/intellij/idea/ideaIU/2022.3.3/ideaIU-2022.3.3-annotations.zip!/" />
         </ANNOTATIONS>
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/3rd-party-rt.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/3rd-party-native.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/ant/lib/ant.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/app.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/byte-buddy-agent.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/error-prone-annotations.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/external-system-rt.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/externalProcess-rt.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/forms_rt.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/groovy.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/idea_rt.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/intellij-coverage-agent-1.0.682.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/intellij-test-discovery.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/jps-model.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/jsch-agent.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/jsp-base.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/junit4.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/platform-duplicates-analysis.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/platform-objectSerializer-annotations.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/platform-statistics-devkit.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/platform-structuralSearch.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/protobuf.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/rd.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/stats.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/testFramework.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/tools-testsBootstrap.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/util.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/util_rt.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/xml-dom.jar!/" />
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/xml-dom-impl.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/3rd-party-rt.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/ant/lib/ant.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/app.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/asm-9.2.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/asm-analysis-9.2.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/asm-commons-9.2.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/asm-tree-9.2.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/asm-util-9.2.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/byte-buddy-agent.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/dbus-java-3.2.1.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/dom-impl.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/dom-openapi.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/duplicates-analysis.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/error-prone-annotations.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/external-system-rt.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/externalProcess-rt.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/forms_rt.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/groovy.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/grpc-netty-shaded.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/idea_rt.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/intellij-coverage-agent-1.0.673.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/intellij-test-discovery.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/java-utils-1.0.6.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/jffi-1.3.9.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/jffi-1.3.9-native.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/jna.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/jnr-a64asm-1.0.0.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/jnr-ffi-2.2.12.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/jnr-x86asm-1.0.2.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/jps-model.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/jsch-agent.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/jsp-base-openapi.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/junit4.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/junixsocket-core.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/lz4-java.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/platform-objectSerializer-annotations.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/platform-statistics-devkit.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/protobuf.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/pty4j.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/rd-core.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/rd-framework.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/rd-swing.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/rd-text.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/stats.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/structuralsearch.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/testFramework.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/tests_bootstrap.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/uast-tests.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/util.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/util_rt.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/20b2316f0038ec4b5853ee0725f05df46b6aa206/ideaIC-2022.2.2/lib/winp.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.2.2/4b60fbe5ec19e8ac21f7b5727ac4ed17279f9eba/ideaIC-2022.2.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
   </component>
