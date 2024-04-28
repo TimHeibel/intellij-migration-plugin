@@ -28,7 +28,7 @@ open class AnnotationSnippet(var start: Int, var end: Int, var hasEnd: Boolean, 
          */
         internal fun fromStartLine(line : String, commentStart: String, start: Int = 0, end: Int = 0, hasEnd: Boolean = false) : AnnotationSnippet? {
 
-            val regex = Regex("^\\h*${Regex.escape(commentStart)}" +
+            val regex = Regex("^\\h*${Regex.escape(commentStart)}\\h*" +
                     "(?<annotationType>(\\S+))\\h*(?<addInfo>((\\S|\\h+\\S)+)|$)(\$|(\\s+\$))", RegexOption.IGNORE_CASE)
 
             val match = regex.matchEntire(line) ?: return null
@@ -112,6 +112,17 @@ open class AnnotationSnippet(var start: Int, var end: Int, var hasEnd: Boolean, 
 
     override fun toString(): String {
         return "Startline: $start, Endline: $end, Type: $type"
+    }
+
+    /**
+     * Checks if the given [annotation] is similar to the current [AnnotationSnippet].
+     * Two annotations are considered similar if they have the same type and additional information.
+     *
+     * @param annotation The annotation snippet to compare.
+     * @return `true` if the annotations are similar, `false` otherwise.
+     */
+    internal fun isSimilar(annotation: AnnotationSnippet) : Boolean {
+        return this.type == annotation.type && this.addInfo == annotation.addInfo
     }
 
 }

@@ -2,6 +2,7 @@ package intellijmigrationplugin.settings
 
 import com.intellij.openapi.options.Configurable
 import intellijmigrationplugin.annotationModel.AnnotationInformation
+import intellijmigrationplugin.actions.annotation.DynamicAction
 import intellijmigrationplugin.settings.components.FileTypeMapping
 import org.jetbrains.annotations.Nls
 import javax.swing.JComponent
@@ -48,6 +49,7 @@ internal class MigrationsSettingsConfigurable : Configurable {
         settings.fileTypeCommentMapping =
             convertTableModelToFileTypeMappingList(settingsComponent?.filetypeCommentMappingComponent?.tableModel!!)
         AnnotationInformation.instance!!.documentManager.updateDocumentVisualisation()
+        DynamicAction.resetCustomAnnotation()
     }
 
     override fun reset() {
@@ -90,11 +92,9 @@ internal class MigrationsSettingsConfigurable : Configurable {
             if (filetype.isNotEmpty()) {
                 val fileTypeMapping = FileTypeMapping(filetype, singleLineComment, multiLineComment, importStatement)
                 list.add(fileTypeMapping)
-                }
             }
-
-            return list
         }
 
-
+        return list
     }
+}

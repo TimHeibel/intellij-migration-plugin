@@ -47,6 +47,13 @@ class AnnotationDetection {
                 if (!line.startsWithComment(commentType)) continue
 
                 if (!annotationActive) {
+                    // Look for END annotations without a starting annotation
+                    if (regexEnd.matches(line)) {
+                        val annotation = AnnotationSnippet(lineIndex, lineIndex, false, "END")
+                        annotationSnippets.add(annotation)
+                        continue
+                    }
+
                     // Look for a line that starts a new annotation
                     markerRegexMapping.entries.find { it.value.containsMatchIn(line) }?.let { _ ->
                         annotationActive = true

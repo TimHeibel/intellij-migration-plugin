@@ -16,6 +16,14 @@
                     anchor= "last"/>
         </group>
         <group
+                id = "intellijmigrationplugin.AnnotationAction.Place"
+                text = "Place"
+                popup = "true">
+            <add-to-group
+                    group-id="intellijmigrationplugin.AnnotationAction.Group"
+                    anchor= "first"/>
+        </group>
+        <group
                 id = "intellijmigrationplugin.AnnotationAction.Group.Jump"
                 text = "Jump"
                 popup = "true">
@@ -70,6 +78,14 @@
             <keyboard-shortcut
                     keymap="$default"
                     first-keystroke="control alt E"/>
+        </action>
+        <action
+                id = "intellijmigrationplugin.actions.annotation.CleanupAction"
+                class = "intellijmigrationplugin.actions.annotation.CleanupAction"
+                text = "Cleanup Annotations"
+                description = "Concatenates similar and consecutive Annotations, if there
+                is no executable code between them">
+            <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group"/>
         </action>
 
         <action

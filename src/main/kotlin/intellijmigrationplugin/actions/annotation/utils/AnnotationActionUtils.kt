@@ -1,14 +1,58 @@
 package intellijmigrationplugin.actions.annotation.utils
 
+import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.PlatformCoreDataKeys
+import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.util.TextRange
+import intellijmigrationplugin.annotationModel.AnnotationInformation
 import intellijmigrationplugin.annotationModel.AnnotationSnippet
+import intellijmigrationplugin.statistics.LineAnalyser
 
 /**
- * Utility class for performing actions related to annotations within a document.
+ * Utility class for performing actions related to annotations within a document or editor.
  */
 class AnnotationActionUtils {
     companion object {
+
+        /**
+         * Retrieves the comment syntax based on the event.
+         *
+         * @param event The action event triggered by the user.
+         * @return The comment syntax used in the document, or the default if not found.
+         */
+        internal fun getCommentTypeByEvent(event: AnActionEvent) : String {
+
+            val default = "//"
+
+            val fType = getFileTypeByEvent(event)
+                    ?: return default
+
+            val annotationInformation = AnnotationInformation.instance
+                    ?: return default
+
+            annotationInformation.singleCommentMapping[".$fType"]?.let {
+                return it
+            }
+
+            return default
+        }
+
+        /**
+         * Retrieves the file type based on the given [event].
+         *
+         * @param event The action event triggered by the user.
+         * @return The file extension representing the file type, or `null` if the file type cannot be determined.
+         */
+        internal fun getFileTypeByEvent(event: AnActionEvent) : String? {
+
+            val vFile = event.getData(PlatformCoreDataKeys.VIRTUAL_FILE)
+                    ?: return null
+
+            return vFile.extension
+
+        }
+
 
         /**
          * Removes the specified [annotation] from the [Document].
@@ -89,6 +133,88 @@ class AnnotationActionUtils {
             val range = TextRange(this.getLineStartOffset(line), endOffset)
 
             this.replaceString(range.startOffset, range.endOffset, "")
+        }
+
+        /**
+         * Merges two annotations represented by [first] and [second] into a single annotation in the document.
+         * Note: This function does not check if the annotations are consecutive and similar.
+         *
+         * @param first The first annotation snippet.
+         * @param second The second annotation snippet.
+         */
+        internal fun Document.mergeAnnotations(first: AnnotationSnippet, second: AnnotationSnippet) {
+            var startAnnotation = first
+            var endAnnotation = second
+
+            if(first.start > second.start) {
+                startAnnotation = second
+                endAnnotation = first
+            }
+
+            if(startAnnotation.end > endAnnotation.start) {
+                thisLogger().warn("Annotations overlap, which should not be possible. Abort merge")
+                return
+            }
+
+            removeLine(endAnnotation.start)
+
+            if(startAnnotation.hasEnd) {
+                removeLine(startAnnotation.end)
+            }
+        }
+
+        internal fun Document.canMerge(first: AnnotationSnippet, second: AnnotationSnippet, filePath: String) : Boolean {
+            if(!first.isSimilar(second)) {
+                return false
+            }
+
+            var startAnnotation = first
+            var endAnnotation = second
+
+            if(first.start > second.start) {
+                startAnnotation = second
+                endAnnotation = first
+            }
+
+            val startLine = startAnnotation.end + 1
+            val endLine = endAnnotation.start - 1
+
+            return !containsCode(startLine, endLine, filePath)
+        }
+
+        internal fun Document.containsCode(startLine: Int, endLine: Int, filePath: String) : Boolean {
+
+            val fileInformation = LineAnalyser().getFileInformation(filePath, AnnotationInformation.instance?.importMapping, AnnotationInformation.instance?.singleCommentMapping, AnnotationInformation.instance?.multiCommentMapping)
+
+            var multiLineCommentActive = false
+
+            for (lineNumber in startLine .. endLine) {
+                val line = getLine(lineNumber)
+
+                if(multiLineCommentActive) {
+                    if(line.startsWith(fileInformation[4])) {
+                        multiLineCommentActive = false
+                    }
+                    continue
+                }
+
+                if(line.isBlank()) {
+                    continue
+                }
+
+                if(line.startsWith(fileInformation[0]) ||
+                    line.startsWith(fileInformation[1])) {
+                    continue
+                }
+
+                if(line.startsWith(fileInformation[3])) {
+                    multiLineCommentActive = true
+                    continue
+                }
+
+                return true
+            }
+            return false;
         }
     }
 }
