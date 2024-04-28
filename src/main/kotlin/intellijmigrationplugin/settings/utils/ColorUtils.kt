@@ -6,8 +6,8 @@ import java.awt.Color
 /**
  * Utility class for working with predefined colors and finding the closest color name based on RGB values.
  */
-private fun initColorList(): ArrayList<ColorUtils.ColorName> {
-    val colorList = ArrayList<ColorUtils.ColorName>()
+private fun initColorList(): ArrayList<ColorName> {
+    val colorList = ArrayList<ColorName>()
     colorList.add(ColorName("Alice Blue", 0xF0, 0xF8, 0xFF))
     colorList.add(ColorName("Antique White", 0xFA, 0xEB, 0xD7))
     colorList.add(ColorName("Aqua", 0x00, 0xFF, 0xFF))

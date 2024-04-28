@@ -1,9 +1,8 @@
 package intellijmigrationplugin.annotationModel
 
 import com.intellij.openapi.application.ApplicationManager
+import intellijmigrationplugin.annotationModel.documents.OpenDocumentManager
 import intellijmigrationplugin.settings.MigrationSettingsState
-import intellijmigrationplugin.ui.editor.DocumentChangeListener
-import intellijmigrationplugin.ui.editor.FileSelectionChangeListener
 import java.awt.Color
 import intellijmigrationplugin.settings.components.FileTypeMapping
 
@@ -19,6 +18,9 @@ class AnnotationInformation private constructor() {
                 return field!!
             }
     }
+
+    lateinit var documentManager: OpenDocumentManager
+    var lastCursorLine: Int? = null
 
     private val settings: MigrationSettingsState
         get() {
@@ -84,14 +86,12 @@ class AnnotationInformation private constructor() {
             return typeHashMap
         }
 
-
-    lateinit var fileSelectionChangeManager: FileSelectionChangeListener
     var showMarker: Boolean = true
         set(value) {
             field = value
-            if (!this::fileSelectionChangeManager.isInitialized) return
-            if (value) fileSelectionChangeManager.turnVisualisationOn()
-            else fileSelectionChangeManager.turnVisualisationOff()
+            if (!this::documentManager.isInitialized) return
+            if (value) documentManager.turnVisualisationOn()
+            else documentManager.turnVisualisationOff()
         }
 
     val singleCommentMapping: HashMap<String, String>
@@ -104,6 +104,11 @@ class AnnotationInformation private constructor() {
             }
 
             return singleCommentMapping
+        }
+
+    val defaultSingleComment: String
+        get() {
+            return singleCommentMapping[".*"] ?: "//"
         }
 
     val multiCommentMapping: HashMap<String, String>
@@ -119,6 +124,11 @@ class AnnotationInformation private constructor() {
             return multiCommentMapping
         }
 
+    val defaultMultiComment: String
+        get() {
+            return singleCommentMapping[".*"] ?: "/* */"
+        }
+
     val importMapping: HashMap<String, String>
         get() {
             val typeMapping = fileTypeMapping
@@ -130,6 +140,11 @@ class AnnotationInformation private constructor() {
             }
 
             return importMapping
+        }
+
+    val defaultImport : String
+        get() {
+            return importMapping[".*"] ?: "import"
         }
 
 

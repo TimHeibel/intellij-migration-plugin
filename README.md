@@ -1,44 +1,40 @@
-# intellij-migration-plugin
-
-![Build](https://github.com/TimHeibel/intellij-migration-plugin/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
-
-## Template ToDo list
-- [x] Create a new [IntelliJ Platform Plugin Template][template] project.
-- [ ] Get familiar with the [template documentation][template].
-- [ ] Adjust the [pluginGroup](./gradle.properties), [plugin ID](./src/main/resources/META-INF/plugin.xml) and [sources package](./src/main/kotlin).
-- [ ] Adjust the plugin description in `README` (see [Tips][docs:plugin-description])
-- [ ] Review the [Legal Agreements](https://plugins.jetbrains.com/docs/marketplace/legal-agreements.html?from=IJPluginTemplate).
-- [ ] [Publish a plugin manually](https://plugins.jetbrains.com/docs/intellij/publishing-plugin.html?from=IJPluginTemplate) for the first time.
-- [ ] Set the `PLUGIN_ID` in the above README badges.
-- [ ] Set the [Plugin Signing](https://plugins.jetbrains.com/docs/intellij/plugin-signing.html?from=IJPluginTemplate) related [secrets](https://github.com/JetBrains/intellij-platform-plugin-template#environment-variables).
-- [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html?from=IJPluginTemplate).
-- [ ] Click the <kbd>Watch</kbd> button on the top of the [IntelliJ Platform Plugin Template][template] to be notified about releases containing new features and fixes.
 
 <!-- Plugin description -->
-This Fancy IntelliJ Platform Plugin is going to be your implementation of the brilliant ideas that you have.
-
-This specific section is a source for the [plugin.xml](/src/main/resources/META-INF/plugin.xml) file which will be extracted by the [Gradle](/build.gradle.kts) during the build process.
-
-To keep everything working, do not remove `<!-- ... -->` sections. 
+# MigrateMate
+## Introduction
+MigrateMate is an innovative IntelliJ plugin designed to enhance the experience of migrating and managing legacy code. It provides intuitive visualization, dynamic customization, and efficient navigation, streamlining the legacy code migration process.
 <!-- Plugin description end -->
 
-## Installation
+## Features
+- **Dynamic Keyword Customization**: Add keywords dynamically to suit your project's specific needs.
+- **Enhanced File Type Mapping**: Users can now specify the format of import statements and define both single-line and multi-line comments for different file formats.
+- **Migration Status Visualization**: Color-code legacy code annotations for easy identification (e.g., MIGRATED in green, LATER in yellow, UNUSED in gray).
+- **Code Navigation**: Quick navigation between legacy and migrated code.
+- **Migration Statistics**: Displays comprehensive statistics on the migration process.
+- **Customizability**: Customize annotation color schemes, file type mappings, and more.
 
-- Using the IDE built-in plugin system:
-  
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "intellij-migration-plugin"</kbd> >
-  <kbd>Install</kbd>
-  
-- Manually:
+## Getting Started
 
-  Download the [latest release](https://github.com/TimHeibel/intellij-migration-plugin/releases/latest) and install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
+### Installation
+1. WIP: Download and install MigrateMate via IntelliJ's plugin marketplace.
+   2. Alternatively, download the source code and [build the jar](https://github.com/TimHeibel/intellij-migration-plugin/wiki/How-to-export-an-IntelliJ-Plugin)
+2. Configure the plugin settings to tailor it to your project's needs.
 
+### Usage
 
----
-Plugin based on the [IntelliJ Platform Plugin Template][template].
+- Enable MigrateMate through IntelliJ's settings.
+- Use the plugin's features to manage and track the migration of your legacy code.
 
-[template]: https://github.com/JetBrains/intellij-platform-plugin-template
-[docs:plugin-description]: https://plugins.jetbrains.com/docs/intellij/plugin-user-experience.html#plugin-description-and-presentation
+## Configuration
+
+- **Dynamic Keywords**: Add and modify keywords according to your migration strategy.
+- **File Type Mapping**: Customize how the plugin recognizes and processes different file types, including import statements and comment types.
+- **Custom Color Scheme**: Personalize the color-coding of annotations.
+
+## Contributing
+
+We welcome contributions to MigrateMate! Feel free to submit pull requests or report issues on our GitHub page.
+
+## License
+
+MigrateMate is licensed under [MIT](LICENSE.txt).
