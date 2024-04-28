@@ -4,21 +4,15 @@ import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class CSVEditor {
-    // filename, keyword1, keyword..., keywordn, sum
+    // filename, keyword1, keyword..., keyword, sum
     // name, 0, 6,4
 
-    fun createCSVFile( keywords: List<String>, legacyPath: String): String{
-        //create fileName
-        val currentDateTime = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd|HH:mm:ss")
-        val currentDateAndTime = currentDateTime.format(formatter)
-        val filePath = "$legacyPath/newStatistics$currentDateAndTime.csv"
 
-        val file = File(filePath)
+    fun createCSVFile( keywords: List<String>, csvPath: String ): String{
+
+        val file = File("$csvPath.csv")
         val headers = mutableListOf("filename")
 
         keywords.forEach { keyword ->
@@ -30,12 +24,12 @@ class CSVEditor {
         file.bufferedWriter().use { writer ->
             writer.write(headers.joinToString(","))
         }
-        return filePath
+        return "$csvPath.csv"
     }
 
     fun addLine(values: MutableMap<String, Int>, csvPath: String, fileName: String): String {
 
-        var line = StringBuilder("$fileName,")
+        val line = StringBuilder("$fileName,")
         var sum = 0
         for ((keyword, value) in values) {
             sum += value
@@ -62,10 +56,9 @@ class CSVEditor {
     fun endLine(csvPath: String){
 
         val inputFile = File(csvPath)
-        var line: String
-        var sumRow: String = "Total,"
+        var sumRow = "Total,"
 
-        inputFile.bufferedReader().use { br ->
+        inputFile.bufferedReader().use {
             val lines = inputFile.readLines()
 
             val columnSums = MutableList(lines[0].split(",").size) { 0 }

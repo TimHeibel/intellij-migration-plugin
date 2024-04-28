@@ -38,9 +38,6 @@
                 text = "Open Annotation Dialog"
                 description = "Opens Dialog to enter Annotation-Type and additional informations">
             <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group"/>
-            <keyboard-shortcut
-                    keymap="$default"
-                    first-keystroke="control alt W"/>
         </action>
 
 
@@ -65,8 +62,6 @@
             <add-to-group
                     group-id="intellijmigrationplugin.AnnotationAction.Group"
                     anchor= "last"/>
-
-            <keyboard-shortcut keymap="$default" first-keystroke="control alt shift o"/>
             <!-- control == option, alt = command, meta = control -->
         </action>
         <action
@@ -75,9 +70,6 @@
                 text = "Remove Annotations"
                 description = "Remove annotations in the given code-segment">
             <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group"/>
-            <keyboard-shortcut
-                    keymap="$default"
-                    first-keystroke="control alt E"/>
         </action>
         <action
                 id = "intellijmigrationplugin.actions.annotation.CleanupAction"
@@ -94,9 +86,6 @@
                 text = "To Top"
                 description = "Jumps if the cursor is in an active annotation">
             <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group.Jump"/>
-            <keyboard-shortcut
-                    keymap="$default"
-                    first-keystroke="control alt shift j"/>
         </action>
 
         <action
@@ -105,9 +94,6 @@
                 text = "To Bottom"
                 description = "Jumps to the bottom of Annotation, if the cursor is in an active annotation">
             <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group.Jump"/>
-            <keyboard-shortcut
-                    keymap="$default"
-                    first-keystroke="control alt shift b"/>
         </action>
 
         <action
@@ -116,9 +102,6 @@
                 text = "To Last Cursor Selection"
                 description = "Jumps to previous cursor line">
             <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group.Jump"/>
-            <keyboard-shortcut
-                    keymap="$default"
-                    first-keystroke="control alt shift l"/>
         </action>
 
         <action
@@ -127,9 +110,6 @@
                 text = "Show Annotation Type"
                 description = "Shows the current annotation type at the cursor position.">
             <add-to-group group-id="intellijmigrationplugin.AnnotationAction.Group"/>
-            <keyboard-shortcut
-                    keymap="$default"
-                    first-keystroke="control alt shift p"/>
         </action>
     </actions>
 
@@ -148,6 +128,4 @@
         <notificationGroup id="Custom Notification Group"
                            displayType="BALLOON"/>
     </extensions>
-
-
 </idea-plugin>

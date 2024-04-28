@@ -107,6 +107,11 @@ class AnnotationInformation private constructor() {
             return singleCommentMapping
         }
 
+    val defaultSingleComment: String
+        get() {
+            return singleCommentMapping[".*"] ?: "//"
+        }
+
     val multiCommentMapping: HashMap<String, String>
         get() {
             val typeMapping = fileTypeMapping
@@ -120,6 +125,11 @@ class AnnotationInformation private constructor() {
             return multiCommentMapping
         }
 
+    val defaultMultiComment: String
+        get() {
+            return singleCommentMapping[".*"] ?: "/* */"
+        }
+
     val importMapping: HashMap<String, String>
         get() {
             val typeMapping = fileTypeMapping
@@ -131,6 +141,11 @@ class AnnotationInformation private constructor() {
             }
 
             return importMapping
+        }
+
+    val defaultImport : String
+        get() {
+            return importMapping[".*"] ?: "import"
         }
 
 

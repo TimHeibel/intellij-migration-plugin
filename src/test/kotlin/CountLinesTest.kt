@@ -8,7 +8,7 @@ import java.util.regex.Pattern
 
 class CountLinesTest {
 
-    var lineAnalyser = LineAnalyser()
+    private var lineAnalyser = LineAnalyser()
 
     @Test
     fun detectComments(){
