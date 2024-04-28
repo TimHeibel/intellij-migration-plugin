@@ -25,32 +25,21 @@ class IDEWindow : ToolWindowFactory {
 
     override fun shouldBeAvailable(project: Project) = true
 
-    ///This class manages the content for myStatisticsWindow
-    ///structure:
+    /**
+     * Manages the different UI Components for the Statistic window
+     */
     class MyStatisticsWindow {
 
         private val project = ProjectManager.getInstance().openProjects[0]
 
         private var annotationInformation = AnnotationInformation.instance
         private val csvFileComponent = CSVFileComponent()
-        //private val csvNameComponent = CSVNameInputField()
         private val fileChooserComponent = FileChooserComponent(project)
-        //private val csvChooserComponent = CSVChooserComponent(project)
         private val runStatisticComponent = RunStatisticComponent(fileChooserComponent, annotationInformation!!,csvFileComponent)
 
         fun getContent(): JPanel {
 
             val contentPane: JPanel = panel {
-//
-//                group("CSV-Info"){
-//                    row {
-//                        cell(csvChooserComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
-//                    }
-//                    row {
-//
-//                        cell(csvNameComponent.getComponent()).horizontalAlign(HorizontalAlign.FILL)
-//                    }
-//                }
                 group ("FileIgnore"){
 
                     row {

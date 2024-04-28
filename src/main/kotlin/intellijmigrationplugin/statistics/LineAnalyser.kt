@@ -21,12 +21,8 @@ class LineAnalyser {
 
         val fileInformation = getFileInformation(filePath, importMapping, singleCommentMapping, multiCommentMapping)
 
-        // set regex
         val regex = setRegex(fileInformation)
-
-        //go through file
         val statisticMap = analiseLines(filePath, regex, fileInformation, keywords)
-        //add line to csv
         csvEditor.addLine(statisticMap, csvName, filePath)
 
         return statisticMap

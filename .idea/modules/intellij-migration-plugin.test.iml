@@ -51,8 +51,8 @@
           <root url="jar://$MAVEN_REPOSITORY$/com/jetbrains/intellij/idea/ideaIU/2022.3.3/ideaIU-2022.3.3-annotations.zip!/" />
         </ANNOTATIONS>
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/3rd-party-rt.jar!/" />
           <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/3rd-party-native.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/3rd-party-rt.jar!/" />
           <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/ant/lib/ant.jar!/" />
           <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/app.jar!/" />
           <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.3.3/19e52733ac61e1d2e675720f92daf5959355cb1e/ideaIC-2022.3.3/lib/byte-buddy-agent.jar!/" />

@@ -11,7 +11,8 @@ class LineAnalyserTest {
     //test analiseLines()
     @Test
     fun analyseJavaFile(){
-        val pathname = "/home/finnika/Documents/Uni/5 Semester/SE Projekt/intellij-migration-plugin/src/test/resources/Main.java"
+        val pathname = "src/test/resources/Main.java"
+
         val fileInformation = arrayOf("import", "//", "\\/\\/", "/*", "*/")
         val regex = Pattern.compile("^(?!\\s*import)(?!\\s*\\/\\/).*[^\\s]\$", 8)
         val keywords = mutableListOf("MIGRATED", "LATER")
@@ -31,7 +32,7 @@ class LineAnalyserTest {
     }
     @Test
     fun analysePhythonFile() {
-        val pathname = "/home/finnika/Documents/Uni/5 Semester/SE Projekt/intellij-migration-plugin/src/test/resources/PhythonTestCode.py"
+        val pathname = "src/test/resources/PhythonTestCode.py"
         val fileInformation = arrayOf("import", "#", "\\#", "\"\"\"", "\"\"\"")
         val regex = Pattern.compile("^(?!\\s*import)(?!\\s*\\#).*[^\\s]\$", 8)
         val keywords = mutableListOf("MIGRATED", "LATER")
@@ -68,7 +69,7 @@ class LineAnalyserTest {
     @Test
     fun getFileInformationForPhython(){
 
-        val pathname = "/home/finnika/Documents/Uni/5 Semester/SE Projekt/intellij-migration-plugin/src/test/resources/testFiles/PhythonTestCode.py"
+        val pathname = "/src/test/resources/testFiles/PhythonTestCode.py"
         val importMapping: HashMap<String, String> = hashMapOf(
         ".*" to "import",
         ".py" to "import"
@@ -92,7 +93,7 @@ class LineAnalyserTest {
      fun getDefaultFileInformation(){
          val lineAnalyser = LineAnalyser()
 
-         val pathname = "/home/finnika/Documents/Uni/5 Semester/SE Projekt/intellij-migration-plugin/src/test/resources/testFiles/PhythonTestCode.py"
+         val pathname = "src/test/resources/testFiles/PhythonTestCode.py"
          val importMapping: HashMap<String, String> = hashMapOf(
              ".*" to "import",
              ".kt" to "import"
