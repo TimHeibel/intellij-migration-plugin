@@ -3,7 +3,6 @@ package intellijmigrationplugin.annotationModel.documents
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
-import intellijmigrationplugin.annotationModel.documents.AnnotationDocumentHandler
 
 /**
  * This class should be created for every [AnnotationDocumentHandler] as it registers a document change listener.

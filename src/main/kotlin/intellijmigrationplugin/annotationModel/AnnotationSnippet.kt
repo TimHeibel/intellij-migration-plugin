@@ -50,19 +50,19 @@ open class AnnotationSnippet(var start: Int, var end: Int, var hasEnd: Boolean, 
      * @return A [CollisionCode] indicating the type of collision if there is one, otherwise null.
      */
     internal fun hasCollision(annotation: AnnotationSnippet) : CollisionCode? {
-        if (annotation.inRange(start) && annotation.inRange(end)) {
+        if (annotation.contains(start) && annotation.contains(end)) {
             return CollisionCode.COMPLETE_INSIDE
         }
 
-        if (annotation.inRange(start)) {
+        if (annotation.contains(start)) {
             return CollisionCode.START_INSIDE
         }
 
-        if (annotation.inRange(end)) {
+        if (annotation.contains(end)) {
             return CollisionCode.END_INSIDE
         }
 
-        if (inRange(annotation.start)) {
+        if (contains(annotation.start)) {
             return CollisionCode.SURROUNDING
         }
 
@@ -90,18 +90,29 @@ open class AnnotationSnippet(var start: Int, var end: Int, var hasEnd: Boolean, 
         return "$commentStart$type $addInfo"
     }
 
-    fun getRange(): Int {
+    fun length(): Int {
         return end - start
     }
 
-    fun inRange(line: Int): Boolean {
+    fun contains(line: Int): Boolean {
         return line in start..end
     }
-    
+
+    fun lineIsStartLine(line: Int): Boolean {
+        return line == start
+    }
+
+    fun lineIsEndLine(line: Int): Boolean {
+        return line == end
+    }
+
+    fun lineIsAnnotationLine(line: Int): Boolean {
+        return lineIsStartLine(line) || (hasEnd && lineIsEndLine(line))
+    }
+
     override fun toString(): String {
         return "Startline: $start, Endline: $end, Type: $type"
     }
-
 
     /**
      * Checks if the given [annotation] is similar to the current [AnnotationSnippet].
