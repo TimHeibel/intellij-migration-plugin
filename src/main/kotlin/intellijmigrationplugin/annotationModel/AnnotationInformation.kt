@@ -37,6 +37,7 @@ class AnnotationInformation private constructor() {
         get() {
             return settings.excludedFoldersList
         }
+
     val markerColorMapping: HashMap<String, String>
         get() {
             val colorMapping = settings.keywordColorMapping
@@ -48,6 +49,7 @@ class AnnotationInformation private constructor() {
 
             return colorHashMap
         }
+
     val markerRealColorMapping: HashMap<String, Color>
         get() {
             val colorMapping = markerColorMapping
@@ -68,7 +70,6 @@ class AnnotationInformation private constructor() {
         get() {
             return settings.keywordColorMapping.map { x -> x.first }
         }
-
 
     val fileTypeMapping: HashMap<String, FileTypeMapping>
         get() {

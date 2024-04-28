@@ -1,52 +1,79 @@
 package intellijmigrationplugin.actions.annotationVisualisation
 
-import com.intellij.ide.DataManager
+import com.intellij.notification.NotificationGroupManager
+import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.DataContext
-import com.intellij.openapi.editor.*
+import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
+import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.getLine
 import intellijmigrationplugin.annotationModel.AnnotationInformation
+import intellijmigrationplugin.annotationModel.util.AnnotationDetection
+import intellijmigrationplugin.annotationModel.util.JumpToAnnotationUtil
+import kotlinx.coroutines.runBlocking
 import java.io.File
-
 
 class JumpToFileAction: AnAction() {
 
-
     override fun actionPerformed(e: AnActionEvent) {
-
         val fileEditorManager = FileEditorManager.getInstance(e.project!!)
-        val path = "/Users/christoph/Documents/MigrationTestProject/src/hauptvers_deprecated.c"
+        val path = AnnotationInformation.instance!!.legacyFolderPath + "/"
+        val legacyFile = File(path)
 
-        val keywords = AnnotationInformation.instance!!.keywords
+        val editor = e.getData(CommonDataKeys.EDITOR)!!
+        val cursorOffset = editor.caretModel.offset
+        val cursorLine = editor.document.getLineNumber(cursorOffset)
 
-        val regexes = keywords.map { x -> Regex("^\\s*//\\s*$x(\$|\\s)\\w", RegexOption.IGNORE_CASE) }
+        val lineString = editor.document.getLine(cursorLine)
 
-        val file = File(path)
-        if (!file.isFile) return
-        val virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file)!!
-        print(virtualFile.name)
+        val psiFile = e.getData(CommonDataKeys.VIRTUAL_FILE)
+        val filePath = psiFile?.canonicalPath!!
+        val splits = filePath.split(".")
+        val fileType = "." + splits.last()
+
+        val (fileName, fileID) = AnnotationDetection.detectNewProjectThing(lineString, fileType)
+
+        if (fileName == "" && fileID == "") {
+           falseSchemeNotification(editor.project)
+        }
+
+        var file: File? = null
+
+        legacyFile.walk(FileWalkDirection.BOTTOM_UP).forEach { x ->
+            val pathSplit = x.canonicalPath.split("/")
+            val currentFileName = pathSplit.last()
+            if (fileName == currentFileName) {
+                file = File(x.canonicalPath)
+            }
+        }
+
+        if (file == null) return
+        if (!file!!.isFile) return
+
+        val virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file!!)!!
         fileEditorManager.openFile(virtualFile, true)
-        gotoLine(100, e.project!!)
+
+        val openEditors = fileEditorManager.selectedTextEditorWithRemotes
+        val newEditor = openEditors[0]
+
+        runBlocking {
+            val line = AnnotationDetection.detectIdInFile(newEditor.document, fileID)
+            if (line == -1) {
+                return@runBlocking
+            }
+            JumpToAnnotationUtil.gotoLine(line, newEditor.project!!)
+        }
     }
 
-    fun gotoLine(lineNumber: Int, project: Project): Boolean {
-        val dataContext: DataContext = DataManager.getInstance().dataContext
-
-        val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return false
-        val caretModel = editor.caretModel
-        val totalLineCount = editor.document.lineCount
-        if (lineNumber > totalLineCount) return false
-
-        //Moving caret to line number
-        caretModel.moveToLogicalPosition(LogicalPosition(lineNumber - 1, 0))
-
-        //Scroll to the caret
-        val scrollingModel = editor.scrollingModel
-        scrollingModel.scrollToCaret(ScrollType.CENTER)
-        return true
+    private fun falseSchemeNotification(project: Project?) {
+        NotificationGroupManager.getInstance()
+            .getNotificationGroup("Custom Notification Group")
+            .createNotification("Your scheme for jumping to other files is not correct. The correct scheme is \"Comment : Filename : Id\"",
+                NotificationType.ERROR)
+            .notify(project)
     }
+
 
 }

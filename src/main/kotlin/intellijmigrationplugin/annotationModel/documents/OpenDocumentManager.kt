@@ -5,14 +5,13 @@ import com.intellij.openapi.fileEditor.FileEditorManagerEvent
 import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.vfs.VirtualFile
 import intellijmigrationplugin.annotationModel.AnnotationInformation
-import intellijmigrationplugin.annotationModel.markervisualisation.HighlightAnnotationFile
-import intellijmigrationplugin.annotationModel.markervisualisation.HighlightAnnotationSnippet
+import intellijmigrationplugin.annotationModel.AnnotationSnippet
 import java.util.concurrent.ConcurrentHashMap
 
 /**
  * This class is instantiated once in the project startup phase.
- * A list contains all documents that are opened as tab.
- * Functionality regarding the state of a specific document are exposed through specific functions.
+ * A list contains all documents that are opened as a tab.
+ * Functionalities regarding the state of a specific document are exposed through specific functions.
  */
 class OpenDocumentManager: FileEditorManagerListener {
 
@@ -75,24 +74,30 @@ class OpenDocumentManager: FileEditorManagerListener {
 
     /**
      * @return Empty list if the specified file is not open, or it does not contain annotations. <br/>
-     * List of all [HighlightAnnotationSnippet] in the specified file.
+     * List of all [AnnotationSnippet] in the specified file.
      */
-    fun getSnippetsOfOpenFile(path: String): MutableList<HighlightAnnotationSnippet> {
+    private fun getSnippetsOfOpenFile(path: String): MutableList<AnnotationSnippet> {
         if (!openDocuments.containsKey(path)) return mutableListOf()
         return openDocuments[path]!!.getSnippets()
     }
 
     /**
-     * @return Null if the current line does not contain a [HighlightAnnotationSnippet]. <br/>
-     * The [HighlightAnnotationSnippet] for the specified line.
+     * @return Null if the current line does not contain an [AnnotationSnippet]. <br/>
+     * The [AnnotationSnippet] for the specified line.
      */
-    fun getSnippetForLine(path: String, line: Int): HighlightAnnotationSnippet? {
-        var snippets = getSnippetsOfOpenFile(path);
+    fun getSnippetForLine(path: String, line: Int): AnnotationSnippet? {
+        val snippets = getSnippetsOfOpenFile(path);
         if (snippets.isEmpty()) return null
         for (snippet in snippets) {
             if (snippet.contains(line)) return snippet
         }
         return null;
+    }
+
+    fun updateDocumentVisualisation() {
+        for (document in openDocuments.values) {
+            document.updateVisualisation()
+        }
     }
 
 }

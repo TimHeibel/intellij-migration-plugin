@@ -1,4 +1,4 @@
-package intellijmigrationplugin.actions.annotationVisualisation
+package intellijmigrationplugin.annotationModel.util
 
 import com.intellij.openapi.editor.LogicalPosition
 import com.intellij.openapi.editor.ScrollType
