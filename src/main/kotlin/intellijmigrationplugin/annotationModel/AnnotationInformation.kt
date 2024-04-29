@@ -127,7 +127,7 @@ class AnnotationInformation private constructor() {
 
     val defaultMultiComment: String
         get() {
-            return singleCommentMapping[".*"] ?: "/* */"
+            return multiCommentMapping[".*"] ?: "/* */"
         }
 
     val importMapping: HashMap<String, String>
