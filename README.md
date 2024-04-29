@@ -22,8 +22,8 @@ MigrateMate is an innovative IntelliJ plugin designed to enhance the experience 
 
 ### Usage
 
-- Enable MigrateMate through IntelliJ's settings.
-- Use the plugin's features to manage and track the migration of your legacy code.
+1. Enable MigrateMate: Configure the plugin settings in IntelliJ to tailor it to your project's needs.
+2. Keybinding Configuration: Set custom keybindings for annotations through [IntelliJ settings](https://www.jetbrains.com/help/idea/configuring-keyboard-and-mouse-shortcuts.html): Settings -> Keymap -> Search for annotation (e.g., Migrated).
 
 ## Configuration
 
