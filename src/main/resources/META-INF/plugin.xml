@@ -2,7 +2,7 @@
 <idea-plugin>
     <id>com.github.timheibel.intellijmigrationplugin</id>
     <name>Migrate Mate</name>
-    <vendor>timheibel</vendor>
+    <vendor>David Blobel, Christoph Denzel, Tim Heibel, Annika Riepe</vendor>
 
     <depends>com.intellij.modules.platform</depends>
 
