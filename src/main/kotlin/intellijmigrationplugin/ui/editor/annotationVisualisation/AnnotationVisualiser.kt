@@ -1,3 +1,5 @@
+package intellijmigrationplugin.ui.editor.annotationVisualisation
+
 import intellijmigrationplugin.annotationModel.AnnotationSnippet
 
 

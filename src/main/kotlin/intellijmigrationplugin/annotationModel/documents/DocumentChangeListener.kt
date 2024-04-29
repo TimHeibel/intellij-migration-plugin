@@ -8,13 +8,7 @@ import com.intellij.openapi.editor.event.DocumentListener
  * This class should be created for every [AnnotationDocumentHandler] as it registers a document change listener.
  * All updates on a document call the functions in this class and are then transmitted to the Document Handler.
  */
-class DocumentChangeListener : DocumentListener {
-
-    private val documentHandler: AnnotationDocumentHandler
-
-    constructor(documentHandler: AnnotationDocumentHandler) {
-        this.documentHandler = documentHandler
-    }
+class DocumentChangeListener(private val documentHandler: AnnotationDocumentHandler) : DocumentListener {
 
     override fun documentChanged(event: DocumentEvent) {
         documentHandler.documentChanged(event)

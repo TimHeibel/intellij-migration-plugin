@@ -36,7 +36,9 @@ class JumpToFileAction: AnAction() {
         val (fileName, fileID) = AnnotationDetection.detectNewProjectThing(lineString, fileType)
 
         if (fileName == "" && fileID == "") {
-           falseSchemeNotification(editor.project)
+            val message = "Your scheme for jumping to other files is not correct. The correct scheme is \"Comment : Filename : Id\"."
+            errorNotification(editor.project, message)
+            return
         }
 
         var file: File? = null
@@ -49,8 +51,11 @@ class JumpToFileAction: AnAction() {
             }
         }
 
-        if (file == null) return
-        if (!file!!.isFile) return
+        if (file == null || !file!!.isFile) {
+            val message = "File $fileName not found."
+            errorNotification(editor.project, message)
+            return
+        }
 
         val virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file!!)!!
         fileEditorManager.openFile(virtualFile, true)
@@ -61,17 +66,18 @@ class JumpToFileAction: AnAction() {
         runBlocking {
             val line = AnnotationDetection.detectIdInFile(newEditor.document, fileID)
             if (line == -1) {
+                val message = "Id $fileID not found."
+                errorNotification(editor.project, message)
                 return@runBlocking
             }
             JumpToAnnotationUtil.gotoLine(line, newEditor.project!!)
         }
     }
 
-    private fun falseSchemeNotification(project: Project?) {
+    private fun errorNotification(project: Project?, message: String) {
         NotificationGroupManager.getInstance()
             .getNotificationGroup("Custom Notification Group")
-            .createNotification("Your scheme for jumping to other files is not correct. The correct scheme is \"Comment : Filename : Id\"",
-                NotificationType.ERROR)
+            .createNotification(message, NotificationType.ERROR)
             .notify(project)
     }
 

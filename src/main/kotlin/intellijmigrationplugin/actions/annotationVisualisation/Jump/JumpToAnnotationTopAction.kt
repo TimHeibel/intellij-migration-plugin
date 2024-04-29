@@ -25,8 +25,8 @@ class JumpToAnnotationTopAction: AnAction() {
         val path = psiFile?.canonicalPath!!
 
         val snippet = information.documentManager.getSnippetForLine(path, cursorLine)
-        if (snippet == null) return;
-        val jumpToLine = snippet.start;
+        if (snippet == null) return
+        val jumpToLine = snippet.start
 
         if (jumpToLine != -1) JumpToAnnotationUtil.gotoLine(jumpToLine, e.project!!)
     }

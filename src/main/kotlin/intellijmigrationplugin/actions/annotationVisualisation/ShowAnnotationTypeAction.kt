@@ -1,13 +1,9 @@
 package intellijmigrationplugin.actions.annotationVisualisation
 
 import com.intellij.codeInsight.hint.HintManager
-import com.intellij.notification.NotificationGroupManager
-import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
-import com.intellij.openapi.util.TextRange
-import intellijmigrationplugin.annotationModel.util.AnnotationDetection
 import intellijmigrationplugin.annotationModel.AnnotationInformation
 
 /**

@@ -6,19 +6,13 @@ import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Co
 import intellijmigrationplugin.annotationModel.util.AnnotationDetection
 import kotlinx.coroutines.yield
 
-open class AnnotationFile {
+open class AnnotationFile(fileName: String, protected var document: Document) {
     var snippets: MutableList<AnnotationSnippet>
 
-    protected var document: Document
-
-    private var fileName: String
     private var fileType: String
 
-    constructor(fileName: String, document: Document) {
+    init {
         snippets = mutableListOf()
-
-        this.fileName = fileName
-        this.document = document
         val splits = fileName.split(".")
         fileType = "." + splits.last()
     }
@@ -61,7 +55,7 @@ open class AnnotationFile {
 
     suspend fun computeSnippets(): MutableList<AnnotationSnippet> {
         snippets = mutableListOf()
-        val annotations = AnnotationDetection.detectAnnotationInFile(document, fileType, 0, document.lineCount)
+        val annotations = AnnotationDetection.detectAnnotationInFile(document, fileType, 0, document.lineCount-1)
 
         for (i in 0..annotations.count() - 1) {
             val currentAnnotation = annotations[i]
@@ -74,7 +68,7 @@ open class AnnotationFile {
                     AnnotationSnippet(currentAnnotation.first, document.lineCount-1, false, currentAnnotation.second)
             } else {
                 val nextAnnotation = annotations[i + 1]
-                val hasEnd = nextAnnotation.second == "end";
+                val hasEnd = nextAnnotation.second == "end"
                 val hasEndAddition = if (hasEnd) 0 else 1
                 snippet = AnnotationSnippet(currentAnnotation.first,
                     nextAnnotation.first - hasEndAddition, hasEnd, currentAnnotation.second)

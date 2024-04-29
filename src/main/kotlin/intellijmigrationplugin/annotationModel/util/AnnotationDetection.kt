@@ -2,7 +2,6 @@ package intellijmigrationplugin.annotationModel.util
 
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.util.TextRange
-import groovy.lang.Tuple
 import intellijmigrationplugin.annotationModel.AnnotationInformation
 import intellijmigrationplugin.annotationModel.AnnotationSnippet
 import intellijmigrationplugin.actions.annotation.utils.AnnotationActionUtils.Companion.getLine
@@ -91,8 +90,8 @@ class AnnotationDetection {
 
         /**
          * Note line numbers from 0 to n-1 number of lines
-         * @param lineStart: inclusive line index
-         * @param lineEnd: exclusive line index
+         * @param lineStart: inclusive start line index
+         * @param lineEnd: inclusive end line index
          */
         suspend fun detectAnnotationInFile(document: Document, fileType: String?, lineStart: Int, lineEnd: Int): MutableList<Pair<Int, String>> {
             val outputList = mutableListOf<Pair<Int, String>>()
@@ -103,7 +102,7 @@ class AnnotationDetection {
             val regexEnd = getAnnotationRegex(commentType, "end")
 
             yield()
-            for (i in lineStart..lineEnd - 1) {
+            for (i in lineStart..lineEnd) {
 
                 val startOffset = document.getLineStartOffset(i)
                 val endOffset = document.getLineEndOffset(i)
@@ -128,10 +127,11 @@ class AnnotationDetection {
 
 
         /**
-         * Detects an annotation in a string and returns the annotationtype
+         * Detects an annotation in a string and returns the annotation type
          */
         fun detectAnnotationInString(string: String, fileType: String?): String? {
-            val commentType = AnnotationInformation.instance!!.singleCommentMapping[fileType] ?: "//"
+            val commentType = AnnotationInformation.instance!!.singleCommentMapping[fileType]
+                ?: AnnotationInformation.instance!!.defaultSingleComment
             val keywords = AnnotationInformation.instance!!.keywords
             val regexes = keywords.map { x ->  getAnnotationRegex(commentType, x) }
             val regexEnd = getAnnotationRegex(commentType, "end")
@@ -146,12 +146,16 @@ class AnnotationDetection {
             return null
         }
 
+        /**
+         * Checks if another jump target can be found.
+         */
         fun detectNewProjectThing(string: String, fileType: String?): Pair<String, String> {
-            val commentType = AnnotationInformation.instance!!.singleCommentMapping[fileType] ?: "//"
+            val commentType = AnnotationInformation.instance!!.singleCommentMapping[fileType]
+                ?: AnnotationInformation.instance!!.defaultSingleComment
             val keywords = AnnotationInformation.instance!!.keywords
             val regexes = keywords.map { x ->  getFileJumpRegex(commentType, x) }
 
-            for ((j, regex) in regexes.withIndex()) {
+            for (regex in regexes) {
                 val sequence: CharSequence = string
                 val match = regex.find(sequence, 0)
                 if (match == null) continue
@@ -205,7 +209,7 @@ class AnnotationDetection {
          * @return The generated [Regex] pattern for the annotation.
          */
         private fun getFileJumpRegex(commentType: String, annotationType: String): Regex {
-            return Regex("^(\\h)*${Regex.escape(commentType)}(\\h)*${Regex.escape(annotationType)}(\\h)+(:)(\\h)+(\\S)+(\\h)+(:)(\\h)+(\\S)+($|\\s)*", RegexOption.IGNORE_CASE)
+            return Regex("^(\\h)*${Regex.escape(commentType)}(.)*(:)(\\h)+(\\S)+(\\h)+(:)(\\h)+(\\S)+($|\\s)*", RegexOption.IGNORE_CASE)
         }
 
         /**

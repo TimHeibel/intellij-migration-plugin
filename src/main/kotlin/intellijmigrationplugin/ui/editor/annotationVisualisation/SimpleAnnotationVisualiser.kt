@@ -1,23 +1,13 @@
 package intellijmigrationplugin.ui.editor.annotationVisualisation
 
-import AnnotationVisualiser
 import com.intellij.openapi.editor.markup.HighlighterTargetArea
 import com.intellij.openapi.editor.markup.MarkupModel
 import com.intellij.openapi.editor.markup.TextAttributes
-import com.intellij.openapi.util.TextRange
 import intellijmigrationplugin.annotationModel.AnnotationInformation
 import intellijmigrationplugin.annotationModel.AnnotationSnippet
 import kotlinx.coroutines.*
 
-class SimpleAnnotationVisualiser : AnnotationVisualiser {
-
-    private var sourcePath: String
-    private var markup: MarkupModel
-
-    constructor(sourcePath: String, markup: MarkupModel) {
-        this.sourcePath = sourcePath
-        this.markup = markup
-    }
+class SimpleAnnotationVisualiser(private var sourcePath: String, private var markup: MarkupModel) : AnnotationVisualiser {
 
     override fun updateAnnotationVisualisation(snippets: MutableList<AnnotationSnippet>) {
         runBlocking {
