@@ -26,7 +26,7 @@ class JumpToAnnotationBottomAction: AnAction() {
 
         val snippet = information.documentManager.getSnippetForLine(path, cursorLine)
         if (snippet == null) return
-        val jumpToLine = snippet.end-1;
+        val jumpToLine = snippet.end-1
 
         if (jumpToLine != -1) JumpToAnnotationUtil.gotoLine(jumpToLine, e.project!!)
     }

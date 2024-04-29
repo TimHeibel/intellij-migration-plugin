@@ -1,6 +1,6 @@
 package intellijmigrationplugin.annotationModel.documents
 
-import AnnotationVisualiser
+import intellijmigrationplugin.ui.editor.annotationVisualisation.AnnotationVisualiser
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.event.DocumentEvent
 import intellijmigrationplugin.annotationModel.AnnotationFile
@@ -12,20 +12,15 @@ import kotlinx.coroutines.runBlocking
 /**
  * Handles events and the state for a single document, which is opened as a tab at the top bar
  */
-class AnnotationDocumentHandler {
+class AnnotationDocumentHandler(val path: String, private val editor: Editor) {
 
     private lateinit var listener: DocumentChangeListener
     private lateinit var highlightAnnotationFile: AnnotationFile
     private var visualiser: AnnotationVisualiser
-    private val editor: Editor
-    val path: String
 
-    constructor(path: String, editor: Editor) {
-        this.path = path
-        this.editor = editor
+    init {
         visualiser = SimpleAnnotationVisualiser(path, editor.markupModel)
         highlightAnnotationFile = AnnotationFile(path, editor.document)
-
         runBlocking {
             val snippets = highlightAnnotationFile.computeSnippets()
             visualiser.visualiseAnnotation(snippets)

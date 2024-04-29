@@ -48,7 +48,7 @@ class OpenDocumentManager: FileEditorManagerListener {
         if (AnnotationInformation.instance!!.showMarker) documentHandler.turnVisualisationOn()
     }
 
-    fun tryToDeregisterDocument(path: String) {
+    private fun tryToDeregisterDocument(path: String) {
         if (!isDocumentRegistered(path)) return
         unregisterDocument(path)
     }
@@ -86,17 +86,17 @@ class OpenDocumentManager: FileEditorManagerListener {
      * The [AnnotationSnippet] for the specified line.
      */
     fun getSnippetForLine(path: String, line: Int): AnnotationSnippet? {
-        val snippets = getSnippetsOfOpenFile(path);
+        val snippets = getSnippetsOfOpenFile(path)
         if (snippets.isEmpty()) return null
         for (snippet in snippets) {
             if (snippet.contains(line)) return snippet
         }
-        return null;
+        return null
     }
 
     fun updateDocumentVisualisation() {
         for (document in openDocuments.values) {
-            document.updateVisualisation()
+            document.turnVisualisationOn()
         }
     }
 
