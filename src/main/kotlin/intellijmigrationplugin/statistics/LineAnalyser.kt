@@ -25,6 +25,14 @@ class LineAnalyser {
         return statisticMap
     }
 
+    /**
+     * extracts file extension, single line comment and multiline comment of the given file [filePath]
+     * from the settings
+     *
+     * @param filePath String of the file being analysed
+     * @param annotationInformation class that holds data from the settings
+     * @return Array <String> with all file information
+     */
     fun getFileInformation(
         filePath: String,
         annotationInformation: AnnotationInformation): Array<String> {
@@ -55,6 +63,13 @@ class LineAnalyser {
         return fileInformationArray
     }
 
+    /**
+     * adds the single line comment string to each keyword
+     *
+     * @param keywordList List of all used keywords
+     * @param fileInformation Array from the function [getFileInformation]
+     * @return mutableListOf<String> with every given keyword and "End"
+     */
     private fun editKeywordsList(keywordList: List<String>, fileInformation: Array<String>): MutableList<String>{
         val commentedKeywords = mutableListOf<String>()
         keywordList.forEach { keyword ->
@@ -82,6 +97,15 @@ class LineAnalyser {
         return matcher.matches()
     }
 
+    /**
+     * counts the lines of code per keyword, other lines will be saved under unmarked
+     *
+     * @param filePath path to the file which needs to be analysed
+     * @param regex Pattern which detects lines of code
+     * @param fileInformation holds file extension, single line comment and multiline comment
+     * @param keywords list that holds all currently used keywords
+     * @return mutableMapOf<String,Int> consisting of keyword, sum of the marked lines
+     */
     fun analiseLines(
         filePath: String,
         regex: Pattern,
@@ -176,6 +200,13 @@ class LineAnalyser {
         return linesPerKeyword
     }
 
+    /**
+     * counts lines of Code in the given String [segment]
+     *
+     * @param segment code that sound be analysed
+     * @param fileInformation Array from the function [getFileInformation]
+     * @return int number of line
+     */
     fun countLinesInSegment(segment: String,regex: Pattern, fileInformation: Array<String>): Int {
         var lOCSegment = 0
         var isComment = false
