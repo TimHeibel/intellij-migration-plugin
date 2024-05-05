@@ -175,8 +175,12 @@ class AnnotationActionUtils {
                 endAnnotation = first
             }
 
-            val startLine = startAnnotation.end + 1
-            val endLine = endAnnotation.start - 1
+            var startLine = startAnnotation.end
+            if(!startAnnotation.hasEnd) {
+                startLine+= 1
+            }
+
+            val endLine = endAnnotation.start
 
             return !containsCode(startLine, endLine, filePath)
         }
@@ -184,37 +188,98 @@ class AnnotationActionUtils {
         internal fun Document.containsCode(startLine: Int, endLine: Int, filePath: String) : Boolean {
 
             val annotationInformation = AnnotationInformation.instance!!
-            val fileInformation = LineAnalyser().getFileInformation(filePath, annotationInformation)
+            val fileInformationArray = LineAnalyser().getFileInformation(filePath, annotationInformation)
+
+            val fileInformation = FileInformation(fileInformationArray[1], fileInformationArray[3], fileInformationArray[4])
 
             var multiLineCommentActive = false
 
-            for (lineNumber in startLine .. endLine) {
+            for (lineNumber in 0 .. lineCount - 1) {
                 val line = getLine(lineNumber)
 
-                if(multiLineCommentActive) {
-                    if(line.startsWith(fileInformation[4])) {
-                        multiLineCommentActive = false
-                    }
-                    continue
+                val lineStatus = line.detectCode(fileInformation, multiLineCommentActive)
+
+                if(lineStatus.containsCode && lineNumber in startLine .. endLine) {
+                    return true
                 }
 
-                if(line.isBlank()) {
-                    continue
-                }
-
-                if(line.startsWith(fileInformation[0]) ||
-                    line.startsWith(fileInformation[1])) {
-                    continue
-                }
-
-                if(line.startsWith(fileInformation[3])) {
-                    multiLineCommentActive = true
-                    continue
-                }
-
-                return true
+                multiLineCommentActive = lineStatus.multiLineActive
             }
             return false
         }
+
+
+        /**
+         * Detects the code status of the current line based on the provided [fileInfo].
+         *
+         * @param fileInfo The information about the file's comment syntax.
+         * @param multiActive Flag indicating if the multi-line comment is currently active.
+         * @return The line status indicating whether the line contains code and if multi-line comment is active.
+         */
+        private fun String.detectCode(fileInfo: FileInformation, multiActive: Boolean = false): LineStatus {
+            //Ensuring that each string has length > 0, to ensure termination of recursion
+            if(fileInfo.single == "" || fileInfo.multiEnd == "" || fileInfo.multiStart == "") {
+                thisLogger().warn("something went wrong, defining the comment syntax")
+                return LineStatus(true, multiActive)
+            }
+
+            // Check if the line is blank
+            if(isBlank()) {
+                return LineStatus(false, multiActive)
+            }
+
+            // Check if multi-line comment is active
+            if(multiActive) {
+                if(contains(fileInfo.multiEnd)) {
+                    return substringAfter(fileInfo.multiEnd).detectCode(fileInfo)
+                }
+
+                return LineStatus(containsCode = false, multiLineActive = true)
+            }
+
+            // Check if line starts with a single-line comment
+            if(trim().startsWith(fileInfo.single)) {
+                return LineStatus(containsCode = false, multiLineActive = false)
+            }
+
+            // Check if line starts a multi-line comment
+            if(trim().startsWith(fileInfo.multiStart)) {
+                return substringAfter(fileInfo.multiStart).detectCode(fileInfo, true)
+            }
+
+            // Code segment found
+            val containsCode = true
+
+            // Check if multi-line comment is opened after a code segment
+            if(!contains(fileInfo.multiStart)) {
+                return LineStatus(containsCode, false)
+            }
+
+            if(substringAfter(fileInfo.multiStart, "") <= substringAfter(fileInfo.single, "")) {
+                return LineStatus(containsCode, false)
+            }
+
+            //detects a multiLineComment is opened after a code segment, short-circuiting if none is opened
+            return LineStatus(containsCode, substringAfter(fileInfo.multiStart, fileInfo.multiEnd)
+                .detectCode(fileInfo, true).multiLineActive)
+        }
+
     }
 }
+
+/**
+ * Data class representing information about the comment syntax of a file.
+ *
+ * @property single The single-line comment syntax.
+ * @property multiStart The start delimiter of the multi-line comment syntax.
+ * @property multiEnd The end delimiter of the multi-line comment syntax.
+ */
+private data class FileInformation(val single : String, val multiStart : String, val multiEnd : String)
+
+/**
+ * Data class representing the status of a line in terms of containing code and the state of multi-line comment.
+ *
+ * @property containsCode Indicates whether the line contains code.
+ * @property multiLineActive Indicates whether a multi-line comment is active at the end of the string.
+ */
+private data class LineStatus(val containsCode : Boolean, val multiLineActive : Boolean)
